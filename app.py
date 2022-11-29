@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
 import os
-
 import aws_cdk as cdk
-
 from cdk_security_group.cdk_security_group_stack import CdkSecurityGroupStack
-
 
 app = cdk.App()
 CdkSecurityGroupStack(app, "CdkSecurityGroupStack",
