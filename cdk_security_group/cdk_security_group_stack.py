@@ -18,23 +18,10 @@ class CdkSecurityGroupStack(Stack):
         # The code that defines your stack goes here
         
         #IAM
-        lambdaRole = _iam.Role(
-                self,
-                "Role",
-                assumed_by=_iam.ServicePrincipal("lambda.amazonaws.com"),
-                description="iam role for lambda"
-            )
-
-        lambdaRole.apply_removal_policy(_removalpolicy.DESTROY)
-
         managedPolicyStatement = _iam.PolicyStatement(
             actions=["log:*"],
             resources=["*"]
         )
-
-        # managedPolicyDocument = _iam.PolicyDocument(
-        #     statements=managedPolicyStatement
-        # )
 
         managedPolicy = _iam.ManagedPolicy(
                 self,
@@ -45,6 +32,16 @@ class CdkSecurityGroupStack(Stack):
         
         managedPolicy.add_statements(managedPolicyStatement)
         managedPolicy.apply_removal_policy(_removalpolicy.DESTROY)
+
+        lambdaRole = _iam.Role(
+                self,
+                "Role",
+                assumed_by=_iam.ServicePrincipal("lambda.amazonaws.com"),
+                description="iam role for lambda"
+            )
+
+        lambdaRole.add_managed_policy(managedPolicy)
+        lambdaRole.apply_removal_policy(_removalpolicy.DESTROY)
 
         #LAMBDA
         function = _lambda.Function(
