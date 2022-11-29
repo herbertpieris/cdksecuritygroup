@@ -27,8 +27,9 @@ class CdkSecurityGroupStack(Stack):
         lambdaRole.apply_removal_policy(_removalpolicy.DESTROY)
 
         managedPolicy = _iam.ManagedPolicy(self,
+                                           id="hello",
                                            description="iam policy for lambda",
-                                           managed_policy_name="Policy",
+                                           managed_policy_name="Policy"                                           
                                            )
 
         #LAMBDA
