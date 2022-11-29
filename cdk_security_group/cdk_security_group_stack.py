@@ -28,7 +28,6 @@ class CdkSecurityGroupStack(Stack):
         lambdaRole.apply_removal_policy(_removalpolicy.DESTROY)
 
         managedPolicyStatement = _iam.PolicyStatement(
-            principals=[_iam.AnyPrincipal()],
             actions=["log:*"],
             resources=["*"]
         )
@@ -45,7 +44,6 @@ class CdkSecurityGroupStack(Stack):
             )
         
         managedPolicy.add_statements(managedPolicyStatement)
-        
         managedPolicy.apply_removal_policy(_removalpolicy.DESTROY)
 
         #LAMBDA
