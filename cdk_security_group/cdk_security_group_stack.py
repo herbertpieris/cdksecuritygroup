@@ -18,37 +18,47 @@ class CdkSecurityGroupStack(Stack):
         # The code that defines your stack goes here
         
         #IAM
-        lambdaRole = _iam.Role(self,
-                               "Role",
-                               assumed_by=_iam.ServicePrincipal("lambda.amazonaws.com"),
-                               description="iam role for lambda"
-                            )
+        lambdaRole = _iam.Role(
+                self,
+                "Role",
+                assumed_by=_iam.ServicePrincipal("lambda.amazonaws.com"),
+                description="iam role for lambda"
+            )
 
         lambdaRole.apply_removal_policy(_removalpolicy.DESTROY)
 
-        managedPolicy = _iam.ManagedPolicy(self,
-                                           id="hello",
-                                           description="iam policy for lambda",
-                                           managed_policy_name="Policy"                                           
-                                           )
+        managedPolicyStatement = _iam.PolicyStatement
+
+        managedPolicy = _iam.ManagedPolicy(
+                self,
+                "lambdaRolePolicy",
+                description="iam policy for lambda",
+                managed_policy_name="Policy",
+                statements=managedPolicyStatement
+            )
+        
+        managedPolicy.apply_removal_policy(_removalpolicy.DESTROY)
 
         #LAMBDA
-        function = _lambda.Function(self,
-                                    "lambda_function",
-                                    function_name="lambda_function",
-                                    runtime=_lambda.Runtime.PYTHON_3_9,
-                                    handler="lambda-handler.main",
-                                    code=_lambda.Code.from_asset("./lambda"),
-                                    role=lambdaRole
-                                    )
+        function = _lambda.Function(
+                self,
+                "lambda_function",
+                function_name="lambda_function",
+                runtime=_lambda.Runtime.PYTHON_3_9,
+                handler="lambda-handler.main",
+                code=_lambda.Code.from_asset("./lambda"),
+                role=lambdaRole
+            )
 
         function.apply_removal_policy(_removalpolicy.DESTROY)
 
         #S3
-        bucket = _s3.Bucket(self, 
-                            "hapcdktestbucket",
-                            bucket_name="hapcdktestbucket"
-                            )
+        bucket = _s3.Bucket(
+                self,
+                "hapcdktestbucket",
+                bucket_name="hapcdktestbucket"
+            )
+
         bucket.apply_removal_policy(_removalpolicy.DESTROY)
         
         #notification = aws_s3_notifications.lambdaDestination(function)
