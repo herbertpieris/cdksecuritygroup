@@ -43,6 +43,14 @@ class CdkSecurityGroupStack(Stack):
         lambdaRole.add_managed_policy(managedPolicy)
         lambdaRole.apply_removal_policy(_removalpolicy.DESTROY)
 
+        #S3
+        bucket = _s3.Bucket(
+                self,
+                "cdkSecurityGroupBucket",
+                bucket_name="cdkSecurityGroupBucket"
+            )
+        bucket.apply_removal_policy(_removalpolicy.DESTROY)
+
         # Cloudwatch Log
         log_group = _logs.LogGroup(
             self,
@@ -63,17 +71,10 @@ class CdkSecurityGroupStack(Stack):
             )
         lambdaFunction.apply_removal_policy(_removalpolicy.DESTROY)
 
-        #S3
-        bucket = _s3.Bucket(
-                self,
-                "hapcdktestbucket",
-                bucket_name="hapcdktestbucket"
-            )
-        bucket.apply_removal_policy(_removalpolicy.DESTROY)
-
         lambdaFunction.add_event_source(
             eventsources.S3EventSource(
                 bucket,
+                "cdkSecurityGroupBucketEventSource"
                 events=[
                     _s3.EventType.OBJECT_CREATED
                 ]
