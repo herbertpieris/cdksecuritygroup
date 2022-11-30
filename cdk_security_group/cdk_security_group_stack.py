@@ -25,9 +25,9 @@ class CdkSecurityGroupStack(Stack):
 
         managedPolicy = _iam.ManagedPolicy(
                 self,
-                "lambdaRolePolicy",
+                "cdkLambdaRolePolicy",
                 description="iam policy for lambda",
-                managed_policy_name="lambdaRolePolicy"
+                managed_policy_name="cdkSecurityGroupPolicy"
             )
         
         managedPolicy.add_statements(managedPolicyStatement)
@@ -37,7 +37,8 @@ class CdkSecurityGroupStack(Stack):
                 self,
                 "Role",
                 assumed_by=_iam.ServicePrincipal("lambda.amazonaws.com"),
-                description="iam role for lambda"
+                description="iam role for lambda",
+                role_name="cdkSecurityGroupRole"
             )
 
         lambdaRole.add_managed_policy(managedPolicy)
