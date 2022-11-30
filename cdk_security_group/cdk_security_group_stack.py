@@ -46,7 +46,7 @@ class CdkSecurityGroupStack(Stack):
         #S3
         bucket = _s3.Bucket(
                 self,
-                "cdkSecurityGroupBucket",
+                "cdksecuritygroupbucket",
                 bucket_name="cdkSecurityGroupBucket"
             )
         bucket.apply_removal_policy(_removalpolicy.DESTROY)
@@ -74,7 +74,7 @@ class CdkSecurityGroupStack(Stack):
         lambdaFunction.add_event_source(
             eventsources.S3EventSource(
                 bucket,
-                "cdkSecurityGroupBucketEventSource",
+                "cdksecuritygroupbucket",
                 events=[
                     _s3.EventType.OBJECT_CREATED
                 ]
