@@ -5,6 +5,7 @@ from aws_cdk import (
     aws_s3_notifications,
     aws_lambda as _lambda,
     aws_iam as _iam,
+    aws_logs as _logs,
     RemovalPolicy as _removalpolicy
     # aws_sqs as sqs,
 )
@@ -44,8 +45,11 @@ class CdkSecurityGroupStack(Stack):
         lambdaRole.add_managed_policy(managedPolicy)
         lambdaRole.apply_removal_policy(_removalpolicy.DESTROY)
 
+        # Cloudwatch Log
+
+
         #LAMBDA
-        function = _lambda.Function(
+        lambdaFunction = _lambda.Function(
                 self,
                 "cdkSecurityGroupFunction",
                 function_name="cdkSecurityGroupFunction",
@@ -55,7 +59,7 @@ class CdkSecurityGroupStack(Stack):
                 role=lambdaRole
             )
 
-        function.apply_removal_policy(_removalpolicy.DESTROY)
+        lambdaFunction.apply_removal_policy(_removalpolicy.DESTROY)
 
         #S3
         bucket = _s3.Bucket(
