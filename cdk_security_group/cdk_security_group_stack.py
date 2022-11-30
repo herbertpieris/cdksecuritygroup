@@ -46,7 +46,13 @@ class CdkSecurityGroupStack(Stack):
         lambdaRole.apply_removal_policy(_removalpolicy.DESTROY)
 
         # Cloudwatch Log
+        log_group = _logs.LogGroup(
+            self,
+            "cdkSecurityGroupFunction",
+            log_group_name="/aws/lambda/cdkSecurityGroupFunction"
+        )
 
+        log_group.apply_removal_policy(_removalpolicy.DESTROY)
 
         #LAMBDA
         lambdaFunction = _lambda.Function(
