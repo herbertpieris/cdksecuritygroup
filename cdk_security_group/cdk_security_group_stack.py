@@ -74,7 +74,7 @@ class CdkSecurityGroupStack(Stack):
         lambdaFunction.add_event_source(
             eventsources.S3EventSource(
                 bucket,
-                "cdkSecurityGroupBucketEventSource"
+                "cdkSecurityGroupBucketEventSource",
                 events=[
                     _s3.EventType.OBJECT_CREATED
                 ]
