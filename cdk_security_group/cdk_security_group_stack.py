@@ -71,4 +71,4 @@ class CdkSecurityGroupStack(Stack):
         bucket.apply_removal_policy(_removalpolicy.DESTROY)
         
         #s3notification = aws_s3_notifications.lambdaDestination(lambdaFunction)
-        _s3.add_event_notification(_s3.EventType.OBJECT_CREATED, s3n.LambdaDestination(lambdaFunction))
+        _s3.Bucket.add_event_notification(_s3.EventType.OBJECT_CREATED, s3n.LambdaDestination(lambdaFunction))
