@@ -48,7 +48,7 @@ class CdkSecurityGroupStack(Stack):
         # Cloudwatch Log
         log_group = _logs.LogGroup(
             self,
-            "cdkSecurityGroupFunction",
+            "cdkSecurityGroupFunctionLogGroup",
             log_group_name="/aws/lambda/cdkSecurityGroupFunction"
         )
 
