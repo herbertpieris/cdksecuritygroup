@@ -4,6 +4,7 @@ from aws_cdk import (
     aws_s3 as _s3,
     aws_s3_notifications as s3n,
     aws_lambda as _lambda,
+    aws_lambda_event_sources as eventsources,
     aws_iam as _iam,
     aws_logs as _logs,
     RemovalPolicy as _removalpolicy
@@ -69,6 +70,15 @@ class CdkSecurityGroupStack(Stack):
                 bucket_name="hapcdktestbucket"
             )
         bucket.apply_removal_policy(_removalpolicy.DESTROY)
-        
-        #s3notification = aws_s3_notifications.lambdaDestination(lambdaFunction)
-        _s3.Bucket.add_event_notification(_s3.EventType.OBJECT_CREATED, s3n.LambdaDestination(lambdaFunction),"")
+
+        lambdaFunction.add_event_source(
+            eventsources.S3EventSource(
+                bucket,
+                events=[
+                    _s3.EventType.OBJECT_CREATED
+                ]
+            )
+        )
+
+        # s3notification = aws_s3_notifications.lambdaDestination(lambdaFunction)
+        # _s3.Bucket.add_event_notification(_s3.EventType.OBJECT_CREATED, s3n.LambdaDestination(lambdaFunction))
