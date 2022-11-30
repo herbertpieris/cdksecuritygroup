@@ -2,7 +2,7 @@ from aws_cdk import (
     # Duration,
     Stack,
     aws_s3 as _s3,
-    aws_s3_notifications,
+    aws_s3_notifications as s3n,
     aws_lambda as _lambda,
     aws_iam as _iam,
     aws_logs as _logs,
