@@ -47,7 +47,7 @@ class CdkSecurityGroupStack(Stack):
         bucket = _s3.Bucket(
                 self,
                 "cdksecuritygroupbucket",
-                bucket_name="cdkSecurityGroupBucket"
+                bucket_name="cdksecuritygroupbucket"
             )
         bucket.apply_removal_policy(_removalpolicy.DESTROY)
 
