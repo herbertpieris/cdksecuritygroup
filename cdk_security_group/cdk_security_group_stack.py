@@ -23,14 +23,12 @@ class CdkSecurityGroupStack(Stack):
             actions=["logs:*"],
             resources=["*"]
         )
-
         managedPolicy = _iam.ManagedPolicy(
                 self,
                 "cdkSecurityGroupPolicy",
                 description="iam policy for lambda",
                 managed_policy_name="cdkSecurityGroupPolicy"
             )
-        
         managedPolicy.add_statements(managedPolicyStatement)
         managedPolicy.apply_removal_policy(_removalpolicy.DESTROY)
 
@@ -41,7 +39,6 @@ class CdkSecurityGroupStack(Stack):
                 description="iam role for lambda",
                 role_name="cdkSecurityGroupRole"
             )
-
         lambdaRole.add_managed_policy(managedPolicy)
         lambdaRole.apply_removal_policy(_removalpolicy.DESTROY)
 
@@ -51,7 +48,6 @@ class CdkSecurityGroupStack(Stack):
             "cdkSecurityGroupFunctionLogGroup",
             log_group_name="/aws/lambda/cdkSecurityGroupFunction"
         )
-
         log_group.apply_removal_policy(_removalpolicy.DESTROY)
 
         #LAMBDA
@@ -64,7 +60,6 @@ class CdkSecurityGroupStack(Stack):
                 code=_lambda.Code.from_asset("./lambda"),
                 role=lambdaRole
             )
-
         lambdaFunction.apply_removal_policy(_removalpolicy.DESTROY)
 
         #S3
@@ -73,14 +68,11 @@ class CdkSecurityGroupStack(Stack):
                 "hapcdktestbucket",
                 bucket_name="hapcdktestbucket"
             )
-
         bucket.apply_removal_policy(_removalpolicy.DESTROY)
         
-        notification = aws_s3_notifications.lambdaDestination(lambdaFunction)
-        _s3.add_event_notification(_s3.EventType.OBJECT_CREATED, notification)
-
-        # example resource
-        # queue = sqs.Queue(
-        #     self, "CdkSecurityGroupQueue",
-        #     visibility_timeout=Duration.seconds(300),
-        # )
+        _s3.BucketNotificationDestinationConfig(
+            arn="arn",
+            type=_s3.BucketNotificationDestinationType.LAMBDA
+        )
+        #notification = aws_s3_notifications.lambdaDestination(lambdaFunction)
+        #_s3.add_event_notification(_s3.EventType.OBJECT_CREATED, notification)
