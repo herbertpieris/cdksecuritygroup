@@ -65,7 +65,7 @@ class CdkSecurityGroupStack(Stack):
                 "cdkSecurityGroupFunction",
                 function_name="cdkSecurityGroupFunction",
                 runtime=_lambda.Runtime.PYTHON_3_9,
-                handler="lambda-handler.main",
+                handler="cdkSecurityGroupFunction.main",
                 code=_lambda.Code.from_asset("./lambda"),
                 role=lambdaRole
             )
