@@ -21,7 +21,12 @@ class CdkSecurityGroupStack(Stack):
         
         #IAM
         managedPolicyStatement = _iam.PolicyStatement(
-            actions=["logs:*"],
+            actions=[
+                "logs:*",
+                "ec2:Describe*",
+                "ec2:List*",
+                "ec2:Get*"
+            ],
             resources=["*"]
         )
         managedPolicy = _iam.ManagedPolicy(
