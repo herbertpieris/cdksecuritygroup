@@ -7,9 +7,9 @@ def getSecurityGroup():
     return response
 
 def main(event, context):
-    getSecurityGroup()
+    return getSecurityGroup()
 
-    return {
-        'statusCode': 200,
-        'body': event
-    }
+    # return {
+    #     'statusCode': 200,
+    #     'body': event
+    # }
