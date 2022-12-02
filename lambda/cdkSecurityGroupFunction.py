@@ -1,4 +1,5 @@
-import boto3;
+import boto3
+import csv
 
 def getSecurityGroup():
     ec2 = boto3.client('ec2')
@@ -7,6 +8,7 @@ def getSecurityGroup():
     return response
 
 def main(event, context):
+    print(event)
     return getSecurityGroup()
 
     # return {
