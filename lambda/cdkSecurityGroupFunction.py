@@ -9,7 +9,7 @@ def getSecurityGroup():
 
 def main(event, context):
     for record in event["Records"]:
-        print(record.keys())
+        print(record['s3']['objects'])
     return getSecurityGroup()
 
     # return {
