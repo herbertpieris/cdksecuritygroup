@@ -8,7 +8,7 @@ def getSecurityGroup():
     return response
 
 def main(event, context):
-    print(event)
+    print(event["Records"][0]])
     return getSecurityGroup()
 
     # return {
