@@ -8,7 +8,7 @@ def getSecurityGroup():
     return response
 
 def main(event, context):
-    for record in event:
+    for record in event["Records"]:
         print(record)
 #        print(event["Records"][0]["object"])
     return getSecurityGroup()
