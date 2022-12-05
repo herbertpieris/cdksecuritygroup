@@ -8,8 +8,9 @@ def getSecurityGroup():
     return response
 
 def main(event, context):
+    # capture event invoke from s3
     for record in event["Records"]:
-        print(record['s3']['objects'])
+        print(record['s3']['object'])
     return getSecurityGroup()
 
     # return {
