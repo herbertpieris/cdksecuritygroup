@@ -8,11 +8,16 @@ def getSecurityGroup():
     return response
 
 def main(event, context):
+    s3 = boto3.client('s3')
+
     # capture event invoke from s3
     for record in event["Records"]:
-        filename = record['s3']['object']['key']
+        s3BucketName = record['s3']['bucket']['name']
+        csvfilename = record['s3']['object']['key']
 
         # read csv
+        csvfile = s3.get_object(s3BucketName,csvfilename)
+        print(csvfile)
         
     return getSecurityGroup()
 
