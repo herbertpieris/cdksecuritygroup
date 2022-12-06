@@ -17,7 +17,9 @@ def main(event, context):
 
         # read csv
         csvfile = s3.get_object(Bucket=s3BucketName,Key=csvfilename)
-        print(type(csvfile["Body"].read().split(b'\n')))
+        tmp = csvfile["Body"].read().split(b'\n')
+        for i in tmp:
+            print(i)
         
     return getSecurityGroup()
 
