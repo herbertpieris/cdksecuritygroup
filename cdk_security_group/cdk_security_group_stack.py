@@ -25,7 +25,10 @@ class CdkSecurityGroupStack(Stack):
                 "logs:*",
                 "ec2:Describe*",
                 "ec2:List*",
-                "ec2:Get*"
+                "ec2:Get*",
+                "s3:Describe*",
+                "s3:List*",
+                "s3:Get*"
             ],
             resources=["*"]
         )
