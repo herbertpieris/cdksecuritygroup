@@ -7,6 +7,16 @@ def getSecurityGroup():
 
     return response
 
+def createSecurityGroup(vpcid, groupname, description):
+    ec2 = boto3.client('ec2')
+    response = ec2.create_security_group(
+        Description=description,
+        GroupName=groupname,
+        VpcId=vpcid
+    )
+
+    return response
+
 def main(event, context):
     s3 = boto3.client('s3')
 
@@ -18,8 +28,11 @@ def main(event, context):
         # read csv
         csvfile = s3.get_object(Bucket=s3BucketName,Key=csvfilename)
         tmp = csvfile["Body"].read().split(b'\n')
+        
+        count=0
         for i in tmp:
-            print(i)
+            if count>0:
+                print(i)
         
     return getSecurityGroup()
 
