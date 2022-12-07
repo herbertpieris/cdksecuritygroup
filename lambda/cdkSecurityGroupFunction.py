@@ -35,6 +35,7 @@ def main(event, context):
         print(tmp[len(tmp)])
 
         for x in range(tmp[len(tmp)-1]):
+            print(x)
             print(tmp[x])
         # count=0
         # for i in tmp:
