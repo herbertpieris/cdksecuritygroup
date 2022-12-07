@@ -28,12 +28,13 @@ def main(event, context):
         # read csv
         csvfile = s3.get_object(Bucket=s3BucketName,Key=csvfilename)
         tmp = csvfile["Body"].read().split(b'\n')
-        
-        count=0
-        for i in tmp:
-            if count>0:
-                count+=1
-                print(i)
+
+        print(tmp[0])        
+        # count=0
+        # for i in tmp:
+        #     if count>0:
+        #         count+=1
+        #         print(i)
         
     return getSecurityGroup()
 
