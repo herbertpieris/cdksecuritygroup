@@ -32,6 +32,7 @@ def main(event, context):
         count=0
         for i in tmp:
             if count>0:
+                count++
                 print(i)
         
     return getSecurityGroup()
