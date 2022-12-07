@@ -32,7 +32,10 @@ def main(event, context):
         print(tmp[0])
         print(len(tmp))
         print(tmp[len(tmp)-1])
-        print(tmp[len(tmp)])    
+        print(tmp[len(tmp)])
+
+        for x in range(tmp[len(tmp)-1]):
+            print(tmp[x])
         # count=0
         # for i in tmp:
         #     if count>0:
