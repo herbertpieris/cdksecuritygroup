@@ -29,10 +29,10 @@ def main(event, context):
         csvfile = s3.get_object(Bucket=s3BucketName,Key=csvfilename)
         tmp = csvfile["Body"].read().split(b'\n')
 
-        print(tmp[0])
-        print(len(tmp))
-        print(tmp[len(tmp)-1])
-        print(tmp[len(tmp)])
+        # print(tmp[0])
+        # print(len(tmp))
+        # print(tmp[len(tmp)-1])
+        # print(tmp[len(tmp)])
 
         for x in range(tmp[len(tmp)-1]):
             print(x)
