@@ -75,7 +75,8 @@ class CdkSecurityGroupStack(Stack):
                 runtime=_lambda.Runtime.PYTHON_3_9,
                 handler="cdkSecurityGroupFunction.main",
                 code=_lambda.Code.from_asset("./lambda"),
-                role=lambdaRole
+                role=lambdaRole,
+                timeout=10
             )
         lambdaFunction.add_event_source(
             eventsources.S3EventSource(
