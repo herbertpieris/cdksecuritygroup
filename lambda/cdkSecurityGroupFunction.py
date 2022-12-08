@@ -29,14 +29,17 @@ def main(event, context):
         csvfile = s3.get_object(Bucket=s3BucketName,Key=csvfilename)
         tmp = csvfile["Body"].read().split(b'\n')
 
-        # print(tmp[0])
-        # print(len(tmp))
-        # print(tmp[len(tmp)-1])
-        # print(tmp[len(tmp)])
+        mode=None
+        if csvfilename.contains("NEW_SG_"):
+            groupname=csvfilename.replace("NEW_SG_","")
+            print(groupname)
+            mode="N"
 
         for x in range(len(tmp)-1):
-            print(x)
-            print(tmp[x])
+            if x!=0 and mode=='N':
+                print(x)
+                print(tmp[x])
+
         # count=0
         # for i in tmp:
         #     if count>0:
