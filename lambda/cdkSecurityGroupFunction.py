@@ -29,15 +29,21 @@ def main(event, context):
         csvfile = s3.get_object(Bucket=s3BucketName,Key=csvfilename)
         tmp = csvfile["Body"].read().split(b'\n')
 
-        mode=None
+        sgmode=None
+        sggroupname=None
+        sgdescription=None
+        sgvpcid=None
         if csvfilename.__contains__("NEW_SG_"):
-            groupname=csvfilename.replace("NEW_SG_","").replace(".csv", "")
-            print(groupname)
-            mode="N"
+            tmp=csvfilename.replace("NEW_SG_","").replace(".csv", "")
+            tmp=tmp.split("_")
+            sggroupname=tmp[1]
+            sgdescription=tmp[1]
+            sgvpcid=tmp[0]
+            sgmode="N"
 
         for x in range(len(tmp)-1):
-            if x!=0 and mode=='N':
-                print(x)
+            if x!=0 and sgmode=='N' and not sggroupname and not sgdescription:
+                createSecurityGroup(sgvpcid, sggroupname,sgdescription)
                 print(tmp[x])
 
         # count=0
