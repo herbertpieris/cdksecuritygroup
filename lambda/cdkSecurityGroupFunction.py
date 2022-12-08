@@ -31,7 +31,7 @@ def main(event, context):
 
         mode=None
         if csvfilename.__contains__("NEW_SG_"):
-            groupname=csvfilename.replace("NEW_SG_","")
+            groupname=csvfilename.replace("NEW_SG_","").replace(".csv", "")
             print(groupname)
             mode="N"
 
