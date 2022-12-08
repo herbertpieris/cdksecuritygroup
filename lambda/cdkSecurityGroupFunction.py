@@ -42,7 +42,7 @@ def main(event, context):
             sgmode="N"
 
         for x in range(len(tmp)-1):
-            if x!=0 and sgmode=='N' and not sggroupname and not sgdescription:
+            if x!=0 and sgmode=='N':
                 createSecurityGroup(sgvpcid, sggroupname,sgdescription)
                 print(tmp[x])
 
