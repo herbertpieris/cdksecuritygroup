@@ -7,7 +7,8 @@ from aws_cdk import (
     aws_lambda_event_sources as eventsources,
     aws_iam as _iam,
     aws_logs as _logs,
-    RemovalPolicy as _removalpolicy
+    RemovalPolicy as _removalpolicy,
+    Duration as _duration
     # aws_sqs as sqs,
 )
 from constructs import Construct
@@ -76,7 +77,7 @@ class CdkSecurityGroupStack(Stack):
                 handler="cdkSecurityGroupFunction.main",
                 code=_lambda.Code.from_asset("./lambda"),
                 role=lambdaRole,
-                timeout=10
+                timeout=_duration.seconds(10)
             )
         lambdaFunction.add_event_source(
             eventsources.S3EventSource(
