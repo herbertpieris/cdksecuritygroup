@@ -43,8 +43,8 @@ def main(event, context):
 
         for x in range(len(tmp)-1):
             if x!=0 and sgmode=='N':
-                createSecurityGroup(sgvpcid, sggroupname,sgdescription)
                 print(tmp[x])
+                createSecurityGroup(sgvpcid, sggroupname,sgdescription)                
 
         # count=0
         # for i in tmp:
