@@ -30,7 +30,7 @@ def main(event, context):
         tmp = csvfile["Body"].read().split(b'\n')
 
         mode=None
-        if csvfilename.contains("NEW_SG_"):
+        if csvfilename.__contains__("NEW_SG_"):
             groupname=csvfilename.replace("NEW_SG_","")
             print(groupname)
             mode="N"
