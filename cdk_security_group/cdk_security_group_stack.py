@@ -28,6 +28,7 @@ class CdkSecurityGroupStack(Stack):
                 "ec2:List*",
                 "ec2:Get*",
                 "ec2:CreateSecurityGroup",
+                "ec2:DeleteSecurityGroup",
                 "s3:Describe*",
                 "s3:List*",
                 "s3:Get*"
