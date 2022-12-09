@@ -88,7 +88,9 @@ def main(event, context):
                     if x==0:
                         response = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
                         sggroupid = response["GroupId"]
+                    print("a")
                     response=authorizeSecurityGroupIngress(sggroupid)
+                    print("b")
 
             elif csvfilename.__contains__("DELETE_SG_"):
                 sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
@@ -99,5 +101,4 @@ def main(event, context):
             'body': response
         }              
     except Exception:
-        print(Exception)
         return Exception
