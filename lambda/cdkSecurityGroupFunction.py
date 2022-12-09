@@ -41,7 +41,7 @@ def authorizeSecurityGroupIngress(groupid):
             GroupId=groupid,
             IpPermissions=[
                 {
-                    'FromPort': 22,
+                    'FromPort': 22',
                     'IpProtocol': 'tcp',
                     'IpRanges': [
                         {
@@ -54,9 +54,9 @@ def authorizeSecurityGroupIngress(groupid):
             ],
         )
 
-        print(response)        
+        print(response)
 
-        return None        
+        return response
     except Exception:
         return Exception
 
