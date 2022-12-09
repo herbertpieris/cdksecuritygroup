@@ -34,12 +34,27 @@ def deleteSecurityGroup(groupid):
     except Exception:
         return Exception
 
-def authorizeSecurityGroupIngress():
+def authorizeSecurityGroupIngress(groupid, fromport):
     try:
-        # ec2 = boto3.client('ec2')
-        # response = ec2.delete_security_group(
-        #     GroupId=groupid
-        # )
+        ec2 = boto3.client('ec2')
+        response = ec2.authorize_security_group_ingress(
+            GroupId=groupid,
+            IpPermissions=[
+                {
+                    'FromPort': 22,
+                    'IpProtocol': 'tcp',
+                    'IpRanges': [
+                        {
+                            'CidrIp': '203.0.113.0/24',
+                            'Description': 'SSH access from the LA office',
+                        },
+                    ],
+                    'ToPort': 22,
+                },
+            ],
+        )
+
+        print(response)        
 
         return None        
     except Exception:
@@ -73,7 +88,6 @@ def main(event, context):
                 for x in range(len(tmp)-1):
                     if x==0:
                         response = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
-                    else:
 
             elif csvfilename.__contains__("DELETE_SG_"):
                 sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
