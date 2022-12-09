@@ -83,11 +83,12 @@ def main(event, context):
                 sggroupname=tmp[1]
                 sgdescription=tmp[1]
                 sgvpcid=tmp[0]
-                sgmode="N"
 
                 for x in range(len(tmp)-1):
                     if x==0:
                         response = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
+                        sggroupid = response["GroupId"]
+                        print(sggroupid)
 
             elif csvfilename.__contains__("DELETE_SG_"):
                 sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
