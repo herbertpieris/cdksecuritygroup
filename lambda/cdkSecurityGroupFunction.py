@@ -99,4 +99,5 @@ def main(event, context):
             'body': response
         }              
     except Exception:
+        print(Exception)
         return Exception
