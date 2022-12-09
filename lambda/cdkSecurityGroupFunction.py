@@ -34,6 +34,17 @@ def deleteSecurityGroup(groupid):
     except Exception:
         return Exception
 
+def authorizeSecurityGroupIngress():
+    try:
+        # ec2 = boto3.client('ec2')
+        # response = ec2.delete_security_group(
+        #     GroupId=groupid
+        # )
+
+        return None        
+    except Exception:
+        return Exception
+
 def main(event, context):
     try:
         s3 = boto3.client('s3')
@@ -47,7 +58,6 @@ def main(event, context):
             csvfile = s3.get_object(Bucket=s3BucketName,Key=csvfilename)
             tmp = csvfile["Body"].read().split(b'\n')
 
-            sgmode=None
             sggroupname=None
             sgdescription=None
             sgvpcid=None
@@ -61,14 +71,13 @@ def main(event, context):
                 sgmode="N"
 
                 for x in range(len(tmp)-1):
-                    if x==0 and sgmode=="N":
-                        response = createSecurityGroup(sgvpcid, sggroupname,sgdescription)            
+                    if x==0:
+                        response = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
+                    else:
+
             elif csvfilename.__contains__("DELETE_SG_"):
                 sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
-                sgmode="D"
-
-                if sgmode=="D":
-                    response = deleteSecurityGroup(sggroupid)  
+                response = deleteSecurityGroup(sggroupid)  
 
         return {
             'statusCode': 200,
