@@ -34,7 +34,7 @@ def deleteSecurityGroup(groupid):
     except Exception:
         return Exception
 
-def authorizeSecurityGroupIngress(groupid, fromport):
+def authorizeSecurityGroupIngress(groupid):
     try:
         ec2 = boto3.client('ec2')
         response = ec2.authorize_security_group_ingress(
@@ -88,7 +88,7 @@ def main(event, context):
                     if x==0:
                         response = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
                         sggroupid = response["GroupId"]
-                        print(sggroupid)
+                    response=authorizeSecurityGroupIngress(sggroupid)
 
             elif csvfilename.__contains__("DELETE_SG_"):
                 sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
