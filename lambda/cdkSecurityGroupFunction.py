@@ -86,6 +86,7 @@ def main(event, context):
 
                 for x in range(len(tmp)-1):
                     if x==0:
+                        print(x)
                         response = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
                         sggroupid = response["GroupId"]
                     print("a")
