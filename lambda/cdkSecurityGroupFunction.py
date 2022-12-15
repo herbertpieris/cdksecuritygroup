@@ -86,13 +86,9 @@ def main(event, context):
 
                 for x in range(len(tmp)-1):
                     if x==0:
-                        print(x)
-                        print(tmp[0])
                         response = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
                         sggroupid = response["GroupId"]
-                    print("a")
-                    response=authorizeSecurityGroupIngress(sggroupid)
-                    print("b")
+                        response=authorizeSecurityGroupIngress(sggroupid)
 
             elif csvfilename.__contains__("DELETE_SG_"):
                 sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
