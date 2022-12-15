@@ -35,30 +35,29 @@ def deleteSecurityGroup(groupid):
         return Exception
 
 def authorizeSecurityGroupIngress(groupid):
-    try:
-        ec2 = boto3.client('ec2')
-        response = ec2.authorize_security_group_ingress(
-            GroupId=groupid,
-            IpPermissions=[
-                {
-                    'FromPort': 22,
-                    'IpProtocol': 'tcp',
-                    'IpRanges': [
-                        {
-                            'CidrIp': '203.0.113.0/24',
-                            'Description': 'SSH access from the LA office',
-                        },
-                    ],
-                    'ToPort': 22,
-                },
-            ],
-        )
+    # try:
+    ec2 = boto3.client('ec2')
+    response = ec2.authorize_security_group_ingress(
+        GroupId=groupid,
+        IpPermissions=[
+            {
+                'FromPort': 22,
+                'IpProtocol': 'tcp',
+                'IpRanges': [
+                    {
+                        'CidrIp': '203.0.113.0/24',
+                        'Description': 'SSH access from the LA office',
+                    },
+                ],
+                'ToPort': 22,
+            },
+        ],
+    )
 
-        print(response)
-
-        return response
-    except Exception:
-        return Exception
+    print(response)
+    return response
+    # except Exception:
+    #     return Exception
 
 def main(event, context):
     try:
