@@ -41,7 +41,7 @@ def authorizeSecurityGroupIngress(groupid):
             GroupId=groupid,
             IpPermissions=[
                 {
-                    'FromPort': 22',
+                    'FromPort': 22,
                     'IpProtocol': 'tcp',
                     'IpRanges': [
                         {
