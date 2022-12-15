@@ -60,45 +60,45 @@ def authorizeSecurityGroupIngress(groupid):
     #     return Exception
 
 def main(event, context):
-    try:
-        s3 = boto3.client('s3')
+    # try:
+    s3 = boto3.client('s3')
 
-        # capture event invoke from s3
-        for record in event["Records"]:
-            s3BucketName = record['s3']['bucket']['name']
-            csvfilename = record['s3']['object']['key']
+    # capture event invoke from s3
+    for record in event["Records"]:
+        s3BucketName = record['s3']['bucket']['name']
+        csvfilename = record['s3']['object']['key']
 
-            # read csv
-            csvfile = s3.get_object(Bucket=s3BucketName,Key=csvfilename)
-            tmp = csvfile["Body"].read().split(b'\n')
+        # read csv
+        csvfile = s3.get_object(Bucket=s3BucketName,Key=csvfilename)
+        tmp = csvfile["Body"].read().split(b'\n')
 
-            sggroupname=None
-            sgdescription=None
-            sgvpcid=None
-            sggroupid=None
-            if csvfilename.__contains__("NEW_SG_"):
-                tmp=csvfilename.replace("NEW_SG_","").replace(".csv", "")
-                tmp=tmp.split("_")
-                sggroupname=tmp[1]
-                sgdescription=tmp[1]
-                sgvpcid=tmp[0]
+        sggroupname=None
+        sgdescription=None
+        sgvpcid=None
+        sggroupid=None
+        if csvfilename.__contains__("NEW_SG_"):
+            tmp=csvfilename.replace("NEW_SG_","").replace(".csv", "")
+            tmp=tmp.split("_")
+            sggroupname=tmp[1]
+            sgdescription=tmp[1]
+            sgvpcid=tmp[0]
 
-                for x in range(len(tmp)-1):
-                    if x==0:
-                        try:
-                            response = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
-                            sggroupid = response["GroupId"]
-                            response=authorizeSecurityGroupIngress(sggroupid)                            
-                        except Exception:
-                            print(Exception)
+            for x in range(len(tmp)-1):
+                if x==0:
+                    # try:
+                    response = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
+                    sggroupid = response["GroupId"]
+                    response=authorizeSecurityGroupIngress(sggroupid)
+                    # except Exception:
+                    #     print(Exception)
 
-            elif csvfilename.__contains__("DELETE_SG_"):
-                sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
-                response = deleteSecurityGroup(sggroupid)  
+        elif csvfilename.__contains__("DELETE_SG_"):
+            sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
+            response = deleteSecurityGroup(sggroupid)  
 
-        return {
-            'statusCode': 200,
-            'body': response
-        }              
-    except Exception:
-        return Exception
+    return {
+        'statusCode': 200,
+        'body': response
+    }              
+    # except Exception:
+    #     return Exception
