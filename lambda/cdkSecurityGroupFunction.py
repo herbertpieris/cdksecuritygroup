@@ -42,14 +42,14 @@ def authorizeSecurityGroupIngress(groupid):
         IpPermissions=[
             {
                 'FromPort': -1,
-                'IpProtocol': -1,
+                'IpProtocol': '-1',
                 'IpRanges': [
                     {
                         'CidrIp': '203.0.113.0/24',
                         'Description': 'SSH access from the LA office',
                     },
                 ],
-                'ToPort': 22,
+                'ToPort': -1,
             },
         ],
     )
