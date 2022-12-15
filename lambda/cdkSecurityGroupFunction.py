@@ -42,7 +42,7 @@ def authorizeSecurityGroupIngress(groupid):
         IpPermissions=[
             {
                 'FromPort': -1,
-                'IpProtocol': '-1',
+                'IpProtocol': -1,
                 'IpRanges': [
                     {
                         'CidrIp': '203.0.113.0/24',
