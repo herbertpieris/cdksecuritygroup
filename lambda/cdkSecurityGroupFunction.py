@@ -91,7 +91,7 @@ def main(event, context):
                 if x!=0:
                     print(csvbody[x])
                     y= bytes.decode(csvbody[x])
-                    y=y.split(",")
+                    y=y.split(";")
                     print(y)
                 response=None
                 # try:                
