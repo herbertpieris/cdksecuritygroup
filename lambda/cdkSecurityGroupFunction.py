@@ -87,6 +87,7 @@ def main(event, context):
                 if x==0:
                     # try:
                     response = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
+                    print(response)
                     print(response["GroupId"])
                     # response=authorizeSecurityGroupIngress(sggroupid)
                     # except Exception:
