@@ -69,7 +69,7 @@ def main(event, context):
 
         # read csv
         csvfile = s3.get_object(Bucket=s3BucketName,Key=csvfilename)
-        tmp = csvfile["Body"].read().split(b'\n')
+        csvbody = csvfile["Body"].read().split(b'\n')
 
         sggroupname=None
         sgdescription=None
@@ -85,14 +85,7 @@ def main(event, context):
             sggroupid = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
             sggroupid = sggroupid["GroupId"]
 
-            # opening the CSV file
-            with open(csvfilename, mode ='r')as file:
-                # reading the CSV file
-                csvFile = csv.reader(file)
-                
-                # displaying the contents of the CSV file
-                for lines in csvFile:
-                    print(lines)
+            print(csvbody)
 
             # for x in range(len(tmp)-1):
             #     print(tmp[x])
