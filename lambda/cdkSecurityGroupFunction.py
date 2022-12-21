@@ -19,7 +19,7 @@ def createSecurityGroup(vpcid, groupname, description):
         VpcId=vpcid
     )
 
-        return response
+    return response
     # except Exception:
     #     return Exception
 
