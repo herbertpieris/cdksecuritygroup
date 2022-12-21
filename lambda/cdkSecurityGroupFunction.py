@@ -90,8 +90,9 @@ def main(event, context):
             for x in range(len(csvbody)-1):
                 if x!=0:
                     print(csvbody[x])
-                    # y=csvbody[x].split(b",")
-                    # print(y)
+                    y= bytes.decode(csvbody[x])
+                    y=y.split(",")
+                    print(y)
                 response=None
                 # try:                
                 # response=authorizeSecurityGroupIngress(sggroupid)
