@@ -87,15 +87,12 @@ def main(event, context):
 
             print(csvbody)
 
-            # for x in range(len(tmp)-1):
-            #     print(tmp[x])
-            #     if x==0:
-            #         # try:
-                    
-                    
-            #         response=authorizeSecurityGroupIngress(sggroupid)
-            #         # except Exception:
-            #         #     print(Exception)
+            for x in range(len(csvbody)-1):
+                print(tmp[x])
+                # try:                
+                # response=authorizeSecurityGroupIngress(sggroupid)
+                # except Exception:
+                #     print(Exception)
 
         elif csvfilename.__contains__("DELETE_SG_"):
             sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
