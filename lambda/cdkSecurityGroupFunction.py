@@ -34,22 +34,22 @@ def deleteSecurityGroup(groupid):
     except Exception:
         return Exception
 
-def authorizeSecurityGroupIngress(groupid):
+def authorizeSecurityGroupIngress(groupid,port,protocol,ip,desc):
     # try:
     ec2 = boto3.client('ec2')
     response = ec2.authorize_security_group_ingress(
         GroupId=groupid,
         IpPermissions=[
             {
-                'FromPort': 22,
-                'IpProtocol': "tcp",
+                'FromPort': port,
+                'IpProtocol': protocol,
                 'IpRanges': [
                     {
-                        'CidrIp': '203.0.113.0/24',
-                        'Description': 'SSH access from the LA office',
+                        'CidrIp': ip,
+                        'Description': desc,
                     },
                 ],
-                'ToPort': 22,
+                'ToPort': port,
             },
         ],
     )
@@ -82,16 +82,27 @@ def main(event, context):
             sgdescription=tmp[1]
             sgvpcid=tmp[0]
 
-            for x in range(len(tmp)-1):
-                print(tmp[x])
-                if x==0:
-                    # try:
-                    response = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
-                    print(response)
-                    print(response["GroupId"])
-                    # response=authorizeSecurityGroupIngress(sggroupid)
-                    # except Exception:
-                    #     print(Exception)
+            sggroupid = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
+            sggroupid = sggroupid["GroupId"]
+
+            # opening the CSV file
+            with open(csvfilename, mode ='r')as file:
+                # reading the CSV file
+                csvFile = csv.reader(file)
+                
+                # displaying the contents of the CSV file
+                for lines in csvFile:
+                    print(lines)
+
+            # for x in range(len(tmp)-1):
+            #     print(tmp[x])
+            #     if x==0:
+            #         # try:
+                    
+                    
+            #         response=authorizeSecurityGroupIngress(sggroupid)
+            #         # except Exception:
+            #         #     print(Exception)
 
         elif csvfilename.__contains__("DELETE_SG_"):
             sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
