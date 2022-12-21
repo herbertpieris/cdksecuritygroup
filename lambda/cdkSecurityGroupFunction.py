@@ -41,15 +41,15 @@ def authorizeSecurityGroupIngress(groupid):
         GroupId=groupid,
         IpPermissions=[
             {
-                'FromPort': ,
-                'IpProtocol': ,
+                'FromPort': 22,
+                'IpProtocol': "tcp",
                 'IpRanges': [
                     {
                         'CidrIp': '203.0.113.0/24',
                         'Description': 'SSH access from the LA office',
                     },
                 ],
-                'ToPort': ,
+                'ToPort': 22,
             },
         ],
     )
@@ -88,7 +88,7 @@ def main(event, context):
                     # try:
                     response = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
                     sggroupid = response["GroupId"]
-                    response=authorizeSecurityGroupIngress(sggroupid)
+                    # response=authorizeSecurityGroupIngress(sggroupid)
                     # except Exception:
                     #     print(Exception)
 
