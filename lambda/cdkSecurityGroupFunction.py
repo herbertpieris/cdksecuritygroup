@@ -88,7 +88,8 @@ def main(event, context):
             print(csvbody)
 
             for x in range(len(csvbody)-1):
-                print(tmp[x])
+                print(csvbody[x])
+                response=None
                 # try:                
                 # response=authorizeSecurityGroupIngress(sggroupid)
                 # except Exception:
