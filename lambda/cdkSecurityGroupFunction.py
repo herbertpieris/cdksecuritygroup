@@ -43,7 +43,7 @@ def deleteSecurityGroup(groupid):
     # except Exception:
     #     return Exception
 
-def authorizeSecurityGroupIngress(groupid,tmpdic,protocol,ip,desc):
+def authorizeSecurityGroupIngress(groupid,tmpdic):
     # try:
     ec2 = boto3.client('ec2')
     response = ec2.authorize_security_group_ingress(
