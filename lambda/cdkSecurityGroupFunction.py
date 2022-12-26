@@ -104,6 +104,7 @@ def main(event, context):
                     y= bytes.decode(csvbody[x])
                     dicbody=y.split(";")
                     tmpdic = convertArrToDic(dichead,dicbody)
+                    print(tmpdic)
                     response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
                 # response=None
                 # try:                
