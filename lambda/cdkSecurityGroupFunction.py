@@ -1,11 +1,13 @@
 import boto3
 import csv
 
-data = {}
 def convertArrToDic(head,body):
-    for x in range(len(head)-1):
+    data = {}    
+    for x in range(len(head)):
         data.append({head[x]:body[x]})
-    return data
+    
+    response = data
+    return response
 
 
 def getSecurityGroup():
@@ -101,14 +103,13 @@ def main(event, context):
                 if x!=0:
                     y= bytes.decode(csvbody[x])
                     dicbody=y.split(";")
-                    convertArrToDic(dichead,dicbody)
-
+                    response = convertArrToDic(dichead,dicbody)
+                    print(response)
                 # response=None
                 # try:                
                 # response=authorizeSecurityGroupIngress(sggroupid)
                 # except Exception:
-                #     print(Exception)
-            print(data)
+                #     print(Exception)            
         elif csvfilename.__contains__("DELETE_SG_"):
             sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
             response = deleteSecurityGroup(sggroupid)  
