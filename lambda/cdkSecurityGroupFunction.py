@@ -4,7 +4,7 @@ import csv
 def convertArrToDic(head,body):
     data = {}    
     for x in range(len(head)):
-        data.append({head[x]:body[x]})
+        data[head[x]] = body[x]
     
     response = data
     return response
