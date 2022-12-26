@@ -1,6 +1,12 @@
 import boto3
 import csv
 
+def convertArrToDic(head,body):
+    for x in range(len(head)-1):
+        print(head[x] + ':' + body[x])
+    # return response
+
+
 def getSecurityGroup():
     # try:
     ec2 = boto3.client('ec2')
@@ -85,15 +91,17 @@ def main(event, context):
             sggroupid = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
             sggroupid = sggroupid["GroupId"]
 
+            dichead=None
+            dicbody=None
             for x in range(len(csvbody)-1):
                 if x==0:
                     y= bytes.decode(csvbody[x])
-                    y=y.split(";")
-                    print(y)
+                    dichead=y.split(";")
                 if x!=0:
                     y= bytes.decode(csvbody[x])
-                    y=y.split(";")
-                    print(y)
+                    dicbody=y.split(";")
+                    convertArrToDic(dichead,dicbody)
+
                 response=None
                 # try:                
                 # response=authorizeSecurityGroupIngress(sggroupid)
