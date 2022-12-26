@@ -89,6 +89,7 @@ def main(event, context):
                 if x==0:
                     y= bytes.decode(csvbody[x])
                     y=y.split(";")
+                    print(y)
                 if x!=0:
                     y= bytes.decode(csvbody[x])
                     y=y.split(";")
