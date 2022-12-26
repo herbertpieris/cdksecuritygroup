@@ -54,7 +54,7 @@ def authorizeSecurityGroupIngress(groupid,tmpdic,protocol,ip,desc):
                 'IpProtocol': tmpdic["IpProtocol"],
                 'IpRanges': [
                     {
-                        'CidrIp': tmpdic["IpRanges",
+                        'CidrIp': tmpdic["IpRanges"],
                         'Description': "aaaaa",
                     },
                 ],
