@@ -88,6 +88,7 @@ def main(event, context):
             print(csvbody)
 
             for x in range(len(csvbody)-1):
+                
                 if x==0:
                     print(csvbody[x])
                     y= bytes.decode(csvbody[x])
