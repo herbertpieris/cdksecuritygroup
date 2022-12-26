@@ -85,17 +85,12 @@ def main(event, context):
             sggroupid = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
             sggroupid = sggroupid["GroupId"]
 
-            print(csvbody)
-
             for x in range(len(csvbody)-1):
-                
                 if x==0:
-                    print(csvbody[x])
                     y= bytes.decode(csvbody[x])
                     y=y.split(";")
                     print(y)                    
                 if x!=0:
-                    print(csvbody[x])
                     y= bytes.decode(csvbody[x])
                     y=y.split(";")
                     print(y)
