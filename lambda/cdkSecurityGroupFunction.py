@@ -105,7 +105,8 @@ def main(event, context):
                     dicbody=y.split(";")
                     tmpdic = convertArrToDic(dichead,dicbody)
                     print(tmpdic)
-                    response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
+                    print(tmpdic["FromPort"])
+                    # response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
                 # response=None
                 # try:                
                 # response=authorizeSecurityGroupIngress(sggroupid)
