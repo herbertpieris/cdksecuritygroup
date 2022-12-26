@@ -2,13 +2,13 @@ import boto3
 import csv
 
 def getSecurityGroup():
-    try:
-        ec2 = boto3.client('ec2')
-        response = ec2.describe_security_groups()
+    # try:
+    ec2 = boto3.client('ec2')
+    response = ec2.describe_security_groups()
 
-        return response    
-    except Exception:
-        return Exception
+    return response    
+    # except Exception:
+    #     return Exception
 
 def createSecurityGroup(vpcid, groupname, description):
     # try:
@@ -24,15 +24,15 @@ def createSecurityGroup(vpcid, groupname, description):
     #     return Exception
 
 def deleteSecurityGroup(groupid):
-    try:
-        ec2 = boto3.client('ec2')
-        response = ec2.delete_security_group(
-            GroupId=groupid
-        )
+    # try:
+    ec2 = boto3.client('ec2')
+    response = ec2.delete_security_group(
+        GroupId=groupid
+    )
 
-        return response
-    except Exception:
-        return Exception
+    return response
+    # except Exception:
+    #     return Exception
 
 def authorizeSecurityGroupIngress(groupid,port,protocol,ip,desc):
     # try:
@@ -93,7 +93,7 @@ def main(event, context):
                 if x!=0:
                     y= bytes.decode(csvbody[x])
                     y=y.split(";")
-                    print(y)
+                    # print(y)
                 response=None
                 # try:                
                 # response=authorizeSecurityGroupIngress(sggroupid)
