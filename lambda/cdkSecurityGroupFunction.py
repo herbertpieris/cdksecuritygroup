@@ -45,6 +45,8 @@ def deleteSecurityGroup(groupid):
 
 def authorizeSecurityGroupIngress(groupid,tmpdic):
     # try:
+    print(tmpdic)
+    print(tmpdic["FromPort"])
     ec2 = boto3.client('ec2')
     response = ec2.authorize_security_group_ingress(
         GroupId=groupid,
@@ -104,9 +106,7 @@ def main(event, context):
                     y= bytes.decode(csvbody[x])
                     dicbody=y.split(";")
                     tmpdic = convertArrToDic(dichead,dicbody)
-                    print(tmpdic)
-                    print(tmpdic["FromPort"])
-                    # response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
+                    response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
                 # response=None
                 # try:                
                 # response=authorizeSecurityGroupIngress(sggroupid)
