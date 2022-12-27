@@ -67,6 +67,30 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
     # except Exception:
     #     return Exception
 
+def authorizeSecurityGroupEngress(groupid,tmpdic):
+    # try:
+    ec2 = boto3.client('ec2')
+    response = ec2.authorize_security_group_egress(
+        GroupId=groupid,
+        IpPermissions=[
+            {
+                'FromPort': int(tmpdic["FromPort"]),
+                'IpProtocol': tmpdic["IpProtocol"],
+                'IpRanges': [
+                    {
+                        'CidrIp': tmpdic["IpRanges"],
+                        'Description': tmpdic["Description"],
+                    },
+                ],
+                'ToPort': int(tmpdic["ToPort"]),
+            },
+        ],
+    )
+
+    return response
+    # except Exception:
+    #     return Exception    
+
 def main(event, context):
     # try:
     s3 = boto3.client('s3')
@@ -106,7 +130,8 @@ def main(event, context):
                     tmpdic = convertArrToDic(dichead,dicbody)
                     if tmpdic["Type"].lower() == "inbound":
                         response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
-                    # elif tmpdic["Type"].lower() == "outbound":
+                    elif tmpdic["Type"].lower() == "outbound":
+                        response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
                     
                 # response=None
                 # try:                
