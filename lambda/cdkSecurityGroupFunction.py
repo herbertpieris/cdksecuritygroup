@@ -47,12 +47,13 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
     # try:
     print(tmpdic)
     print(tmpdic["FromPort"])
+    print(type(tmpdic["FromPort"]))
     ec2 = boto3.client('ec2')
     response = ec2.authorize_security_group_ingress(
         GroupId=groupid,
         IpPermissions=[
             {
-                'FromPort': tmpdic["FromPort"],
+                'FromPort': int(tmpdic["FromPort"]),
                 'IpProtocol': tmpdic["IpProtocol"],
                 'IpRanges': [
                     {
@@ -60,7 +61,7 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
                         'Description': "aaaaa",
                     },
                 ],
-                'ToPort': tmpdic["ToPort"],
+                'ToPort': int(tmpdic["ToPort"]),
             },
         ],
     )
