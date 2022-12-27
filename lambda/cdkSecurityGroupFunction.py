@@ -67,7 +67,7 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
     # except Exception:
     #     return Exception
 
-def authorizeSecurityGroupEngress(groupid,tmpdic):
+def authorizeSecurityGroupEgress(groupid,tmpdic):
     # try:
     ec2 = boto3.client('ec2')
     response = ec2.authorize_security_group_egress(
