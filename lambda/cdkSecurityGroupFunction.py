@@ -141,6 +141,8 @@ def main(event, context):
         elif csvfilename.__contains__("UPDATE_SG_"):
             sggroupid=csvfilename.replace("UPDATE_SG_","").replace(".csv", "")
 
+            print(sggroupid)
+
             dichead=None
             dicbody=None
             for x in range(len(csvbody)-1):
