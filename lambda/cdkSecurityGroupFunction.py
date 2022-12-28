@@ -92,6 +92,46 @@ def revokeIngress(data):
     # except botocore.exceptions.ClientError as e:
     #     raise e
 
+def revokeEgress(data):
+    ec2 = boto3.client('ec2')
+    data = data['SecurityGroups'][0]
+    # try:
+    GroupId = data["GroupId"]
+    
+    FromPort = None
+    ToPort = None
+    IpProtocol = None
+    IpRanges = None
+
+    for x in range(len(data["IpPermissionsEgress"])):
+        FromPort = data["IpPermissionsEgress"][x]["FromPort"]
+        ToPort = data["IpPermissionsEgress"][x]["ToPort"]
+        IpProtocol = data["IpPermissionsEgress"][x]['IpProtocol']
+        IpRanges = data["IpPermissionsEgress"][x]['IpRanges'] 
+
+        for ip in IpRanges:
+            ec2.revoke_security_group_egress(
+                DryRun=False,
+                GroupId=GroupId,            
+                IpPermissions=[
+                    {
+                        'FromPort': FromPort,
+                        'IpProtocol': IpProtocol,                    
+                        'IpRanges': [
+                            {
+                                'CidrIp': ip["CidrIp"]
+                            },
+                        ],
+                        'Ipv6Ranges': [],
+                        'PrefixListIds': [],
+                        'ToPort': ToPort,
+                        'UserIdGroupPairs': []                        
+                    }
+                ]
+            )
+    # except botocore.exceptions.ClientError as e:
+    #     raise e
+
 def authorizeSecurityGroupIngress(groupid,tmpdic):
     # try:
     ec2 = boto3.client('ec2')
@@ -191,6 +231,7 @@ def main(event, context):
             sggroupid=csvfilename.replace("UPDATE_SG_","").replace(".csv", "")
 
             revokeIngress(getSecurityGroup(sggroupid))
+            revokeEgress(getSecurityGroup(sggroupid))
 
             dichead=None
             dicbody=None
