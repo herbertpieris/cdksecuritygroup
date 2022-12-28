@@ -96,9 +96,7 @@ def main(event, context):
     s3 = boto3.client('s3')
 
     # capture event invoke from s3
-    for record in event["Records"]:
-        print(record)
-        
+    for record in event["Records"]:       
         s3BucketName = record['s3']['bucket']['name']
         csvfilename = record['s3']['object']['key']
 
@@ -140,6 +138,24 @@ def main(event, context):
                 # response=authorizeSecurityGroupIngress(sggroupid)
                 # except Exception:
                 #     print(Exception)            
+        elif csvfilename.__contains__("UPDATE_SG_"):
+            sggroupid=csvfilename.replace("UPDATE_SG_","").replace(".csv", "")
+
+            dichead=None
+            dicbody=None
+            for x in range(len(csvbody)-1):
+                if x==0:
+                    y= bytes.decode(csvbody[x])
+                    dichead=y.split(";")
+                if x!=0:
+                    y= bytes.decode(csvbody[x])
+                    dicbody=y.split(";")
+                    tmpdic = convertArrToDic(dichead,dicbody)
+                    if tmpdic["Type"].lower() == "inbound":
+                        response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
+                    elif tmpdic["Type"].lower() == "outbound":
+                        response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
+
         elif csvfilename.__contains__("DELETE_SG_"):
             sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
             response = deleteSecurityGroup(sggroupid)  
