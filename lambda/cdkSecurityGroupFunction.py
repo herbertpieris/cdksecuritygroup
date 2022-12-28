@@ -160,9 +160,9 @@ def main(event, context):
             sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
             response = deleteSecurityGroup(sggroupid)  
 
-    return {
-        'statusCode': 200,
-        'body': response
-    }              
+    # return {
+    #     'statusCode': 200,
+    #     'body': response
+    # }              
     # except Exception:
     #     return Exception
