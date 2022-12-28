@@ -53,41 +53,42 @@ def deleteSecurityGroup(groupid):
 #     response = security_group.revoke_ingress()
 
 def revokeIngress(data):
-    print(data['SecurityGroups'][0])
+    ec2 = boto3.client('ec2')
+    data = data['SecurityGroups'][0]
     # try:
-    #     GroupId = data["GroupId"]
-        
-    #     FromPort = None
-    #     ToPort = None
-    #     IpProtocol = None
-    #     IpRanges = None
+    GroupId = data["GroupId"]
+    
+    FromPort = None
+    ToPort = None
+    IpProtocol = None
+    IpRanges = None
 
-    #     for x in range(len(data["IpPermissionsEgress"])):
-    #         FromPort = data["IpPermissionsEgress"][x]["FromPort"]
-    #         ToPort = data["IpPermissionsEgress"][x]["ToPort"]
-    #         IpProtocol = data["IpPermissionsEgress"][x]['IpProtocol']
-    #         IpRanges = data["IpPermissionsEgress"][x]['IpRanges'] 
+    for x in range(len(data["IpPermissions"])):
+        FromPort = data["IpPermissions"][x]["FromPort"]
+        ToPort = data["IpPermissions"][x]["ToPort"]
+        IpProtocol = data["IpPermissions"][x]['IpProtocol']
+        IpRanges = data["IpPermissions"][x]['IpRanges'] 
 
-    #         for ip in IpRanges:
-    #             ec2.revoke_security_group_egress(
-    #                 DryRun=False,
-    #                 GroupId=GroupId,            
-    #                 IpPermissions=[
-    #                     {
-    #                         'FromPort': FromPort,
-    #                         'IpProtocol': IpProtocol,                    
-    #                         'IpRanges': [
-    #                             {
-    #                                 'CidrIp': ip["CidrIp"]
-    #                             },
-    #                         ],
-    #                         'Ipv6Ranges': [],
-    #                         'PrefixListIds': [],
-    #                         'ToPort': ToPort,
-    #                         'UserIdGroupPairs': []                        
-    #                     }
-    #                 ]
-    #             )
+        for ip in IpRanges:
+            ec2.revoke_security_group_ingress(
+                DryRun=False,
+                GroupId=GroupId,            
+                IpPermissions=[
+                    {
+                        'FromPort': FromPort,
+                        'IpProtocol': IpProtocol,                    
+                        'IpRanges': [
+                            {
+                                'CidrIp': ip["CidrIp"]
+                            },
+                        ],
+                        'Ipv6Ranges': [],
+                        'PrefixListIds': [],
+                        'ToPort': ToPort,
+                        'UserIdGroupPairs': []                        
+                    }
+                ]
+            )
     # except botocore.exceptions.ClientError as e:
     #     raise e
 
