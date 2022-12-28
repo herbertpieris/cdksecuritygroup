@@ -43,6 +43,12 @@ def deleteSecurityGroup(groupid):
     # except Exception:
     #     return Exception
 
+def revokeIngress(sggroupid):
+    ec2 = boto3.resource('ec2')
+    security_group = ec2.SecurityGroup(sggroupid)
+
+    response = security_group.revoke_ingress()
+
 def authorizeSecurityGroupIngress(groupid,tmpdic):
     # try:
     ec2 = boto3.client('ec2')
@@ -141,7 +147,7 @@ def main(event, context):
         elif csvfilename.__contains__("UPDATE_SG_"):
             sggroupid=csvfilename.replace("UPDATE_SG_","").replace(".csv", "")
 
-            print(sggroupid)
+            revokeIngress(sggroupid)
 
             dichead=None
             dicbody=None
