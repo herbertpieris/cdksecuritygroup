@@ -53,7 +53,7 @@ def deleteSecurityGroup(groupid):
 #     response = security_group.revoke_ingress()
 
 def revokeIngress(data):
-    print(data) 
+    print(data['SecurityGroups'][0])
     # try:
     #     GroupId = data["GroupId"]
         
