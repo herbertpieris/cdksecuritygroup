@@ -1,4 +1,5 @@
 import boto3
+import botocore
 import csv
 
 def convertArrToDic(head,body):
@@ -10,10 +11,12 @@ def convertArrToDic(head,body):
     return response
 
 
-def getSecurityGroup():
+def getSecurityGroup(groupid):
     # try:
     ec2 = boto3.client('ec2')
-    response = ec2.describe_security_groups()
+    response = ec2.describe_security_groups(
+        GroupIds=[groupid]
+    )
 
     return response    
     # except Exception:
@@ -43,11 +46,50 @@ def deleteSecurityGroup(groupid):
     # except Exception:
     #     return Exception
 
-def revokeIngress(sggroupid):
-    ec2 = boto3.resource('ec2')
-    security_group = ec2.SecurityGroup(sggroupid)
+# def revokeIngress(sggroupid):
+#     ec2 = boto3.resource('ec2')
+#     security_group = ec2.SecurityGroup(sggroupid)
 
-    response = security_group.revoke_ingress()
+#     response = security_group.revoke_ingress()
+
+def revokeIngress(data):
+    print(data) 
+    # try:
+    #     GroupId = data["GroupId"]
+        
+    #     FromPort = None
+    #     ToPort = None
+    #     IpProtocol = None
+    #     IpRanges = None
+
+    #     for x in range(len(data["IpPermissionsEgress"])):
+    #         FromPort = data["IpPermissionsEgress"][x]["FromPort"]
+    #         ToPort = data["IpPermissionsEgress"][x]["ToPort"]
+    #         IpProtocol = data["IpPermissionsEgress"][x]['IpProtocol']
+    #         IpRanges = data["IpPermissionsEgress"][x]['IpRanges'] 
+
+    #         for ip in IpRanges:
+    #             ec2.revoke_security_group_egress(
+    #                 DryRun=False,
+    #                 GroupId=GroupId,            
+    #                 IpPermissions=[
+    #                     {
+    #                         'FromPort': FromPort,
+    #                         'IpProtocol': IpProtocol,                    
+    #                         'IpRanges': [
+    #                             {
+    #                                 'CidrIp': ip["CidrIp"]
+    #                             },
+    #                         ],
+    #                         'Ipv6Ranges': [],
+    #                         'PrefixListIds': [],
+    #                         'ToPort': ToPort,
+    #                         'UserIdGroupPairs': []                        
+    #                     }
+    #                 ]
+    #             )
+    # except botocore.exceptions.ClientError as e:
+    #     raise e
 
 def authorizeSecurityGroupIngress(groupid,tmpdic):
     # try:
@@ -147,7 +189,7 @@ def main(event, context):
         elif csvfilename.__contains__("UPDATE_SG_"):
             sggroupid=csvfilename.replace("UPDATE_SG_","").replace(".csv", "")
 
-            revokeIngress(sggroupid)
+            revokeIngress(getSecurityGroup(sggroupid))
 
             dichead=None
             dicbody=None
