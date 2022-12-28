@@ -110,7 +110,7 @@ def revokeEgress(data):
             FromPort = -1
         if "ToPort" in data["IpPermissionsEgress"][x]:
             ToPort = data["IpPermissionsEgress"][x]["ToPort"]
-        else
+        else:
             ToPort = -1
         IpProtocol = data["IpPermissionsEgress"][x]['IpProtocol']
         IpRanges = data["IpPermissionsEgress"][x]['IpRanges'] 
