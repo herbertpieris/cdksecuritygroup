@@ -91,10 +91,10 @@ def revokeIngress(data):
             FromPort = data["IpPermissions"][x]["FromPort"]
             ToPort = data["IpPermissions"][x]["ToPort"]
             IpProtocol = data["IpPermissions"][x]['IpProtocol']
-            GroupIds = data["IpPermissions"][x]['UserIdGroupPairs']
+            SourceGroupIds = data["IpPermissions"][x]['UserIdGroupPairs']
 
-            for GroupId in GroupIds:
-                print(GroupId)
+            for SourceGroupId in SourceGroupIds:
+                print(SourceGroupId)
                 ec2.revoke_security_group_ingress(
                     DryRun=False,
                     GroupId=GroupId,            
@@ -108,7 +108,7 @@ def revokeIngress(data):
                             'ToPort': ToPort,
                             'UserIdGroupPairs': [
                                 {
-                                    'GroupId': GroupId["GroupId"],
+                                    'GroupId': SourceGroupId["GroupId"],
                                 },
                             ],
                         }
