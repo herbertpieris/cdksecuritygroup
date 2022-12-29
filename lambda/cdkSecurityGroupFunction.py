@@ -191,7 +191,7 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
                     'IpProtocol': tmpdic["IpProtocol"],
                     'UserIdGroupPairs': [
                         {
-                            'GroupId': tmpdic["IpRanges"],
+                            'GroupId': tmpdic["UserIdGroupPairs"],
                             'Description': tmpdic["Description"],
                         },
                     ],
