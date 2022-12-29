@@ -163,8 +163,6 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
     # try:
     ec2 = boto3.client('ec2')
     if tmpdic["IpRanges"] != '':
-        print("1")
-        print(tmpdic)
         response = ec2.authorize_security_group_ingress(
             GroupId=groupid,
             IpPermissions=[
@@ -179,11 +177,9 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
                     ],
                     'ToPort': int(tmpdic["ToPort"]),
                 },
-            ],
+            ]            
         )
     else:
-        print("2")
-        print(tmpdic)
         response = ec2.authorize_security_group_ingress(
             GroupId=groupid,
             IpPermissions=[
@@ -208,23 +204,40 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
 def authorizeSecurityGroupEgress(groupid,tmpdic):
     # try:
     ec2 = boto3.client('ec2')
-    
-    response = ec2.authorize_security_group_egress(
-        GroupId=groupid,
-        IpPermissions=[
-            {
-                'FromPort': int(tmpdic["FromPort"]),
-                'IpProtocol': tmpdic["IpProtocol"],
-                'IpRanges': [
-                    {
-                        'CidrIp': tmpdic["IpRanges"],
-                        'Description': tmpdic["Description"],
-                    },
-                ],
-                'ToPort': int(tmpdic["ToPort"]),
-            },
-        ],
-    )
+    if tmpdic["IpRanges"] != '':
+        response = ec2.authorize_security_group_egress(
+            GroupId=groupid,
+            IpPermissions=[
+                {
+                    'FromPort': int(tmpdic["FromPort"]),
+                    'IpProtocol': tmpdic["IpProtocol"],
+                    'IpRanges': [
+                        {
+                            'CidrIp': tmpdic["IpRanges"],
+                            'Description': tmpdic["Description"],
+                        },
+                    ],
+                    'ToPort': int(tmpdic["ToPort"]),
+                },
+            ],
+        )
+    else:
+        response = ec2.authorize_security_group_egress(
+            GroupId=groupid,
+            IpPermissions=[
+                {
+                    'FromPort': int(tmpdic["FromPort"]),
+                    'IpProtocol': tmpdic["IpProtocol"],
+                    'UserIdGroupPairs': [
+                        {
+                            'GroupId': tmpdic["UserIdGroupPairs\r"].replace("\r",""),
+                            'Description': tmpdic["Description"],
+                        },
+                    ],
+                    'ToPort': int(tmpdic["ToPort"]),
+                },
+            ],
+        )
 
     return response
     # except Exception:
