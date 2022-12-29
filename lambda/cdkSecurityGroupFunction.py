@@ -141,23 +141,35 @@ def revokeEgress(data):
 def authorizeSecurityGroupIngress(groupid,tmpdic):
     # try:
     ec2 = boto3.client('ec2')
-    response = ec2.authorize_security_group_ingress(
-        GroupId=groupid,
-        IpPermissions=[
-            {
-                'FromPort': int(tmpdic["FromPort"]),
-                'IpProtocol': tmpdic["IpProtocol"],
-                'IpRanges': [
-                    {
-                        'CidrIp': tmpdic["IpRanges"],
-                        'Description': tmpdic["Description"],
-                    },
-                ],
-                'ToPort': int(tmpdic["ToPort"]),
-            },
-        ],
-    )
-
+    if not tmpdic["IpRanges"].__contains__("sg-"):
+        response = ec2.authorize_security_group_ingress(
+            GroupId=groupid,
+            IpPermissions=[
+                {
+                    'FromPort': int(tmpdic["FromPort"]),
+                    'IpProtocol': tmpdic["IpProtocol"],
+                    'IpRanges': [
+                        {
+                            'CidrIp': tmpdic["IpRanges"],
+                            'Description': tmpdic["Description"],
+                        },
+                    ],
+                    'ToPort': int(tmpdic["ToPort"]),
+                },
+            ],
+        )
+    else:
+        response = ec2.authorize_security_group_ingress(
+            GroupId=groupid,
+            IpPermissions=[
+                {
+                    'FromPort': int(tmpdic["FromPort"]),
+                    'IpProtocol': tmpdic["IpProtocol"],
+                    'ToPort': int(tmpdic["ToPort"]),
+                    'SourceSecurityGroupOwnerId': tmpdic["IpRanges"]
+                },
+            ],
+        )
     return response
     # except Exception:
     #     return Exception
