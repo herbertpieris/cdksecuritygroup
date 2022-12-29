@@ -161,7 +161,7 @@ def revokeEgress(data):
                 )            
         else:
             print(data)
-            SourceGroupIds = data["IpPermissions"][x]['UserIdGroupPairs']
+            SourceGroupIds = data["IpPermissionsEgress"][x]['UserIdGroupPairs']
 
             for SourceGroupId in SourceGroupIds:
                 ec2.revoke_security_group_egress(
