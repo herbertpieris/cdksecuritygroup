@@ -162,9 +162,9 @@ def revokeEgress(data):
 def authorizeSecurityGroupIngress(groupid,tmpdic):
     # try:
     ec2 = boto3.client('ec2')
-    print(tmpdic)
     if tmpdic["IpRanges"] != '':
         print("1")
+        print(tmpdic)
         response = ec2.authorize_security_group_ingress(
             GroupId=groupid,
             IpPermissions=[
@@ -183,6 +183,7 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
         )
     else:
         print("2")
+        print(tmpdic)
         response = ec2.authorize_security_group_ingress(
             GroupId=groupid,
             IpPermissions=[
