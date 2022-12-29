@@ -161,9 +161,9 @@ def revokeEgress(data):
                 )            
         else:
             print(data)
-            IpRanges = data["IpPermissionsEgress"][x]['IpRanges'] 
+            SourceGroupIds = data["IpPermissions"][x]['UserIdGroupPairs']
 
-            for ip in IpRanges:
+            for SourceGroupId in SourceGroupIds:
                 ec2.revoke_security_group_egress(
                     DryRun=False,
                     GroupId=GroupId,            
@@ -171,15 +171,15 @@ def revokeEgress(data):
                         {
                             'FromPort': FromPort,
                             'IpProtocol': IpProtocol,                    
-                            'IpRanges': [
-                                {
-                                    'CidrIp': ip["CidrIp"]
-                                },
-                            ],
+                            'IpRanges': [],
                             'Ipv6Ranges': [],
                             'PrefixListIds': [],
                             'ToPort': ToPort,
-                            'UserIdGroupPairs': []                        
+                            'UserIdGroupPairs': [
+                                {
+                                    'GroupId': SourceGroupId["GroupId"],
+                                },
+                            ],                      
                         }
                     ]
                 )
