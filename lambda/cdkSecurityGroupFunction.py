@@ -58,6 +58,7 @@ def revokeIngress(data):
     IpRanges = None
 
     for x in range(len(data["IpPermissions"])):
+        print(data["IpPermissions"][x]['IpRanges'])
         if not data["IpPermissions"][x]['IpRanges'].__contains__("sg-"):
             FromPort = data["IpPermissions"][x]["FromPort"]
             ToPort = data["IpPermissions"][x]["ToPort"]
