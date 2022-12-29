@@ -163,7 +163,7 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
     # try:
     ec2 = boto3.client('ec2')
     print(tmpdic)
-    if tmpdic["IpRanges"] != []:
+    if tmpdic["IpRanges"] != '':
         print("1")
         response = ec2.authorize_security_group_ingress(
             GroupId=groupid,
