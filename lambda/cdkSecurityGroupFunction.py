@@ -91,7 +91,7 @@ def revokeIngress(data):
             FromPort = data["IpPermissions"][x]["FromPort"]
             ToPort = data["IpPermissions"][x]["ToPort"]
             IpProtocol = data["IpPermissions"][x]['IpProtocol']
-            GroupId = data["IpPermissions"][x]['UserIdGroupPairs']['GroupId'] 
+            GroupId = data["IpPermissions"][x]['UserIdGroupPairs'][0]['GroupId'] 
 
             for ip in IpRanges:
                 ec2.revoke_security_group_ingress(
