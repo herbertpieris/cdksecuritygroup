@@ -93,6 +93,7 @@ def revokeIngress(data):
             SourceGroupIds = data["IpPermissions"][x]['UserIdGroupPairs']
 
             for SourceGroupId in SourceGroupIds:
+                print(SourceGroupId)
                 ec2.revoke_security_group_ingress(
                     DryRun=False,
                     GroupId=GroupId,            
