@@ -165,10 +165,10 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
                 {
                     'FromPort': int(tmpdic["FromPort"]),
                     'IpProtocol': tmpdic["IpProtocol"],
-                    'ToPort': int(tmpdic["ToPort"]),
-                    'SourceSecurityGroupOwnerId': tmpdic["IpRanges"]
+                    'ToPort': int(tmpdic["ToPort"]),                    
                 },
             ],
+            SourceSecurityGroupOwnerId= tmpdic["IpRanges"]
         )
     return response
     # except Exception:
