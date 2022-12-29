@@ -85,6 +85,8 @@ def revokeIngress(data):
                     ]
                 )
         else:
+            print(data)
+
             FromPort = data["IpPermissions"][x]["FromPort"]
             ToPort = data["IpPermissions"][x]["ToPort"]
             IpProtocol = data["IpPermissions"][x]['IpProtocol']
