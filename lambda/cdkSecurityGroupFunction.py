@@ -161,10 +161,20 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
     else:
         response = ec2.authorize_security_group_ingress(
             GroupId=groupid,
-            FromPort= int(tmpdic["FromPort"]),
-            IpProtocol= tmpdic["IpProtocol"],
-            ToPort= int(tmpdic["ToPort"]),
-            SourceSecurityGroupOwnerId= tmpdic["IpRanges"]
+            IpPermissions=[
+                {
+                    'FromPort': int(tmpdic["FromPort"]),
+                    'IpProtocol': tmpdic["IpProtocol"],
+                    'UserIdGroupPairs': [
+                        {
+                            'GroupId': tmpdic["IpRanges"],
+                            'Description': tmpdic["Description"],
+                        },
+                    ],
+                    'ToPort': int(tmpdic["ToPort"]),
+
+                },
+            ],            
         )
     return response
     # except Exception:
