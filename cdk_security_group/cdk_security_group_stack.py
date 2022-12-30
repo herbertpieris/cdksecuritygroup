@@ -83,7 +83,7 @@ class CdkSecurityGroupStack(Stack):
                 handler="cdkSecurityGroupFunction.main",
                 code=_lambda.Code.from_asset("./lambda"),
                 role=lambdaRole,
-                timeout=_duration.seconds(15)
+                timeout=_duration.seconds(300)
             )
         lambdaFunction.add_event_source(
             eventsources.S3EventSource(
