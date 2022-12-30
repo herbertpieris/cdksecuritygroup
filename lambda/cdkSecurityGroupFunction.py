@@ -67,6 +67,9 @@ def revokeIngress(data):
             IpRanges = data["IpPermissions"][x]['IpRanges'] 
 
             for ip in IpRanges:
+                print("revokeingress 1 - start")
+                print(ip)
+                print("revokeingress 1 - end")
                 ec2.revoke_security_group_ingress(
                     DryRun=False,
                     GroupId=GroupId,            
@@ -91,7 +94,10 @@ def revokeIngress(data):
             SourceGroupIds = data["IpPermissions"][x]['UserIdGroupPairs']
 
             for SourceGroupId in SourceGroupIds:
+                print("revokeingress 2 - start")
                 print(SourceGroupId)
+                print("revokeingress 2 - end")
+
                 ec2.revoke_security_group_ingress(
                     DryRun=False,
                     GroupId=GroupId,            
@@ -141,6 +147,9 @@ def revokeEgress(data):
             IpRanges = data["IpPermissionsEgress"][x]['IpRanges'] 
 
             for ip in IpRanges:
+                print("revoke egress 1 - start")
+                print(ip)
+                print("revoke egress 1 - end")
                 ec2.revoke_security_group_egress(
                     DryRun=False,
                     GroupId=GroupId,            
@@ -165,6 +174,9 @@ def revokeEgress(data):
             SourceGroupIds = data["IpPermissionsEgress"][x]['UserIdGroupPairs']
 
             for SourceGroupId in SourceGroupIds:
+                print("revoke egress 2 - start")
+                print(SourceGroupId)
+                print("revoke egress 2 - end")                
                 ec2.revoke_security_group_egress(
                     DryRun=False,
                     GroupId=GroupId,            
