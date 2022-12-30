@@ -339,20 +339,26 @@ def main(event, context):
             revokeIngress(getSecurityGroup(sggroupid))
             revokeEgress(getSecurityGroup(sggroupid))
 
-            # dichead=None
-            # dicbody=None
-            # for x in range(len(csvbody)-1):
-            #     if x==0:
-            #         y= bytes.decode(csvbody[x])
-            #         dichead=y.split(";")
-            #     if x!=0:
-            #         y= bytes.decode(csvbody[x])
-            #         dicbody=y.split(";")
-            #         tmpdic = convertArrToDic(dichead,dicbody)
-            #         if tmpdic["Type"].lower() == "inbound":
-            #             response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
-            #         elif tmpdic["Type"].lower() == "outbound":
-            #             response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
+            dichead=None
+            dicbody=None
+            for x in range(len(csvbody)-1):
+                if x==0:
+                    y= bytes.decode(csvbody[x])
+                    dichead=y.split(";")
+                if x!=0:
+                    y= bytes.decode(csvbody[x])
+                    dicbody=y.split(";")
+                    tmpdic = convertArrToDic(dichead,dicbody)
+                    if tmpdic["Type"].lower() == "inbound":
+                        print("authorizeSecurityGroupIngress - start")
+                        print(tmpdic)
+                        print("authorizeSecurityGroupIngress - end")
+                        response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
+                    elif tmpdic["Type"].lower() == "outbound":
+                        print("authorizeSecurityGroupEgress - start")
+                        print(tmpdic)
+                        print("authorizeSecurityGroupEgress - end")
+                        response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
 
         elif csvfilename.__contains__("DELETE_SG_"):
             sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
