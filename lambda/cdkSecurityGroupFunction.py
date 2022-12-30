@@ -59,11 +59,11 @@ def revokeIngress(data):
 
     for x in range(len(data["IpPermissions"])):
         print(data)
+        FromPort = data["IpPermissions"][x]["FromPort"]
+        ToPort = data["IpPermissions"][x]["ToPort"]
+        IpProtocol = data["IpPermissions"][x]['IpProtocol']
 
         if data["IpPermissions"][x]['IpRanges'] != [] :
-            FromPort = data["IpPermissions"][x]["FromPort"]
-            ToPort = data["IpPermissions"][x]["ToPort"]
-            IpProtocol = data["IpPermissions"][x]['IpProtocol']
             IpRanges = data["IpPermissions"][x]['IpRanges'] 
 
             for ip in IpRanges:
@@ -88,10 +88,6 @@ def revokeIngress(data):
                 )
         else:
             print(data)
-
-            FromPort = data["IpPermissions"][x]["FromPort"]
-            ToPort = data["IpPermissions"][x]["ToPort"]
-            IpProtocol = data["IpPermissions"][x]['IpProtocol']
             SourceGroupIds = data["IpPermissions"][x]['UserIdGroupPairs']
 
             for SourceGroupId in SourceGroupIds:
@@ -329,20 +325,20 @@ def main(event, context):
             revokeIngress(getSecurityGroup(sggroupid))
             revokeEgress(getSecurityGroup(sggroupid))
 
-            # dichead=None
-            # dicbody=None
-            # for x in range(len(csvbody)-1):
-            #     if x==0:
-            #         y= bytes.decode(csvbody[x])
-            #         dichead=y.split(";")
-            #     if x!=0:
-            #         y= bytes.decode(csvbody[x])
-            #         dicbody=y.split(";")
-            #         tmpdic = convertArrToDic(dichead,dicbody)
-            #         if tmpdic["Type"].lower() == "inbound":
-            #             response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
-            #         elif tmpdic["Type"].lower() == "outbound":
-            #             response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
+            dichead=None
+            dicbody=None
+            for x in range(len(csvbody)-1):
+                if x==0:
+                    y= bytes.decode(csvbody[x])
+                    dichead=y.split(";")
+                if x!=0:
+                    y= bytes.decode(csvbody[x])
+                    dicbody=y.split(";")
+                    tmpdic = convertArrToDic(dichead,dicbody)
+                    if tmpdic["Type"].lower() == "inbound":
+                        response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
+                    elif tmpdic["Type"].lower() == "outbound":
+                        response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
 
         elif csvfilename.__contains__("DELETE_SG_"):
             sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
