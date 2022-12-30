@@ -350,14 +350,14 @@ def main(event, context):
                     dicbody=y.split(";")
                     tmpdic = convertArrToDic(dichead,dicbody)
                     if tmpdic["Type"].lower() == "inbound":
-                        print("authorizeSecurityGroupIngress " + x + " - start")
+                        print("authorizeSecurityGroupIngress " + str(x) + " - start")
                         print(tmpdic)
-                        print("authorizeSecurityGroupIngress " + x + "  - end")
+                        print("authorizeSecurityGroupIngress " + str(x) + "  - end")
                         response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
                     elif tmpdic["Type"].lower() == "outbound":
-                        print("authorizeSecurityGroupEgress " + x + "  - start")
+                        print("authorizeSecurityGroupEgress " + str(x) + "  - start")
                         print(tmpdic)
-                        print("authorizeSecurityGroupEgress " + x + "  - end")
+                        print("authorizeSecurityGroupEgress " + str(x) + "  - end")
                         response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
 
         elif csvfilename.__contains__("DELETE_SG_"):
