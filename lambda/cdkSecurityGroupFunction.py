@@ -66,6 +66,7 @@ def revokeIngress(data):
         print(data["IpPermissions"][x]['IpRanges'][x])
         print(data["IpPermissions"][x]['UserIdGroupPairs'])
         print(type(data["IpPermissions"][x]['UserIdGroupPairs']))
+        print(len(data["IpPermissions"][x]['UserIdGroupPairs']))
         if data["IpPermissions"][x]['IpRanges'][x] != [] :
             IpRanges = data["IpPermissions"][x]['IpRanges'] 
 
