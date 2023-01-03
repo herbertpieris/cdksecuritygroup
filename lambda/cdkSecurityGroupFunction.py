@@ -90,7 +90,7 @@ def revokeIngress(data):
                     ]
                 )
         else:
-            # print(data)
+            print("revokeingress 2")
             SourceGroupIds = data["IpPermissions"][x]['UserIdGroupPairs']
 
             for SourceGroupId in SourceGroupIds:
