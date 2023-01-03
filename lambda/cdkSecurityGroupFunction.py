@@ -93,7 +93,7 @@ def revokeIngress(data):
                         }
                     ]
                 )
-        elif len(data["IpPermissions"][x]['UserIdGroupPairs']) != 0:
+        elif len(data["IpPermissions"][x]['UserIdGroupPairs']) >= 0:
             print("revokeingress 2")
             SourceGroupIds = data["IpPermissions"][x]['UserIdGroupPairs']
 
