@@ -91,34 +91,35 @@ def revokeIngress(data):
                     }
                 ]
             )
-        # elif len(data["IpPermissions"][x]['UserIdGroupPairs']) >= 0:
-        #     print("revokeingress 2")
-        #     SourceGroupIds = data["IpPermissions"][x]['UserIdGroupPairs']
 
-        #     for SourceGroupId in SourceGroupIds:
-        #         print("revokeingress 2 - start")
-        #         print(SourceGroupId)
-        #         print("revokeingress 2 - end")
+    if len(data["IpPermissions"][0]['UserIdGroupPairs']) >= 0:
+        print("revokeingress 2")
+        SourceGroupIds = data["IpPermissions"][0]['UserIdGroupPairs']
 
-        #         ec2.revoke_security_group_ingress(
-        #             DryRun=False,
-        #             GroupId=GroupId,            
-        #             IpPermissions=[
-        #                 {
-        #                     'FromPort': FromPort,
-        #                     'IpProtocol': IpProtocol,                    
-        #                     'IpRanges': [],
-        #                     'Ipv6Ranges': [],
-        #                     'PrefixListIds': [],
-        #                     'ToPort': ToPort,
-        #                     'UserIdGroupPairs': [
-        #                         {
-        #                             'GroupId': SourceGroupId["GroupId"],
-        #                         },
-        #                     ],
-        #                 }
-        #             ]
-        #         )            
+        for SourceGroupId in SourceGroupIds:
+            print("revokeingress 2 - start")
+            print(SourceGroupId)
+            print("revokeingress 2 - end")
+
+            ec2.revoke_security_group_ingress(
+                DryRun=False,
+                GroupId=GroupId,            
+                IpPermissions=[
+                    {
+                        'FromPort': FromPort,
+                        'IpProtocol': IpProtocol,                    
+                        'IpRanges': [],
+                        'Ipv6Ranges': [],
+                        'PrefixListIds': [],
+                        'ToPort': ToPort,
+                        'UserIdGroupPairs': [
+                            {
+                                'GroupId': SourceGroupId["GroupId"],
+                            },
+                        ],
+                    }
+                ]
+            )            
     # except botocore.exceptions.ClientError as e:
     #     raise e
 
