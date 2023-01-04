@@ -61,36 +61,36 @@ def revokeIngress(data):
     ToPort = data["IpPermissions"][0]["ToPort"]
     IpProtocol = data["IpPermissions"][0]['IpProtocol']
 
-    print(data["IpPermissions"][0]['IpRanges'])
-    print(data["IpPermissions"][0]['UserIdGroupPairs'])
-    print(type(data["IpPermissions"][0]['UserIdGroupPairs']))
-    print(len(data["IpPermissions"][0]['UserIdGroupPairs']))
-        # if data["IpPermissions"][x]['IpRanges'][x] != [] :
-        #     IpRanges = data["IpPermissions"][x]['IpRanges'] 
+    # print(data["IpPermissions"][0]['IpRanges'])
+    # print(data["IpPermissions"][0]['UserIdGroupPairs'])
+    # print(type(data["IpPermissions"][0]['UserIdGroupPairs']))
+    # print(len(data["IpPermissions"][0]['UserIdGroupPairs']))
+    if data["IpPermissions"][0]['IpRanges'] != [] :
+        IpRanges = data["IpPermissions"][0]['IpRanges'] 
 
-        #     for ip in IpRanges:
-        #         print("revokeingress 1 - start")
-        #         print(ip)
-        #         print("revokeingress 1 - end")
-        #         ec2.revoke_security_group_ingress(
-        #             DryRun=False,
-        #             GroupId=GroupId,            
-        #             IpPermissions=[
-        #                 {
-        #                     'FromPort': FromPort,
-        #                     'IpProtocol': IpProtocol,                    
-        #                     'IpRanges': [
-        #                         {
-        #                             'CidrIp': ip["CidrIp"]
-        #                         },
-        #                     ],
-        #                     'Ipv6Ranges': [],
-        #                     'PrefixListIds': [],
-        #                     'ToPort': ToPort,
-        #                     'UserIdGroupPairs': []                        
-        #                 }
-        #             ]
-        #         )
+        for ip in IpRanges:
+            print("revokeingress 1 - start")
+            print(ip)
+            print("revokeingress 1 - end")
+            ec2.revoke_security_group_ingress(
+                DryRun=False,
+                GroupId=GroupId,            
+                IpPermissions=[
+                    {
+                        'FromPort': FromPort,
+                        'IpProtocol': IpProtocol,                    
+                        'IpRanges': [
+                            {
+                                'CidrIp': ip["CidrIp"]
+                            },
+                        ],
+                        'Ipv6Ranges': [],
+                        'PrefixListIds': [],
+                        'ToPort': ToPort,
+                        'UserIdGroupPairs': []                        
+                    }
+                ]
+            )
         # elif len(data["IpPermissions"][x]['UserIdGroupPairs']) >= 0:
         #     print("revokeingress 2")
         #     SourceGroupIds = data["IpPermissions"][x]['UserIdGroupPairs']
