@@ -222,7 +222,6 @@ def revokeEgress(data):
 def authorizeSecurityGroupIngress(groupid,tmpdic):
     # try:
     ec2 = boto3.client('ec2')
-    print(tmpdic)
 
     if tmpdic["FromPort"] != "":
         FromPort = tmpdic["FromPort"]
@@ -276,12 +275,22 @@ def authorizeSecurityGroupEgress(groupid,tmpdic):
     # try:
     ec2 = boto3.client('ec2')
     print(tmpdic)
+
+    if tmpdic["FromPort"] != "":
+        FromPort = tmpdic["FromPort"]
+    else:
+        FromPort = -1
+    if tmpdic["ToPort"] != "":
+        ToPort = tmpdic["ToPort"]
+    else:
+        ToPort = -1
+
     if tmpdic["IpRanges"] != '':
         response = ec2.authorize_security_group_egress(
             GroupId=groupid,
             IpPermissions=[
                 {
-                    'FromPort': int(tmpdic["FromPort"]),
+                    'FromPort': int(FromPort),
                     'IpProtocol': tmpdic["IpProtocol"],
                     'IpRanges': [
                         {
@@ -289,7 +298,7 @@ def authorizeSecurityGroupEgress(groupid,tmpdic):
                             'Description': tmpdic["Description"],
                         },
                     ],
-                    'ToPort': int(tmpdic["ToPort"]),
+                    'ToPort': int(ToPort),
                 },
             ],
         )
