@@ -57,7 +57,6 @@ def revokeIngress(data):
     IpProtocol = None
     IpRanges = None
 
-    print(data["IpPermissions"])
     for x in range(len(data["IpPermissions"])):
         print(data["IpPermissions"][x])
         # FromPort = data["IpPermissions"][x]["FromPort"]
