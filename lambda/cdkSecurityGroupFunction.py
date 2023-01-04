@@ -59,69 +59,69 @@ def revokeIngress(data):
 
     print(data["IpPermissions"])
     for x in range(len(data["IpPermissions"])):
-        # print(data)
-        FromPort = data["IpPermissions"][x]["FromPort"]
-        ToPort = data["IpPermissions"][x]["ToPort"]
-        IpProtocol = data["IpPermissions"][x]['IpProtocol']
+        print(data)
+        # FromPort = data["IpPermissions"][x]["FromPort"]
+        # ToPort = data["IpPermissions"][x]["ToPort"]
+        # IpProtocol = data["IpPermissions"][x]['IpProtocol']
 
-        print(data["IpPermissions"][x]['IpRanges'][x])
-        print(data["IpPermissions"][x]['UserIdGroupPairs'])
-        print(type(data["IpPermissions"][x]['UserIdGroupPairs']))
-        print(len(data["IpPermissions"][x]['UserIdGroupPairs']))
-        if data["IpPermissions"][x]['IpRanges'][x] != [] :
-            IpRanges = data["IpPermissions"][x]['IpRanges'] 
+        # print(data["IpPermissions"][x]['IpRanges'][x])
+        # print(data["IpPermissions"][x]['UserIdGroupPairs'])
+        # print(type(data["IpPermissions"][x]['UserIdGroupPairs']))
+        # print(len(data["IpPermissions"][x]['UserIdGroupPairs']))
+        # if data["IpPermissions"][x]['IpRanges'][x] != [] :
+        #     IpRanges = data["IpPermissions"][x]['IpRanges'] 
 
-            for ip in IpRanges:
-                print("revokeingress 1 - start")
-                print(ip)
-                print("revokeingress 1 - end")
-                ec2.revoke_security_group_ingress(
-                    DryRun=False,
-                    GroupId=GroupId,            
-                    IpPermissions=[
-                        {
-                            'FromPort': FromPort,
-                            'IpProtocol': IpProtocol,                    
-                            'IpRanges': [
-                                {
-                                    'CidrIp': ip["CidrIp"]
-                                },
-                            ],
-                            'Ipv6Ranges': [],
-                            'PrefixListIds': [],
-                            'ToPort': ToPort,
-                            'UserIdGroupPairs': []                        
-                        }
-                    ]
-                )
-        elif len(data["IpPermissions"][x]['UserIdGroupPairs']) >= 0:
-            print("revokeingress 2")
-            SourceGroupIds = data["IpPermissions"][x]['UserIdGroupPairs']
+        #     for ip in IpRanges:
+        #         print("revokeingress 1 - start")
+        #         print(ip)
+        #         print("revokeingress 1 - end")
+        #         ec2.revoke_security_group_ingress(
+        #             DryRun=False,
+        #             GroupId=GroupId,            
+        #             IpPermissions=[
+        #                 {
+        #                     'FromPort': FromPort,
+        #                     'IpProtocol': IpProtocol,                    
+        #                     'IpRanges': [
+        #                         {
+        #                             'CidrIp': ip["CidrIp"]
+        #                         },
+        #                     ],
+        #                     'Ipv6Ranges': [],
+        #                     'PrefixListIds': [],
+        #                     'ToPort': ToPort,
+        #                     'UserIdGroupPairs': []                        
+        #                 }
+        #             ]
+        #         )
+        # elif len(data["IpPermissions"][x]['UserIdGroupPairs']) >= 0:
+        #     print("revokeingress 2")
+        #     SourceGroupIds = data["IpPermissions"][x]['UserIdGroupPairs']
 
-            for SourceGroupId in SourceGroupIds:
-                print("revokeingress 2 - start")
-                print(SourceGroupId)
-                print("revokeingress 2 - end")
+        #     for SourceGroupId in SourceGroupIds:
+        #         print("revokeingress 2 - start")
+        #         print(SourceGroupId)
+        #         print("revokeingress 2 - end")
 
-                ec2.revoke_security_group_ingress(
-                    DryRun=False,
-                    GroupId=GroupId,            
-                    IpPermissions=[
-                        {
-                            'FromPort': FromPort,
-                            'IpProtocol': IpProtocol,                    
-                            'IpRanges': [],
-                            'Ipv6Ranges': [],
-                            'PrefixListIds': [],
-                            'ToPort': ToPort,
-                            'UserIdGroupPairs': [
-                                {
-                                    'GroupId': SourceGroupId["GroupId"],
-                                },
-                            ],
-                        }
-                    ]
-                )            
+        #         ec2.revoke_security_group_ingress(
+        #             DryRun=False,
+        #             GroupId=GroupId,            
+        #             IpPermissions=[
+        #                 {
+        #                     'FromPort': FromPort,
+        #                     'IpProtocol': IpProtocol,                    
+        #                     'IpRanges': [],
+        #                     'Ipv6Ranges': [],
+        #                     'PrefixListIds': [],
+        #                     'ToPort': ToPort,
+        #                     'UserIdGroupPairs': [
+        #                         {
+        #                             'GroupId': SourceGroupId["GroupId"],
+        #                         },
+        #                     ],
+        #                 }
+        #             ]
+        #         )            
     # except botocore.exceptions.ClientError as e:
     #     raise e
 
