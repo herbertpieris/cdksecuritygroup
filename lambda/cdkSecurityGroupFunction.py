@@ -351,6 +351,9 @@ def main(event, context):
             sggroupid = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
             sggroupid = sggroupid["GroupId"]
 
+            revokeIngress(getSecurityGroup(sggroupid))
+            revokeEgress(getSecurityGroup(sggroupid))            
+
             dichead=None
             dicbody=None
             for x in range(len(csvbody)-1):
