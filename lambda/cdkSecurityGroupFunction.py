@@ -349,7 +349,9 @@ def main(event, context):
             sgvpcid=tmp[0]
 
             sggroupid = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
+            print(sggroupid)
             sggroupid = sggroupid["GroupId"]
+            print(sggroupid)
 
             revokeIngress(getSecurityGroup(sggroupid))
             revokeEgress(getSecurityGroup(sggroupid))            
