@@ -1,6 +1,10 @@
-
-# AWS CDK Python project
 # Automation to Create, Update and Delete AWS Security Group!
+
+This is aws cdk using python language project.
+The purpose of this project is to simplify the workload of network team in current company when there's a request to create, delete or maintain security group.
+
+Limitation ( that I know of ):
+The code written for lambda function is only work for max 60 ingress and max 60 egress.
 
 Here's the flow
 create csv to create, update or delete security group -> upload it to S3 bucket -> s3 put event will trigger lambda -> lambda will create, update or delete security group 
