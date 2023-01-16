@@ -1,5 +1,8 @@
 
-# Welcome to your CDK Python project!
+# Hello Welcome to CDK Python project - Automation to Create, Update and Delete AWS Security Group!
+
+Here's the flow
+create csv to create, update or delete security group -> upload it to S3 bucket -> s3 put event will trigger 
 
 This is a blank project for CDK development with Python.
 
