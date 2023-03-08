@@ -7,6 +7,7 @@ from aws_cdk import (
     aws_lambda_event_sources as eventsources,
     aws_iam as _iam,
     aws_logs as _logs,
+    aws_dynamodb as _dynamodb,
     RemovalPolicy as _removalpolicy,
     Duration as _duration
     # aws_sqs as sqs,
@@ -93,7 +94,10 @@ class CdkSecurityGroupStack(Stack):
                 ]
             )
         )
-        lambdaFunction.apply_removal_policy(_removalpolicy.DESTROY)        
+        lambdaFunction.apply_removal_policy(_removalpolicy.DESTROY)
+
+
+        dynamodb = _dynamodb.Table(self, id="cdkSGDynamoDB")        
 
         # s3notification = aws_s3_notifications.lambdaDestination(lambdaFunction)
         # _s3.Bucket.add_event_notification(_s3.EventType.OBJECT_CREATED, s3n.LambdaDestination(lambdaFunction))
