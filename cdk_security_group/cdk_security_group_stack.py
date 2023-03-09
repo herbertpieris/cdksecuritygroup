@@ -199,25 +199,25 @@ class CdkSecurityGroupStack(Stack):
         modifySecurityGroupLogGroup.apply_removal_policy(_removalpolicy.DESTROY)                        
 
         #LAMBDA
-        # createEmptySecurityGroupFunction = _lambda.Function(
-        #         self,
-        #         "createEmptySecurityGroupFunction",
-        #         function_name="createEmptySecurityGroupFunction",
-        #         runtime=_lambda.Runtime.PYTHON_3_9,
-        #         handler="createEmptySecurityGroupFunction.main",
-        #         code=_lambda.Code.from_asset("./lambdas/createemptysecuritygroup"),
-        #         role=createemptysecuritygroupLambdaRole,
-        #         timeout=_duration.seconds(300)
-        #     )
-        # createEmptySecurityGroupFunction.add_event_source(
-        #     eventsources.S3EventSource(
-        #         bucket,
-        #         events=[
-        #             _s3.EventType.OBJECT_CREATED
-        #         ]
-        #     )
-        # )
-        # createEmptySecurityGroupFunction.apply_removal_policy(_removalpolicy.DESTROY)        
+        createEmptySecurityGroupFunction = _lambda.Function(
+                self,
+                "createEmptySecurityGroupFunction",
+                function_name="createEmptySecurityGroupFunction",
+                runtime=_lambda.Runtime.PYTHON_3_9,
+                handler="createEmptySecurityGroupFunction.main",
+                code=_lambda.Code.from_asset("./lambdas/createemptysecuritygroup"),
+                role=createemptysecuritygroupLambdaRole,
+                timeout=_duration.seconds(300)
+            )
+        createEmptySecurityGroupFunction.add_event_source(
+            eventsources.S3EventSource(
+                bucket,
+                events=[
+                    _s3.EventType.OBJECT_CREATED
+                ]
+            )
+        )
+        createEmptySecurityGroupFunction.apply_removal_policy(_removalpolicy.DESTROY)        
 
         # s3notification = aws_s3_notifications.lambdaDestination(lambdaFunction)
         # _s3.Bucket.add_event_notification(_s3.EventType.OBJECT_CREATED, s3n.LambdaDestination(lambdaFunction))
