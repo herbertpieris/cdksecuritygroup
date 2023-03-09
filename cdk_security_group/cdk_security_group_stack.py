@@ -94,12 +94,7 @@ class CdkSecurityGroupStack(Stack):
                 ]
             )
         )
-        lambdaFunction.apply_removal_policy(_removalpolicy.DESTROY)
-
-
-        dynamodb = _dynamodb.Table(self, 
-                                   id="cdkSGDynamoDB",
-                                   partition_key=_dynamodb.Attribute(name="id", type=_dynamodb.AttributeType.STRING))        
+        lambdaFunction.apply_removal_policy(_removalpolicy.DESTROY)        
 
         # s3notification = aws_s3_notifications.lambdaDestination(lambdaFunction)
         # _s3.Bucket.add_event_notification(_s3.EventType.OBJECT_CREATED, s3n.LambdaDestination(lambdaFunction))
