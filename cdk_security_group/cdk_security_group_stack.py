@@ -63,8 +63,8 @@ class CdkSecurityGroupStack(Stack):
                 self,
                 # "jcihononprod-cdksecuritygroupbucket",
                 # bucket_name="jcihononprod-cdksecuritygroupbucket"
-                "jcihononprod-cdksecuritygroupbucket",
-                bucket_name="jcihononprod-cdksecuritygroupbucket"                
+                "herbertpieris-cdksecuritygroupbucket",
+                bucket_name="herbertpieris-cdksecuritygroupbucket"                
             )
         bucket.apply_removal_policy(_removalpolicy.DESTROY)
 
