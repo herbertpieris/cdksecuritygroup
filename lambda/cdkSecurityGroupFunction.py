@@ -341,7 +341,21 @@ def main(event, context):
         sgdescription=None
         sgvpcid=None
         sggroupid=None
-        if csvfilename.__contains__("NEW_SG_"):
+        if csvfilename.__contains__("NEWEMP_SG_"):
+            tmp=csvfilename.replace("NEWEMP_SG_","").replace(".csv", "")
+            tmp=tmp.split("_")
+            sggroupname=tmp[1]
+            sgdescription=tmp[1]
+            sgvpcid=tmp[0]
+
+            sggroupid = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
+            print(sggroupid)
+            sggroupid = sggroupid["GroupId"]
+            print(sggroupid)
+
+            revokeIngress(getSecurityGroup(sggroupid))
+            revokeEgress(getSecurityGroup(sggroupid))            
+        elif csvfilename.__contains__("NEW_SG_"):
             tmp=csvfilename.replace("NEW_SG_","").replace(".csv", "")
             tmp=tmp.split("_")
             sggroupname=tmp[1]
