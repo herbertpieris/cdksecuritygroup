@@ -356,16 +356,16 @@ def main(event, context):
             revokeIngress(getSecurityGroup(sggroupid))
             revokeEgress(getSecurityGroup(sggroupid))            
 
-            dicthead=None
-            dictbody=None
+            dichead=None
+            dicbody=None
             for x in range(len(csvbody)-1):
                 if x==0:
                     y= bytes.decode(csvbody[x])
-                    dicthead=y.split(";")
+                    dichead=y.split(";")
                 if x!=0:
                     y= bytes.decode(csvbody[x])
-                    dictbody=y.split(";")
-                    tmpdic = convertArrToDic(dicthead,dictbody)
+                    dicbody=y.split(";")
+                    tmpdic = convertArrToDic(dichead,dicbody)
                     if tmpdic["Type"].lower() == "inbound":
                         response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
                     elif tmpdic["Type"].lower() == "outbound":
@@ -382,16 +382,16 @@ def main(event, context):
             revokeIngress(getSecurityGroup(sggroupid))
             revokeEgress(getSecurityGroup(sggroupid))
 
-            dicthead=None
-            dictbody=None
+            dichead=None
+            dicbody=None
             for x in range(len(csvbody)-1):
                 if x==0:
                     y= bytes.decode(csvbody[x])
-                    dicthead=y.split(";")
+                    dichead=y.split(";")
                 if x!=0:
                     y= bytes.decode(csvbody[x])
-                    dictbody=y.split(";")
-                    tmpdic = convertArrToDic(dicthead,dictbody)
+                    dicbody=y.split(";")
+                    tmpdic = convertArrToDic(dichead,dicbody)
                     if tmpdic["Type"].lower() == "inbound":
                         print("authorizeSecurityGroupIngress " + str(x) + " - start")
                         print(tmpdic)
