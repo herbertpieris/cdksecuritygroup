@@ -373,18 +373,17 @@ def main(event, context):
             dichead=None
             dicbody=None
             for x in range(len(csvbody)-1):
-                print(csvbody[x])                
-                # if x==0:
-                #     y= bytes.decode(csvbody[x])
-                #     dichead=y.split(";")
-                # if x!=0:
-                #     y= bytes.decode(csvbody[x])
-                #     dicbody=y.split(";")
-                #     tmpdic = convertArrToDic(dichead,dicbody)
-                #     if tmpdic["Type"].lower() == "inbound":
-                #         response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
-                #     elif tmpdic["Type"].lower() == "outbound":
-                #         response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
+                if x==0:
+                    y= bytes.decode(csvbody[x])
+                    dichead=y.split(";")
+                if x!=0:
+                    y= bytes.decode(csvbody[x])
+                    dicbody=y.split(";")
+                    tmpdic = convertArrToDic(dichead,dicbody)
+                    if tmpdic["Type"].lower() == "inbound":
+                        response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
+                    elif tmpdic["Type"].lower() == "outbound":
+                        response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
                     
                 # response=None
                 # try:                
@@ -400,23 +399,24 @@ def main(event, context):
             dichead=None
             dicbody=None
             for x in range(len(csvbody)-1):
-                if x==0:
-                    y= bytes.decode(csvbody[x])
-                    dichead=y.split(";")
-                if x!=0:
-                    y= bytes.decode(csvbody[x])
-                    dicbody=y.split(";")
-                    tmpdic = convertArrToDic(dichead,dicbody)
-                    if tmpdic["Type"].lower() == "inbound":
-                        print("authorizeSecurityGroupIngress " + str(x) + " - start")
-                        print(tmpdic)
-                        print("authorizeSecurityGroupIngress " + str(x) + "  - end")
-                        response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
-                    elif tmpdic["Type"].lower() == "outbound":
-                        print("authorizeSecurityGroupEgress " + str(x) + "  - start")
-                        print(tmpdic)
-                        print("authorizeSecurityGroupEgress " + str(x) + "  - end")
-                        response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
+                print(csvbody[x])
+                # if x==0:
+                #     y= bytes.decode(csvbody[x])
+                #     dichead=y.split(";")
+                # if x!=0:
+                #     y= bytes.decode(csvbody[x])
+                #     dicbody=y.split(";")
+                #     tmpdic = convertArrToDic(dichead,dicbody)
+                #     if tmpdic["Type"].lower() == "inbound":
+                #         print("authorizeSecurityGroupIngress " + str(x) + " - start")
+                #         print(tmpdic)
+                #         print("authorizeSecurityGroupIngress " + str(x) + "  - end")
+                #         response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
+                #     elif tmpdic["Type"].lower() == "outbound":
+                #         print("authorizeSecurityGroupEgress " + str(x) + "  - start")
+                #         print(tmpdic)
+                #         print("authorizeSecurityGroupEgress " + str(x) + "  - end")
+                #         response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
 
         elif csvfilename.__contains__("DELETE_SG_"):
             sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
