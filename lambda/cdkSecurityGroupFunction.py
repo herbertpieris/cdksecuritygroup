@@ -373,6 +373,7 @@ def main(event, context):
             dichead=None
             dicbody=None
             for x in range(len(csvbody)-1):
+                # csvbody[x] <--- value csv yang bisa di store di list untuk dijadikan report waktu di email
                 if x==0:
                     y= bytes.decode(csvbody[x])
                     dichead=y.split(";")
@@ -399,7 +400,8 @@ def main(event, context):
             dichead=None
             dicbody=None
             for x in range(len(csvbody)-1):
-                print(csvbody[x])
+                # csvbody[x] <--- value csv yang bisa di store di list untuk dijadikan report waktu di email                
+                print(csvbody)
                 # if x==0:
                 #     y= bytes.decode(csvbody[x])
                 #     dichead=y.split(";")
