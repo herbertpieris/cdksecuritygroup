@@ -390,7 +390,8 @@ def main(event, context):
                 # try:                
                 # response=authorizeSecurityGroupIngress(sggroupid)
                 # except Exception:
-                #     print(Exception)            
+                #     print(Exception)     
+            print(dicbody)
         elif csvfilename.__contains__("UPDATE_SG_"):
             sggroupid=csvfilename.replace("UPDATE_SG_","").replace(".csv", "")
 
