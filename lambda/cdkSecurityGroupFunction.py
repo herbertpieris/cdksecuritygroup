@@ -392,7 +392,7 @@ def main(event, context):
                 # except Exception:
                 #     print(Exception)    
             print("---1---") 
-            print(bytes.decode(csvbody[x]))
+            print(bytes.decode(csvbody))
             print("---2---")
         elif csvfilename.__contains__("UPDATE_SG_"):
             sggroupid=csvfilename.replace("UPDATE_SG_","").replace(".csv", "")
