@@ -350,10 +350,10 @@ def sendEmail(csvbody):
                 dichead=y.split(";")
                 temp_my_file.writerow(dichead)
                             
-            # if x!=0:
-            #     y= bytes.decode(csvbody[x])
-            #     dicbody=y.split(";")
-            #     my_file.write(dicbody)
+            if x!=0:
+                y= bytes.decode(csvbody[x])
+                dicbody=y.split(";")
+                temp_my_file.writerow(dicbody)
         my_file.close()
         
         msg = MIMEMultipart('alternative')
