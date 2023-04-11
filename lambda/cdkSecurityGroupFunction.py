@@ -358,8 +358,8 @@ def sendEmail(csvbody):
         
         msg = MIMEMultipart('alternative')
         msg['Subject'] = "NEW" + " - " + "SG" + " Notification"
-        msg['From'] = "no-reply.backupalert@japfa.com"
-        msg['To'] = "herbert.pieris@japfa.com" #event["email"]
+        msg['From'] = "herbertpieris@gmail.com"
+        msg['To'] = "herbertpieris@gmail.com" #event["email"]
         mail_body = "test"
 
 
