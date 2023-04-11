@@ -333,31 +333,32 @@ def authorizeSecurityGroupEgress(groupid,tmpdic):
     # except Exception:
     #     return Exception
 
-def sendEmail(csvbody):
+def sendEmail(mode,sgid,csvbody,attachmentmode):
     try:
         wib = dateutil.tz.gettz('Asia/Jakarta')
-        x = datetime.datetime.now(tz=wib)    
-                    
-        file_name = "/tmp/1.csv" 
-        my_file = open(file_name,"w+")
-        temp_my_file = csv.writer(my_file)
+        x = datetime.datetime.now(tz=wib)
 
-        dichead=None
-        dicbody=None
-        for x in range(len(csvbody)-1):
-            if x==0:
-                y= bytes.decode(csvbody[x])
-                dichead=y.split(";")
-                temp_my_file.writerow(dichead)
-                            
-            if x!=0:
-                y= bytes.decode(csvbody[x])
-                dicbody=y.split(";")
-                temp_my_file.writerow(dicbody)
-        my_file.close()
+        if attachmentmode:
+            file_name = "/tmp/1.csv" 
+            my_file = open(file_name,"w+")
+            temp_my_file = csv.writer(my_file)
+
+            dichead=None
+            dicbody=None
+            for x in range(len(csvbody)-1):
+                if x==0:
+                    y= bytes.decode(csvbody[x])
+                    dichead=y.split(";")
+                    temp_my_file.writerow(dichead)
+                                
+                if x!=0:
+                    y= bytes.decode(csvbody[x])
+                    dicbody=y.split(";")
+                    temp_my_file.writerow(dicbody)
+            my_file.close()
         
         msg = MIMEMultipart('alternative')
-        msg['Subject'] = "NEW" + " - " + "SG" + " Notification"
+        msg['Subject'] = mode + " - " + "SG" + " Notification"
         msg['From'] = "herbertpieris@gmail.com"
         msg['To'] = "herbertpieris@gmail.com" #event["email"]
         mail_body = "test"
@@ -379,37 +380,36 @@ def sendEmail(csvbody):
 
         ses = boto3.client('ses', use_ssl=True)
 
-        # Record the MIME types of both parts - text/plain and text/html.
-        # part1 = MIMEText(text, 'plain')
-        part2 = MIMEText(html, 'html')
-        
-        # Attach parts into message container.
-        # According to RFC 2046, the last part of a multipart message, in this case
-        # the HTML message, is best and preferred.
-        # msg.attach(part1)
-        msg.attach(part2)
-        
-        # ATTACHMENT = tmp_summary_file_name
+        if attachmentmode:
+            # Record the MIME types of both parts - text/plain and text/html.
+            # part1 = MIMEText(text, 'plain')
+            part2 = MIMEText(html, 'html')
+            
+            # Attach parts into message container.
+            # According to RFC 2046, the last part of a multipart message, in this case
+            # the HTML message, is best and preferred.
+            # msg.attach(part1)
+            msg.attach(part2)
+            
+            # ATTACHMENT = tmp_summary_file_name
 
-        # part3 = MIMEApplication(open(ATTACHMENT, 'rb').read())
-        # part3.add_header('Content-Disposition', 'attachment', filename=summary_file_name)
-        # msg.attach(part3)   
+            # part3 = MIMEApplication(open(ATTACHMENT, 'rb').read())
+            # part3.add_header('Content-Disposition', 'attachment', filename=summary_file_name)
+            # msg.attach(part3)   
 
-        ATTACHMENT = file_name
+            ATTACHMENT = file_name
 
-        part4 = MIMEApplication(open(ATTACHMENT, 'rb').read())
-        part4.add_header('Content-Disposition', 'attachment', filename=file_name+".txt")
-        msg.attach(part4)
+            part4 = MIMEApplication(open(ATTACHMENT, 'rb').read())
+            part4.add_header('Content-Disposition', 'attachment', filename=file_name+".txt")
+            msg.attach(part4)
 
-        ATTACHMENT = file_name
+            ATTACHMENT = file_name
 
-        part5 = MIMEApplication(open(ATTACHMENT, 'rb').read())
-        part5.add_header('Content-Disposition', 'attachment', filename=file_name+".txt")
-        msg.attach(part5)                 
+            part5 = MIMEApplication(open(ATTACHMENT, 'rb').read())
+            part5.add_header('Content-Disposition', 'attachment', filename=file_name+".txt")
+            msg.attach(part5)                 
         
         text = msg.as_string()
-
-        print(mail_body)
 
         ses.send_raw_email(
             RawMessage= { 'Data': text }
@@ -447,7 +447,13 @@ def main(event, context):
             print(sggroupid)
 
             revokeIngress(getSecurityGroup(sggroupid))
-            revokeEgress(getSecurityGroup(sggroupid))            
+            revokeEgress(getSecurityGroup(sggroupid)) 
+
+            print("---1---") 
+            print(csvbody)
+            print("---2---")
+            sendEmail("NEWEMP_SG_",sggroupid,csvbody,False)
+            print("---3---")                       
         elif csvfilename.__contains__("NEW_SG_"):
             tmp=csvfilename.replace("NEW_SG_","").replace(".csv", "")
             tmp=tmp.split("_")
@@ -487,7 +493,7 @@ def main(event, context):
             print("---1---") 
             print(csvbody)
             print("---2---")
-            sendEmail(csvbody)
+            sendEmail("NEW_SG_",sggroupid,csvbody,True)
             print("---3---")
         elif csvfilename.__contains__("UPDATE_SG_"):
             sggroupid=csvfilename.replace("UPDATE_SG_","").replace(".csv", "")
