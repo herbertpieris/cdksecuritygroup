@@ -341,12 +341,12 @@ def sendEmail(csvbody):
             if x==0:
                 y= bytes.decode(csvbody[x])
                 dichead=y.split(";")
-                my_file.write(dichead + "\n")
+                my_file.write(dichead)
                             
             if x!=0:
                 y= bytes.decode(csvbody[x])
                 dicbody=y.split(";")
-                my_file.write(dicbody + "\n")
+                my_file.write(dicbody)
         my_file.close()
         
         msg = MIMEMultipart('alternative')
