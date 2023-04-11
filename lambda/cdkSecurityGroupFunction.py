@@ -395,16 +395,16 @@ def sendEmail(csvbody):
         # part3.add_header('Content-Disposition', 'attachment', filename=summary_file_name)
         # msg.attach(part3)   
 
-        ATTACHMENT = tmp_source_file_name
+        ATTACHMENT = file_name
 
         part4 = MIMEApplication(open(ATTACHMENT, 'rb').read())
-        part4.add_header('Content-Disposition', 'attachment', filename=source_file_name+".txt")
+        part4.add_header('Content-Disposition', 'attachment', filename=file_name+".txt")
         msg.attach(part4)
 
-        ATTACHMENT = tmp_target_file_name
+        ATTACHMENT = file_name
 
         part5 = MIMEApplication(open(ATTACHMENT, 'rb').read())
-        part5.add_header('Content-Disposition', 'attachment', filename=target_file_name+".txt")
+        part5.add_header('Content-Disposition', 'attachment', filename=file_name+".txt")
         msg.attach(part5)                 
         
         text = msg.as_string()
