@@ -341,6 +341,7 @@ def sendEmail(csvbody):
             if x==0:
                 y= bytes.decode(csvbody[x])
                 dichead=y.split(";")
+                print(type(dichead))
                 my_file.write(dichead)
                             
             if x!=0:
