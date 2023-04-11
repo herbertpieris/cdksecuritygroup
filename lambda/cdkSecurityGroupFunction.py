@@ -4,6 +4,7 @@ import json
 import datetime
 import dateutil.tz
 from datetime import date
+import csv
 
 def convertArrToDic(head,body):
     data = {}    
@@ -332,8 +333,9 @@ def sendEmail(csvbody):
         wib = dateutil.tz.gettz('Asia/Jakarta')
         x = datetime.datetime.now(tz=wib)    
                     
-        tmp_target_file_name = "/tmp/1" 
-        my_file = open(tmp_target_file_name,"w+")
+        file_name = "/tmp/1.csv" 
+        my_file = open(file_name,"w+")
+        temp_my_file = csv.writer(my_file)
 
         dichead=None
         dicbody=None
@@ -341,13 +343,12 @@ def sendEmail(csvbody):
             if x==0:
                 y= bytes.decode(csvbody[x])
                 dichead=y.split(";")
-                print(type(dichead))
-                my_file.write(dichead)
+                temp_my_file.writerow(dichead)
                             
-            if x!=0:
-                y= bytes.decode(csvbody[x])
-                dicbody=y.split(";")
-                my_file.write(dicbody)
+            # if x!=0:
+            #     y= bytes.decode(csvbody[x])
+            #     dicbody=y.split(";")
+            #     my_file.write(dicbody)
         my_file.close()
         
         msg = MIMEMultipart('alternative')
