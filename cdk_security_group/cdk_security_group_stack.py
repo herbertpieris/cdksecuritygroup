@@ -35,7 +35,8 @@ class CdkSecurityGroupStack(Stack):
                 "ec2:RevokeSecurityGroupEgress",
                 "s3:Describe*",
                 "s3:List*",
-                "s3:Get*"
+                "s3:Get*",
+                "ses:SendRawEmail"
             ],
             resources=["*"]
         )
