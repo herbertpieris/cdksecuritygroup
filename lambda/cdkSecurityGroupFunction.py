@@ -322,7 +322,90 @@ def authorizeSecurityGroupEgress(groupid,tmpdic):
 
     return response
     # except Exception:
-    #     return Exception    
+    #     return Exception
+
+def sendEmail(csvfile):
+    try:
+        wib = dateutil.tz.gettz('Asia/Jakarta')
+        x = datetime.datetime.now(tz=wib)    
+                    
+        tmp_target_file_name = "/tmp/1" 
+        my_file = open(tmp_target_file_name,"w+")
+
+        dichead=None
+        dicbody=None
+        for x in range(len(csvbody)-1):
+            if x==0:
+                y= bytes.decode(csvbody[x])
+                dichead=y.split(";")
+                my_file.write(dichead + "\n")
+                            
+            if x!=0:
+                y= bytes.decode(csvbody[x])
+                dicbody=y.split(";")
+                my_file.write(dicbody + "\n")
+        my_file.close()
+        
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = "NEW" + " - " + "SG" + " Notification"
+        msg['From'] = "no-reply.backupalert@japfa.com"
+        msg['To'] = "herbert.pieris@japfa.com" #event["email"]
+        mail_body = csv
+
+
+        # Create the body of the message (a plain-text and an HTML version).
+        html = """\
+        <html>
+            <head></head>
+            <body>
+            <p style="margin-top: 0.0px;margin-bottom: 0.0px;font-size: 11.0pt;font-family: Calibri , sans-serif;color: rgb(33,33,33);">Dear Technician<br><br> """ + mail_body + """
+            </p>
+            <p>&nbsp;</p>
+            <p style="margin-top: 0.0px;margin-bottom: 0.0px;font-size: 11.0pt;font-family: Calibri , sans-serif;color: rgb(33,33,33);"> <b><span lang="IN" style="font-size: 8.0pt;font-family: Arial , sans-serif;color: silver;">Note</span></b><span lang="IN" style="font-size: 8.0pt;font-family: Arial , sans-serif;color: silver;">:&nbsp;</span><span style="font-size: 8.0pt;font-family: Arial , sans-serif;color: silver;">This  email and its attachments are intended for the sole receipt of its stated addressees. Their contents are private and confidential. If you have received this email or its attachments in error, please immediately notify the sender and destroy the same without  reading, using, copying, storing and/or disseminating the same.</span><span lang="IN" style="font-size: 8.0pt;font-family: Arial , sans-serif;color: rgb(96,96,96);">&nbsp;&nbsp;</span><span style="font-size: 8.0pt;font-family: Arial , sans-serif;color: silver;">As  email communications are not secure, neither the sender nor any of the Japfa companies or their affiliates accepts any responsibility for any errors or changes resulting from interference or tampering.</span>
+            </p>
+            </body>
+        </html>
+        """      
+
+        ses = boto3.client('ses', use_ssl=True)
+
+        # Record the MIME types of both parts - text/plain and text/html.
+        # part1 = MIMEText(text, 'plain')
+        part2 = MIMEText(html, 'html')
+        
+        # Attach parts into message container.
+        # According to RFC 2046, the last part of a multipart message, in this case
+        # the HTML message, is best and preferred.
+        # msg.attach(part1)
+        msg.attach(part2)
+        
+        # ATTACHMENT = tmp_summary_file_name
+
+        # part3 = MIMEApplication(open(ATTACHMENT, 'rb').read())
+        # part3.add_header('Content-Disposition', 'attachment', filename=summary_file_name)
+        # msg.attach(part3)   
+
+        ATTACHMENT = tmp_source_file_name
+
+        part4 = MIMEApplication(open(ATTACHMENT, 'rb').read())
+        part4.add_header('Content-Disposition', 'attachment', filename=source_file_name+".txt")
+        msg.attach(part4)
+
+        ATTACHMENT = tmp_target_file_name
+
+        part5 = MIMEApplication(open(ATTACHMENT, 'rb').read())
+        part5.add_header('Content-Disposition', 'attachment', filename=target_file_name+".txt")
+        msg.attach(part5)                 
+        
+        text = msg.as_string()
+
+        print(mail_body)
+
+        ses.send_raw_email(
+            RawMessage= { 'Data': text }
+        )
+    except Exception as e:
+        raise e
 
 def main(event, context):
     # try:
@@ -394,6 +477,8 @@ def main(event, context):
             print("---1---") 
             print(csvbody)
             print("---2---")
+            sendEmail(csvbody)
+            print("---3---")
         elif csvfilename.__contains__("UPDATE_SG_"):
             sggroupid=csvfilename.replace("UPDATE_SG_","").replace(".csv", "")
 
