@@ -361,7 +361,10 @@ def sendEmail(mode,sgid,csvbody,attachmentmode):
         msg['Subject'] = mode + " - " + "SG" + " Notification"
         msg['From'] = "herbertpieris@gmail.com"
         msg['To'] = "herbertpieris@gmail.com" #event["email"]
-        mail_body = "test"
+        if mode=="NEWEMP_SG_":
+            mail_body = sgid + " created"
+        elif mode=="NEW_SG_":
+            mail_body = sgid + " created"
 
 
         # Create the body of the message (a plain-text and an HTML version).
@@ -380,17 +383,17 @@ def sendEmail(mode,sgid,csvbody,attachmentmode):
 
         ses = boto3.client('ses', use_ssl=True)
 
-        if attachmentmode:
-            # Record the MIME types of both parts - text/plain and text/html.
-            # part1 = MIMEText(text, 'plain')
-            part2 = MIMEText(html, 'html')
+        # Record the MIME types of both parts - text/plain and text/html.
+        # part1 = MIMEText(text, 'plain')
+        part2 = MIMEText(html, 'html')
+
+        # Attach parts into message container.
+        # According to RFC 2046, the last part of a multipart message, in this case
+        # the HTML message, is best and preferred.
+        # msg.attach(part1)
+        msg.attach(part2)
             
-            # Attach parts into message container.
-            # According to RFC 2046, the last part of a multipart message, in this case
-            # the HTML message, is best and preferred.
-            # msg.attach(part1)
-            msg.attach(part2)
-            
+        if attachmentmode:    
             # ATTACHMENT = tmp_summary_file_name
 
             # part3 = MIMEApplication(open(ATTACHMENT, 'rb').read())
