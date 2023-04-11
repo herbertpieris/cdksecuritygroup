@@ -6,6 +6,11 @@ import dateutil.tz
 from datetime import date
 import csv
 
+from botocore.exceptions import ClientError
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.application import MIMEApplication
+
 def convertArrToDic(head,body):
     data = {}    
     for x in range(len(head)):
