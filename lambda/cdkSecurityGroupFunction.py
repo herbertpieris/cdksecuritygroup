@@ -327,7 +327,7 @@ def authorizeSecurityGroupEgress(groupid,tmpdic):
     # except Exception:
     #     return Exception
 
-def sendEmail(csvfile):
+def sendEmail(csvbody):
     try:
         wib = dateutil.tz.gettz('Asia/Jakarta')
         x = datetime.datetime.now(tz=wib)    
@@ -353,7 +353,7 @@ def sendEmail(csvfile):
         msg['Subject'] = "NEW" + " - " + "SG" + " Notification"
         msg['From'] = "no-reply.backupalert@japfa.com"
         msg['To'] = "herbert.pieris@japfa.com" #event["email"]
-        mail_body = csv
+        mail_body = "test"
 
 
         # Create the body of the message (a plain-text and an HTML version).
