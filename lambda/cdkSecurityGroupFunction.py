@@ -339,7 +339,7 @@ def sendEmail(mode,sgid,csvbody,attachmentmode):
         x = datetime.datetime.now(tz=wib)
 
         if attachmentmode:
-            file_name = "/tmp/1.csv" 
+            file_name = "/tmp/1" 
             my_file = open(file_name,"w+")
             temp_my_file = csv.writer(my_file)
 
@@ -365,6 +365,8 @@ def sendEmail(mode,sgid,csvbody,attachmentmode):
             mail_body = sgid + " created"
         elif mode=="NEW_SG_":
             mail_body = sgid + " created"
+        elif mode=="UPDATE_SG_":
+            mail_body = sgid + " updated"            
 
 
         # Create the body of the message (a plain-text and an HTML version).
@@ -393,7 +395,7 @@ def sendEmail(mode,sgid,csvbody,attachmentmode):
         # msg.attach(part1)
         msg.attach(part2)
             
-        if attachmentmode:    
+        if attachmentmode and (mode=="NEW_SG_" or mode=="UPDATE_SG_"):    
             # ATTACHMENT = tmp_summary_file_name
 
             # part3 = MIMEApplication(open(ATTACHMENT, 'rb').read())
@@ -403,13 +405,14 @@ def sendEmail(mode,sgid,csvbody,attachmentmode):
             ATTACHMENT = file_name
 
             part4 = MIMEApplication(open(ATTACHMENT, 'rb').read())
-            part4.add_header('Content-Disposition', 'attachment', filename=file_name+".txt")
+            part4.add_header('Content-Disposition', 'attachment', filename=file_name+".csv")
             msg.attach(part4)
 
+        if attachmentmode and mode=="UPDATE_SG_":
             ATTACHMENT = file_name
 
             part5 = MIMEApplication(open(ATTACHMENT, 'rb').read())
-            part5.add_header('Content-Disposition', 'attachment', filename=file_name+".txt")
+            part5.add_header('Content-Disposition', 'attachment', filename=file_name+".csv")
             msg.attach(part5)                 
         
         text = msg.as_string()
