@@ -498,17 +498,17 @@ def main(event, context):
             csvbody = list(dict.fromkeys(csvbody))            
             for x in range(len(csvbody)-1):
                 # csvbody[x] <--- value csv yang bisa di store di list untuk dijadikan report waktu di email
-                # if x==0:
-                #     y= bytes.decode(csvbody[x])
-                #     dichead=y.split(";")
-                # if x!=0:
-                #     y= bytes.decode(csvbody[x])
-                #     dicbody=y.split(";")
-                #     tmpdic = convertArrToDic(dichead,dicbody)
-                #     if tmpdic["Type"].lower() == "inbound":
-                #         response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
-                #     elif tmpdic["Type"].lower() == "outbound":
-                #         response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
+                if x==0:
+                    y= bytes.decode(csvbody[x])
+                    dichead=y.split(";")
+                if x!=0:
+                    y= bytes.decode(csvbody[x])
+                    dicbody=y.split(";")
+                    tmpdic = convertArrToDic(dichead,dicbody)
+                    if tmpdic["Type"].lower() == "inbound":
+                        response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
+                    elif tmpdic["Type"].lower() == "outbound":
+                        response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
                     
                 # response=None
                 # try:                
@@ -516,10 +516,10 @@ def main(event, context):
                 # except Exception:
                 #     print(Exception) 
                
-            print("---1---") 
-            print(csvbody)
-            print("---2---")
-            # sendEmail("NEW_SG_",sggroupid,csvbody,True)
+            # print("---1---") 
+            # print(csvbody)
+            # print("---2---")
+            sendEmail("NEW_SG_",sggroupid,csvbody,True)
             # print("---3---")
         elif csvfilename.__contains__("UPDATE_SG_"):
             sggroupid=csvfilename.replace("UPDATE_SG_","").replace(".csv", "")
