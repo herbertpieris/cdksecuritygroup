@@ -529,6 +529,7 @@ def main(event, context):
 
             dichead=None
             dicbody=None
+            csvbody = list(dict.fromkeys(csvbody))
             for x in range(len(csvbody)-1):
                 # csvbody[x] <--- value csv yang bisa di store di list untuk dijadikan report waktu di email                
                 print(csvbody)
