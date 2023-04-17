@@ -494,9 +494,9 @@ def main(event, context):
             revokeEgress(getSecurityGroup(sggroupid))            
 
             dichead=None
-            dicbody=None            
+            dicbody=None
+            csvbody = list(dict.fromkeys(csvbody))            
             for x in range(len(csvbody)-1):
-                print(csvbody[x])
                 # csvbody[x] <--- value csv yang bisa di store di list untuk dijadikan report waktu di email
                 # if x==0:
                 #     y= bytes.decode(csvbody[x])
@@ -515,8 +515,7 @@ def main(event, context):
                 # response=authorizeSecurityGroupIngress(sggroupid)
                 # except Exception:
                 #     print(Exception) 
-
-            csvbody = list(dict.fromkeys(csvbody))   
+               
             print("---1---") 
             print(csvbody)
             print("---2---")
