@@ -338,7 +338,7 @@ def sendEmail(mode,sgid,csvbody,attachmentmode):
         wib = dateutil.tz.gettz('Asia/Jakarta')
         x = datetime.datetime.now(tz=wib)
 
-        if attachmentmode:
+        if attachmentmode and mode=="NEW_SG_":
             file_name = "/tmp/1" 
             my_file = open(file_name,"w+")
             temp_my_file = csv.writer(my_file)
@@ -356,6 +356,24 @@ def sendEmail(mode,sgid,csvbody,attachmentmode):
                     dicbody=y.split(";")
                     temp_my_file.writerow(dicbody)
             my_file.close()
+        elif attachmentmode and mode=="UPDATE_SG_":
+            file_name = "/tmp/1" 
+            my_file = open(file_name,"w+")
+            temp_my_file = csv.writer(my_file)
+
+            dichead=None
+            dicbody=None
+            for x in range(len(csvbody)-1):
+                if x==0:
+                    y= bytes.decode(csvbody[x])
+                    dichead=y.split(";")
+                    temp_my_file.writerow(dichead)
+                                
+                if x!=0:
+                    y= bytes.decode(csvbody[x])
+                    dicbody=y.split(";")
+                    temp_my_file.writerow(dicbody)
+            my_file.close()        
         
         msg = MIMEMultipart('alternative')
         msg['Subject'] = mode + " - " + "SG" + " Notification"
@@ -477,6 +495,7 @@ def main(event, context):
 
             dichead=None
             dicbody=None
+            print(type(csvbody))
             for x in range(len(csvbody)-1):
                 # csvbody[x] <--- value csv yang bisa di store di list untuk dijadikan report waktu di email
                 if x==0:
@@ -512,23 +531,29 @@ def main(event, context):
             for x in range(len(csvbody)-1):
                 # csvbody[x] <--- value csv yang bisa di store di list untuk dijadikan report waktu di email                
                 print(csvbody)
-                # if x==0:
-                #     y= bytes.decode(csvbody[x])
-                #     dichead=y.split(";")
-                # if x!=0:
-                #     y= bytes.decode(csvbody[x])
-                #     dicbody=y.split(";")
-                #     tmpdic = convertArrToDic(dichead,dicbody)
-                #     if tmpdic["Type"].lower() == "inbound":
-                #         print("authorizeSecurityGroupIngress " + str(x) + " - start")
-                #         print(tmpdic)
-                #         print("authorizeSecurityGroupIngress " + str(x) + "  - end")
-                #         response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
-                #     elif tmpdic["Type"].lower() == "outbound":
-                #         print("authorizeSecurityGroupEgress " + str(x) + "  - start")
-                #         print(tmpdic)
-                #         print("authorizeSecurityGroupEgress " + str(x) + "  - end")
-                #         response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
+                if x==0:
+                    y= bytes.decode(csvbody[x])
+                    dichead=y.split(";")
+                if x!=0:
+                    y= bytes.decode(csvbody[x])
+                    dicbody=y.split(";")
+                    tmpdic = convertArrToDic(dichead,dicbody)
+                    if tmpdic["Type"].lower() == "inbound":
+                        print("authorizeSecurityGroupIngress " + str(x) + " - start")
+                        print(tmpdic)
+                        print("authorizeSecurityGroupIngress " + str(x) + "  - end")
+                        response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
+                    elif tmpdic["Type"].lower() == "outbound":
+                        print("authorizeSecurityGroupEgress " + str(x) + "  - start")
+                        print(tmpdic)
+                        print("authorizeSecurityGroupEgress " + str(x) + "  - end")
+                        response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
+
+            print("---1---") 
+            print(csvbody)
+            print("---2---")
+            sendEmail("UPDATE_SG_",sggroupid,csvbody,True)
+            print("---3---")
 
         elif csvfilename.__contains__("DELETE_SG_"):
             sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
