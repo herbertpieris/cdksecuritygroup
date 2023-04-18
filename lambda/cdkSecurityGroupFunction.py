@@ -527,35 +527,35 @@ def main(event, context):
             revokeIngress(getSecurityGroup(sggroupid))
             revokeEgress(getSecurityGroup(sggroupid))
 
-            dichead=None
-            dicbody=None
-            csvbody = list(dict.fromkeys(csvbody))
-            for x in range(len(csvbody)-1):
-                # csvbody[x] <--- value csv yang bisa di store di list untuk dijadikan report waktu di email                
-                print(csvbody)
-                if x==0:
-                    y= bytes.decode(csvbody[x])
-                    dichead=y.split(";")
-                if x!=0:
-                    y= bytes.decode(csvbody[x])
-                    dicbody=y.split(";")
-                    tmpdic = convertArrToDic(dichead,dicbody)
-                    if tmpdic["Type"].lower() == "inbound":
-                        print("authorizeSecurityGroupIngress " + str(x) + " - start")
-                        print(tmpdic)
-                        print("authorizeSecurityGroupIngress " + str(x) + "  - end")
-                        response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
-                    elif tmpdic["Type"].lower() == "outbound":
-                        print("authorizeSecurityGroupEgress " + str(x) + "  - start")
-                        print(tmpdic)
-                        print("authorizeSecurityGroupEgress " + str(x) + "  - end")
-                        response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
+            # dichead=None
+            # dicbody=None
+            # csvbody = list(dict.fromkeys(csvbody))
+            # for x in range(len(csvbody)-1):
+            #     # csvbody[x] <--- value csv yang bisa di store di list untuk dijadikan report waktu di email                
+            #     print(csvbody)
+            #     if x==0:
+            #         y= bytes.decode(csvbody[x])
+            #         dichead=y.split(";")
+            #     if x!=0:
+            #         y= bytes.decode(csvbody[x])
+            #         dicbody=y.split(";")
+            #         tmpdic = convertArrToDic(dichead,dicbody)
+            #         if tmpdic["Type"].lower() == "inbound":
+            #             print("authorizeSecurityGroupIngress " + str(x) + " - start")
+            #             print(tmpdic)
+            #             print("authorizeSecurityGroupIngress " + str(x) + "  - end")
+            #             response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
+            #         elif tmpdic["Type"].lower() == "outbound":
+            #             print("authorizeSecurityGroupEgress " + str(x) + "  - start")
+            #             print(tmpdic)
+            #             print("authorizeSecurityGroupEgress " + str(x) + "  - end")
+            #             response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
 
-            print("---1---") 
-            print(csvbody)
-            print("---2---")
-            sendEmail("UPDATE_SG_",sggroupid,csvbody,True)
-            print("---3---")
+            # print("---1---") 
+            # print(csvbody)
+            # print("---2---")
+            # sendEmail("UPDATE_SG_",sggroupid,csvbody,True)
+            # print("---3---")
 
         elif csvfilename.__contains__("DELETE_SG_"):
             sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
