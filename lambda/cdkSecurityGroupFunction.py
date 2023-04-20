@@ -112,7 +112,7 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
 
     IpPermissions = []
     if tmpdic["IpRanges"] != '':
-        IpPermissions.append([
+        IpPermissions.append(
             {
                 'FromPort': int(FromPort),
                 'IpProtocol': tmpdic["IpProtocol"],
@@ -124,9 +124,9 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
                 ],
                 'ToPort': int(ToPort),
             },
-        ])
+        )
     else:
-        IpPermissions.append([
+        IpPermissions.append(
             {
                 'FromPort': int(tmpdic["FromPort"]),
                 'IpProtocol': tmpdic["IpProtocol"],
@@ -139,7 +139,7 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
                 'ToPort': int(tmpdic["ToPort"]),
 
             },
-        ])
+        )
 
     response = ec2.authorize_security_group_ingress(
         GroupId=groupid,
