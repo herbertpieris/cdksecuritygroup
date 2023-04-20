@@ -110,7 +110,7 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
     else:
         ToPort = -1
 
-    IpPermissions = []
+    IpPermissions = {}
     if tmpdic["IpRanges"] != '':
         IpPermissions.append([
             {
@@ -342,11 +342,7 @@ def main(event, context):
             revokeIngress(getSecurityGroup(sggroupid))
             revokeEgress(getSecurityGroup(sggroupid)) 
 
-            print("---1---") 
-            print(csvbody)
-            print("---2---")
-            sendEmail("NEWEMP_SG_",sggroupid,csvbody,False)
-            print("---3---")                       
+            sendEmail("NEWEMP_SG_",sggroupid,csvbody,False)                       
         elif csvfilename.__contains__("NEW_SG_"):
             tmp=csvfilename.replace("NEW_SG_","").replace(".csv", "")
             tmp=tmp.split("_")
