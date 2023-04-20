@@ -68,12 +68,14 @@ def revokeIngress(data):
 
     print(data)
     print(data["IpPermissions"])
-    if data["IpPermissions"] != []:
-        ec2.revoke_security_group_ingress(
-            DryRun=False,
-            GroupId=GroupId,            
-            IpPermissions=data["IpPermissions"]
-        )        
+
+    ec2.revoke_security_group_ingress(
+        DryRun=False,
+        GroupId=GroupId,            
+        IpPermissions=data["IpPermissions"]
+    )   
+
+    # if data["IpPermissions"] != [] or "UserIdGroupPairs" in data:     
         # if "FromPort" in data["IpPermissions"][0]:
         #     FromPort = data["IpPermissions"][0]["FromPort"]
         # else:
@@ -112,44 +114,44 @@ def revokeIngress(data):
         #             ]
         #         )
 
-    if "UserIdGroupPairs" in data:
-        if "FromPort" in data["IpPermissions"][0]:
-            FromPort = data["IpPermissions"][0]["FromPort"]
-        else:
-            FromPort = -1
-        if "ToPort" in data["IpPermissions"][0]:
-            ToPort = data["IpPermissions"][0]["ToPort"]
-        else:
-            ToPort = -1
+    # if "UserIdGroupPairs" in data:
+    #     if "FromPort" in data["IpPermissions"][0]:
+    #         FromPort = data["IpPermissions"][0]["FromPort"]
+    #     else:
+    #         FromPort = -1
+    #     if "ToPort" in data["IpPermissions"][0]:
+    #         ToPort = data["IpPermissions"][0]["ToPort"]
+    #     else:
+    #         ToPort = -1
 
-        if len(data["IpPermissions"][0]['UserIdGroupPairs']) >= 0:
-            print("revokeingress 2")
-            SourceGroupIds = data["IpPermissions"][0]['UserIdGroupPairs']
+    #     if len(data["IpPermissions"][0]['UserIdGroupPairs']) >= 0:
+    #         print("revokeingress 2")
+    #         SourceGroupIds = data["IpPermissions"][0]['UserIdGroupPairs']
 
-            for SourceGroupId in SourceGroupIds:
-                print("revokeingress 2 - start")
-                print(SourceGroupId)
-                print("revokeingress 2 - end")
+    #         for SourceGroupId in SourceGroupIds:
+    #             print("revokeingress 2 - start")
+    #             print(SourceGroupId)
+    #             print("revokeingress 2 - end")
 
-                ec2.revoke_security_group_ingress(
-                    DryRun=False,
-                    GroupId=GroupId,            
-                    IpPermissions=[
-                        {
-                            'FromPort': FromPort,
-                            'IpProtocol': IpProtocol,                    
-                            'IpRanges': [],
-                            'Ipv6Ranges': [],
-                            'PrefixListIds': [],
-                            'ToPort': ToPort,
-                            'UserIdGroupPairs': [
-                                {
-                                    'GroupId': SourceGroupId["GroupId"],
-                                },
-                            ],
-                        }
-                    ]
-                )            
+    #             ec2.revoke_security_group_ingress(
+    #                 DryRun=False,
+    #                 GroupId=GroupId,            
+    #                 IpPermissions=[
+    #                     {
+    #                         'FromPort': FromPort,
+    #                         'IpProtocol': IpProtocol,                    
+    #                         'IpRanges': [],
+    #                         'Ipv6Ranges': [],
+    #                         'PrefixListIds': [],
+    #                         'ToPort': ToPort,
+    #                         'UserIdGroupPairs': [
+    #                             {
+    #                                 'GroupId': SourceGroupId["GroupId"],
+    #                             },
+    #                         ],
+    #                     }
+    #                 ]
+    #             )            
     # except botocore.exceptions.ClientError as e:
     #     raise e
 
@@ -164,71 +166,77 @@ def revokeEgress(data):
     IpProtocol = None
     IpRanges = None
 
-    for x in range(len(data["IpPermissionsEgress"])):
-        if "FromPort" in data["IpPermissionsEgress"][x]:
-            FromPort = data["IpPermissionsEgress"][x]["FromPort"]
-        else:
-            FromPort = -1
-        if "ToPort" in data["IpPermissionsEgress"][x]:
-            ToPort = data["IpPermissionsEgress"][x]["ToPort"]
-        else:
-            ToPort = -1
-        IpProtocol = data["IpPermissionsEgress"][x]['IpProtocol']
+    ec2.revoke_security_group_egress(
+        DryRun=False,
+        GroupId=GroupId,            
+        IpPermissions=data["IpPermissionsEgress"]
+    )
 
-        # print(data)
-        if data["IpPermissionsEgress"][x]['IpRanges'] != [] :
-            IpRanges = data["IpPermissionsEgress"][x]['IpRanges'] 
+    # for x in range(len(data["IpPermissionsEgress"])):
+    #     if "FromPort" in data["IpPermissionsEgress"][x]:
+    #         FromPort = data["IpPermissionsEgress"][x]["FromPort"]
+    #     else:
+    #         FromPort = -1
+    #     if "ToPort" in data["IpPermissionsEgress"][x]:
+    #         ToPort = data["IpPermissionsEgress"][x]["ToPort"]
+    #     else:
+    #         ToPort = -1
+    #     IpProtocol = data["IpPermissionsEgress"][x]['IpProtocol']
 
-            for ip in IpRanges:
-                print("revoke egress 1 - start")
-                print(ip)
-                print("revoke egress 1 - end")
-                ec2.revoke_security_group_egress(
-                    DryRun=False,
-                    GroupId=GroupId,            
-                    IpPermissions=[
-                        {
-                            'FromPort': FromPort,
-                            'IpProtocol': IpProtocol,                    
-                            'IpRanges': [
-                                {
-                                    'CidrIp': ip["CidrIp"]
-                                },
-                            ],
-                            'Ipv6Ranges': [],
-                            'PrefixListIds': [],
-                            'ToPort': ToPort,
-                            'UserIdGroupPairs': []                        
-                        }
-                    ]
-                )            
-        else:
-            # print(data)
-            SourceGroupIds = data["IpPermissionsEgress"][x]['UserIdGroupPairs']
+    #     # print(data)
+    #     if data["IpPermissionsEgress"][x]['IpRanges'] != [] :
+    #         IpRanges = data["IpPermissionsEgress"][x]['IpRanges'] 
 
-            for SourceGroupId in SourceGroupIds:
-                print("revoke egress 2 - start")
-                print(SourceGroupId)
-                print("revoke egress 2 - end")                
-                ec2.revoke_security_group_egress(
-                    DryRun=False,
-                    GroupId=GroupId,            
-                    IpPermissions=[
-                        {
-                            'FromPort': FromPort,
-                            'IpProtocol': IpProtocol,                    
-                            'IpRanges': [],
-                            'Ipv6Ranges': [],
-                            'PrefixListIds': [],
-                            'ToPort': ToPort,
-                            'UserIdGroupPairs': [
-                                {
-                                    'GroupId': SourceGroupId["GroupId"],
-                                },
-                            ],                      
-                        }
-                    ]
-                )
+    #         for ip in IpRanges:
+    #             print("revoke egress 1 - start")
+    #             print(ip)
+    #             print("revoke egress 1 - end")
+    #             ec2.revoke_security_group_egress(
+    #                 DryRun=False,
+    #                 GroupId=GroupId,            
+    #                 IpPermissions=[
+    #                     {
+    #                         'FromPort': FromPort,
+    #                         'IpProtocol': IpProtocol,                    
+    #                         'IpRanges': [
+    #                             {
+    #                                 'CidrIp': ip["CidrIp"]
+    #                             },
+    #                         ],
+    #                         'Ipv6Ranges': [],
+    #                         'PrefixListIds': [],
+    #                         'ToPort': ToPort,
+    #                         'UserIdGroupPairs': []                        
+    #                     }
+    #                 ]
+    #             )            
+    #     else:
+    #         # print(data)
+    #         SourceGroupIds = data["IpPermissionsEgress"][x]['UserIdGroupPairs']
+
+    #         for SourceGroupId in SourceGroupIds:
+    #             print("revoke egress 2 - start")
+    #             print(SourceGroupId)
+    #             print("revoke egress 2 - end")                
+    #             ec2.revoke_security_group_egress(
+    #                 DryRun=False,
+    #                 GroupId=GroupId,            
+    #                 IpPermissions=[
+    #                     {
+    #                         'FromPort': FromPort,
+    #                         'IpProtocol': IpProtocol,                    
+    #                         'IpRanges': [],
+    #                         'Ipv6Ranges': [],
+    #                         'PrefixListIds': [],
+    #                         'ToPort': ToPort,
+    #                         'UserIdGroupPairs': [
+    #                             {
+    #                                 'GroupId': SourceGroupId["GroupId"],
+    #                             },
+    #                         ],                      
+    #                     }
+    #                 ]
+    #             )
 
     # except botocore.exceptions.ClientError as e:
     #     raise e
@@ -532,35 +540,35 @@ def main(event, context):
             revokeIngress(getSecurityGroup(sggroupid))
             revokeEgress(getSecurityGroup(sggroupid))
 
-            # dichead=None
-            # dicbody=None
-            # csvbody = list(dict.fromkeys(csvbody))
-            # for x in range(len(csvbody)-1):
-            #     # csvbody[x] <--- value csv yang bisa di store di list untuk dijadikan report waktu di email                
-            #     print(csvbody)
-            #     if x==0:
-            #         y= bytes.decode(csvbody[x])
-            #         dichead=y.split(";")
-            #     if x!=0:
-            #         y= bytes.decode(csvbody[x])
-            #         dicbody=y.split(";")
-            #         tmpdic = convertArrToDic(dichead,dicbody)
-            #         if tmpdic["Type"].lower() == "inbound":
-            #             print("authorizeSecurityGroupIngress " + str(x) + " - start")
-            #             print(tmpdic)
-            #             print("authorizeSecurityGroupIngress " + str(x) + "  - end")
-            #             response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
-            #         elif tmpdic["Type"].lower() == "outbound":
-            #             print("authorizeSecurityGroupEgress " + str(x) + "  - start")
-            #             print(tmpdic)
-            #             print("authorizeSecurityGroupEgress " + str(x) + "  - end")
-            #             response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
+            dichead=None
+            dicbody=None
+            csvbody = list(dict.fromkeys(csvbody))
+            for x in range(len(csvbody)-1):
+                # csvbody[x] <--- value csv yang bisa di store di list untuk dijadikan report waktu di email                
+                print(csvbody)
+                if x==0:
+                    y= bytes.decode(csvbody[x])
+                    dichead=y.split(";")
+                if x!=0:
+                    y= bytes.decode(csvbody[x])
+                    dicbody=y.split(";")
+                    tmpdic = convertArrToDic(dichead,dicbody)
+                    if tmpdic["Type"].lower() == "inbound":
+                        print("authorizeSecurityGroupIngress " + str(x) + " - start")
+                        print(tmpdic)
+                        print("authorizeSecurityGroupIngress " + str(x) + "  - end")
+                        response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
+                    elif tmpdic["Type"].lower() == "outbound":
+                        print("authorizeSecurityGroupEgress " + str(x) + "  - start")
+                        print(tmpdic)
+                        print("authorizeSecurityGroupEgress " + str(x) + "  - end")
+                        response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
 
-            # print("---1---") 
-            # print(csvbody)
-            # print("---2---")
-            # sendEmail("UPDATE_SG_",sggroupid,csvbody,True)
-            # print("---3---")
+            print("---1---") 
+            print(csvbody)
+            print("---2---")
+            sendEmail("UPDATE_SG_",sggroupid,csvbody,True)
+            print("---3---")
 
         elif csvfilename.__contains__("DELETE_SG_"):
             sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
