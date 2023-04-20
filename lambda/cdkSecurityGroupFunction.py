@@ -58,103 +58,23 @@ def deleteSecurityGroup(groupid):
 def revokeIngress(data):
     ec2 = boto3.client('ec2')
     data = data['SecurityGroups'][0]
-    # try:
-    GroupId = data["GroupId"]
-    
-    FromPort = None
-    ToPort = None
-    IpProtocol = None
-    IpRanges = None
-
-    print(data)
-    print(data["IpPermissions"])
-
-    if data["IpPermissions"] != [] or "UserIdGroupPairs" in data:
-        ec2.revoke_security_group_ingress(
-            DryRun=False,
-            GroupId=GroupId,            
-            IpPermissions=data["IpPermissions"]
-        )   
-
-    # if data["IpPermissions"] != []:     
-        # if "FromPort" in data["IpPermissions"][0]:
-        #     FromPort = data["IpPermissions"][0]["FromPort"]
-        # else:
-        #     FromPort = -1
-        # if "ToPort" in data["IpPermissions"][0]:
-        #     ToPort = data["IpPermissions"][0]["ToPort"]
-        # else:
-        #     ToPort = -1
+    try:
+        GroupId = data["GroupId"]
         
-        # IpProtocol = data["IpPermissions"][0]['IpProtocol']
+        FromPort = None
+        ToPort = None
+        IpProtocol = None
+        IpRanges = None
 
-        # if data["IpPermissions"][0]['IpRanges'] != [] :
-        #     IpRanges = data["IpPermissions"][0]['IpRanges'] 
+        if data["IpPermissions"] != [] or "UserIdGroupPairs" in data:
+            ec2.revoke_security_group_ingress(
+                DryRun=False,
+                GroupId=GroupId,            
+                IpPermissions=data["IpPermissions"]
+            )   
 
-        #     for ip in IpRanges:
-        #         print("revokeingress 1 - start")
-        #         print(ip)
-        #         print("revokeingress 1 - end")
-        #         ec2.revoke_security_group_ingress(
-        #             DryRun=False,
-        #             GroupId=GroupId,            
-        #             IpPermissions=[
-        #                 {
-        #                     'FromPort': FromPort,
-        #                     'IpProtocol': IpProtocol,                    
-        #                     'IpRanges': [
-        #                         {
-        #                             'CidrIp': ip["CidrIp"]
-        #                         },
-        #                     ],
-        #                     'Ipv6Ranges': [],
-        #                     'PrefixListIds': [],
-        #                     'ToPort': ToPort,
-        #                     'UserIdGroupPairs': []                        
-        #                 }
-        #             ]
-        #         )
-
-    # if "UserIdGroupPairs" in data:
-    #     if "FromPort" in data["IpPermissions"][0]:
-    #         FromPort = data["IpPermissions"][0]["FromPort"]
-    #     else:
-    #         FromPort = -1
-    #     if "ToPort" in data["IpPermissions"][0]:
-    #         ToPort = data["IpPermissions"][0]["ToPort"]
-    #     else:
-    #         ToPort = -1
-
-    #     if len(data["IpPermissions"][0]['UserIdGroupPairs']) >= 0:
-    #         print("revokeingress 2")
-    #         SourceGroupIds = data["IpPermissions"][0]['UserIdGroupPairs']
-
-    #         for SourceGroupId in SourceGroupIds:
-    #             print("revokeingress 2 - start")
-    #             print(SourceGroupId)
-    #             print("revokeingress 2 - end")
-
-    #             ec2.revoke_security_group_ingress(
-    #                 DryRun=False,
-    #                 GroupId=GroupId,            
-    #                 IpPermissions=[
-    #                     {
-    #                         'FromPort': FromPort,
-    #                         'IpProtocol': IpProtocol,                    
-    #                         'IpRanges': [],
-    #                         'Ipv6Ranges': [],
-    #                         'PrefixListIds': [],
-    #                         'ToPort': ToPort,
-    #                         'UserIdGroupPairs': [
-    #                             {
-    #                                 'GroupId': SourceGroupId["GroupId"],
-    #                             },
-    #                         ],
-    #                     }
-    #                 ]
-    #             )            
-    # except botocore.exceptions.ClientError as e:
-    #     raise e
+    except botocore.exceptions.ClientError as e:
+        raise e
 
 def revokeEgress(data):
     ec2 = boto3.client('ec2')
