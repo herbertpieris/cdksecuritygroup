@@ -87,11 +87,12 @@ def revokeEgress(data):
     IpProtocol = None
     IpRanges = None
 
-    ec2.revoke_security_group_egress(
-        DryRun=False,
-        GroupId=GroupId,            
-        IpPermissions=data["IpPermissionsEgress"]
-    )
+    if data["IpPermissionsEgress"] != [] :
+        ec2.revoke_security_group_egress(
+            DryRun=False,
+            GroupId=GroupId,            
+            IpPermissions=data["IpPermissionsEgress"]
+        )
 
     # for x in range(len(data["IpPermissionsEgress"])):
     #     if "FromPort" in data["IpPermissionsEgress"][x]:
