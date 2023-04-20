@@ -143,7 +143,7 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
 
     response = ec2.authorize_security_group_ingress(
         GroupId=groupid,
-        IpPermissions=dict(enumerate(IpPermissions))
+        IpPermissions=IpPermissions)
     )
     return response
     # except Exception:
