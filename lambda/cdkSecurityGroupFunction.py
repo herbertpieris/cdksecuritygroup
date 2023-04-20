@@ -110,41 +110,41 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
     else:
         ToPort = -1
 
+    IpPermissions = []
     if tmpdic["IpRanges"] != '':
-        response = ec2.authorize_security_group_ingress(
-            GroupId=groupid,
-            IpPermissions=[
-                {
-                    'FromPort': int(FromPort),
-                    'IpProtocol': tmpdic["IpProtocol"],
-                    'IpRanges': [
-                        {
-                            'CidrIp': tmpdic["IpRanges"],
-                            'Description': tmpdic["Description"],
-                        },
-                    ],
-                    'ToPort': int(ToPort),
-                },
-            ]            
-        )
+        IpPermissions.append([
+            {
+                'FromPort': int(FromPort),
+                'IpProtocol': tmpdic["IpProtocol"],
+                'IpRanges': [
+                    {
+                        'CidrIp': tmpdic["IpRanges"],
+                        'Description': tmpdic["Description"],
+                    },
+                ],
+                'ToPort': int(ToPort),
+            },
+        ])
     else:
-        response = ec2.authorize_security_group_ingress(
-            GroupId=groupid,
-            IpPermissions=[
-                {
-                    'FromPort': int(tmpdic["FromPort"]),
-                    'IpProtocol': tmpdic["IpProtocol"],
-                    'UserIdGroupPairs': [
-                        {
-                            'GroupId': tmpdic["UserIdGroupPairs\r"].replace("\r",""),
-                            'Description': tmpdic["Description"],
-                        },
-                    ],
-                    'ToPort': int(tmpdic["ToPort"]),
+        IpPermissions.append([
+            {
+                'FromPort': int(tmpdic["FromPort"]),
+                'IpProtocol': tmpdic["IpProtocol"],
+                'UserIdGroupPairs': [
+                    {
+                        'GroupId': tmpdic["UserIdGroupPairs\r"].replace("\r",""),
+                        'Description': tmpdic["Description"],
+                    },
+                ],
+                'ToPort': int(tmpdic["ToPort"]),
 
-                },
-            ],            
-        )
+            },
+        ])
+
+    response = ec2.authorize_security_group_ingress(
+        GroupId=groupid,
+        IpPermissions=IpPermissions
+    )
     return response
     # except Exception:
     #     return Exception
