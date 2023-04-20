@@ -69,13 +69,14 @@ def revokeIngress(data):
     print(data)
     print(data["IpPermissions"])
 
-    ec2.revoke_security_group_ingress(
-        DryRun=False,
-        GroupId=GroupId,            
-        IpPermissions=data["IpPermissions"]
-    )   
+    if data["IpPermissions"] != [] or "UserIdGroupPairs" in data:
+        ec2.revoke_security_group_ingress(
+            DryRun=False,
+            GroupId=GroupId,            
+            IpPermissions=data["IpPermissions"]
+        )   
 
-    # if data["IpPermissions"] != [] or "UserIdGroupPairs" in data:     
+    # if data["IpPermissions"] != []:     
         # if "FromPort" in data["IpPermissions"][0]:
         #     FromPort = data["IpPermissions"][0]["FromPort"]
         # else:
