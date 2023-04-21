@@ -163,46 +163,46 @@ def authorizeSecurityGroupEgress(groupid,tmpdic):
     else:
         ToPort = -1
 
+    IpPermissions=[]
     if tmpdic["IpRanges"] != '':
-        response = ec2.authorize_security_group_egress(
-            GroupId=groupid,
-            IpPermissions=[
-                {
-                    'FromPort': int(FromPort),
-                    'IpProtocol': tmpdic["IpProtocol"],
-                    'IpRanges': [
-                        {
-                            'CidrIp': tmpdic["IpRanges"],
-                            'Description': tmpdic["Description"],
-                        },
-                    ],
-                    'ToPort': int(ToPort),
-                },
-            ],
+        IpPermissions.append(
+            {
+                'FromPort': int(FromPort),
+                'IpProtocol': tmpdic["IpProtocol"],
+                'IpRanges': [
+                    {
+                        'CidrIp': tmpdic["IpRanges"],
+                        'Description': tmpdic["Description"],
+                    },
+                ],
+                'ToPort': int(ToPort),
+            },
         )
     else:
-        response = ec2.authorize_security_group_egress(
-            GroupId=groupid,
-            IpPermissions=[
-                {
-                    'FromPort': int(tmpdic["FromPort"]),
-                    'IpProtocol': tmpdic["IpProtocol"],
-                    'UserIdGroupPairs': [
-                        {
-                            'GroupId': tmpdic["UserIdGroupPairs\r"].replace("\r",""),
-                            'Description': tmpdic["Description"],
-                        },
-                    ],
-                    'ToPort': int(tmpdic["ToPort"]),
-                },
-            ],
+        IpPermissions.append(
+            {
+                'FromPort': int(tmpdic["FromPort"]),
+                'IpProtocol': tmpdic["IpProtocol"],
+                'UserIdGroupPairs': [
+                    {
+                        'GroupId': tmpdic["UserIdGroupPairs\r"].replace("\r",""),
+                        'Description': tmpdic["Description"],
+                    },
+                ],
+                'ToPort': int(tmpdic["ToPort"]),
+            },
         )
+
+    response = ec2.authorize_security_group_egress(
+        GroupId=groupid,
+        IpPermissions=IpPermissions
+    )
 
     return response
     # except Exception:
     #     return Exception
 
-def sendEmail(mode,sgid,csvbody,attachmentmode):
+def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue:None):
     try:
         wib = dateutil.tz.gettz('Asia/Jakarta')
         x = datetime.datetime.now(tz=wib)
@@ -214,14 +214,14 @@ def sendEmail(mode,sgid,csvbody,attachmentmode):
 
             dichead=None
             dicbody=None
-            for x in range(len(csvbody)-1):
+            for x in range(len(newvalue)-1):
                 if x==0:
-                    y= bytes.decode(csvbody[x])
+                    y= bytes.decode(newvalue[x])
                     dichead=y.split(";")
                     temp_my_file.writerow(dichead)
                                 
                 if x!=0:
-                    y= bytes.decode(csvbody[x])
+                    y= bytes.decode(newvalue[x])
                     dicbody=y.split(";")
                     temp_my_file.writerow(dicbody)
             my_file.close()
@@ -232,14 +232,14 @@ def sendEmail(mode,sgid,csvbody,attachmentmode):
 
             dichead=None
             dicbody=None
-            for x in range(len(csvbody)-1):
+            for x in range(len(newvalue)-1):
                 if x==0:
-                    y= bytes.decode(csvbody[x])
+                    y= bytes.decode(newvalue[x])
                     dichead=y.split(";")
                     temp_my_file.writerow(dichead)
                                 
                 if x!=0:
-                    y= bytes.decode(csvbody[x])
+                    y= bytes.decode(newvalue[x])
                     dicbody=y.split(";")
                     temp_my_file.writerow(dicbody)
             my_file.close()        
@@ -342,7 +342,7 @@ def main(event, context):
             revokeIngress(getSecurityGroup(sggroupid))
             revokeEgress(getSecurityGroup(sggroupid)) 
 
-            sendEmail("NEWEMP_SG_",sggroupid,csvbody,False)                       
+            sendEmail("NEWEMP_SG_",sggroupid,False,csvbody)                       
         elif csvfilename.__contains__("NEW_SG_"):
             tmp=csvfilename.replace("NEW_SG_","").replace(".csv", "")
             tmp=tmp.split("_")
@@ -384,11 +384,12 @@ def main(event, context):
             # print("---1---") 
             # print(csvbody)
             # print("---2---")
-            sendEmail("NEW_SG_",sggroupid,csvbody,True)
+            sendEmail("NEW_SG_",sggroupid,True,csvbody)
             # print("---3---")
         elif csvfilename.__contains__("UPDATE_SG_"):
             sggroupid=csvfilename.replace("UPDATE_SG_","").replace(".csv", "")
 
+            print(getSecurityGroup(sggroupid))
             revokeIngress(getSecurityGroup(sggroupid))
             revokeEgress(getSecurityGroup(sggroupid))
 
@@ -419,7 +420,7 @@ def main(event, context):
             print("---1---") 
             print(csvbody)
             print("---2---")
-            sendEmail("UPDATE_SG_",sggroupid,csvbody,True)
+            sendEmail("UPDATE_SG_",sggroupid,True,csvbody)
             print("---3---")
 
         elif csvfilename.__contains__("DELETE_SG_"):
