@@ -231,19 +231,20 @@ def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue:None):
             file_name = "/tmp/1" 
             my_file = open(file_name,"w+")
             temp_my_file = csv.writer(my_file)
+            temp_my_file.writerow(newvalue)
 
-            dichead=None
-            dicbody=None
-            for x in range(len(newvalue)-1):
-                if x==0:
-                    y= bytes.decode(newvalue[x])
-                    dichead=y.split(";")
-                    temp_my_file.writerow(dichead)
+            # dichead=None
+            # dicbody=None
+            # for x in range(len(newvalue)-1):
+            #     if x==0:
+            #         y= bytes.decode(newvalue[x])
+            #         dichead=y.split(";")
+            #         temp_my_file.writerow(dichead)
                                 
-                if x!=0:
-                    y= bytes.decode(newvalue[x])
-                    dicbody=y.split(";")
-                    temp_my_file.writerow(dicbody)
+            #     if x!=0:
+            #         y= bytes.decode(newvalue[x])
+            #         dicbody=y.split(";")
+            #         temp_my_file.writerow(dicbody)
             my_file.close()        
         
         msg = MIMEMultipart('alternative')
@@ -311,6 +312,8 @@ def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue:None):
         )
     except Exception as e:
         raise e
+
+# def rollBackNewSG():
 
 def main(event, context):
     # try:
@@ -393,8 +396,8 @@ def main(event, context):
 
             sgvalue=getSecurityGroup(sggroupid)
             print(sgvalue)
-            revokeIngress(getSecurityGroup(sggroupid))
-            revokeEgress(getSecurityGroup(sggroupid))
+            revokeIngress(sgvalue)
+            revokeEgress(sgvalue)
 
             dichead=None
             dicbody=None
@@ -423,7 +426,7 @@ def main(event, context):
             print("---1---") 
             print(csvbody)
             print("---2---")
-            sendEmail("UPDATE_SG_",sggroupid,True,csvbody)
+            sendEmail("UPDATE_SG_",sggroupid,True,csvbody,sgvalue)
             print("---3---")
 
         elif csvfilename.__contains__("DELETE_SG_"):
