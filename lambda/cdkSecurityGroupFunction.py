@@ -231,7 +231,11 @@ def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue:None):
             file_name = "/tmp/1" 
             my_file = open(file_name,"w+")
             temp_my_file = csv.writer(my_file)
-            temp_my_file.writerow(newvalue)
+
+            for x in range(len(newvalue)-1):
+                y= bytes.decode(newvalue[x])
+                z=y.split(";")
+                temp_my_file.writerow(z)
 
             # dichead=None
             # dicbody=None
