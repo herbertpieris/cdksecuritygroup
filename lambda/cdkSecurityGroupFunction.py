@@ -396,7 +396,7 @@ def main(event, context):
             sggroupid=csvfilename.replace("UPDATE_SG_","").replace(".csv", "")
 
             sgvalue=getSecurityGroup(sggroupid)
-            print(sgvalue)
+            print(sgvalue['SecurityGroups'][0])
             revokeIngress(sgvalue)
             revokeEgress(sgvalue)
 
@@ -427,7 +427,7 @@ def main(event, context):
             # print("---1---") 
             # print(csvbody)
             # print("---2---")
-            sendEmail("UPDATE_SG_",sggroupid,True,csvbody,sgvalue)
+            sendEmail("UPDATE_SG_",sggroupid,True,csvbody,sgvalue['SecurityGroups'][0])
             # print("---3---")
 
         elif csvfilename.__contains__("DELETE_SG_"):
