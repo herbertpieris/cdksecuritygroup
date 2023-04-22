@@ -405,7 +405,7 @@ def main(event, context):
             csvbody = list(dict.fromkeys(csvbody))
             for x in range(len(csvbody)-1):
                 # csvbody[x] <--- value csv yang bisa di store di list untuk dijadikan report waktu di email                
-                print(csvbody)
+                # print(csvbody)
                 if x==0:
                     y= bytes.decode(csvbody[x])
                     dichead=y.split(";")
