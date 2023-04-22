@@ -154,7 +154,7 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
 def authorizeSecurityGroupEgress(groupid,tmpdic):
     try:
         ec2 = boto3.client('ec2')
-        print(tmpdic)
+        # print(tmpdic)
 
         if tmpdic["FromPort"] != "":
             FromPort = tmpdic["FromPort"]
