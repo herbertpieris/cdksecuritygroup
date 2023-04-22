@@ -100,109 +100,109 @@ def revokeEgress(data):
         raise e
 
 def authorizeSecurityGroupIngress(groupid,tmpdic):
-    # try:
-    ec2 = boto3.client('ec2')
+    try:
+        ec2 = boto3.client('ec2')
 
-    if tmpdic["FromPort"] != "":
-        FromPort = tmpdic["FromPort"]
-    else:
-        FromPort = -1
-    if tmpdic["ToPort"] != "":
-        ToPort = tmpdic["ToPort"]
-    else:
-        ToPort = -1
+        if tmpdic["FromPort"] != "":
+            FromPort = tmpdic["FromPort"]
+        else:
+            FromPort = -1
+        if tmpdic["ToPort"] != "":
+            ToPort = tmpdic["ToPort"]
+        else:
+            ToPort = -1
 
-    IpPermissions = []
-    if tmpdic["IpRanges"] != '':
-        IpPermissions.append(
-            {
-                'FromPort': int(FromPort),
-                'IpProtocol': tmpdic["IpProtocol"],
-                'IpRanges': [
-                    {
-                        'CidrIp': tmpdic["IpRanges"],
-                        'Description': tmpdic["Description"],
-                    },
-                ],
-                'ToPort': int(ToPort),
-            },
+        IpPermissions = []
+        if tmpdic["IpRanges"] != '':
+            IpPermissions.append(
+                {
+                    'FromPort': int(FromPort),
+                    'IpProtocol': tmpdic["IpProtocol"],
+                    'IpRanges': [
+                        {
+                            'CidrIp': tmpdic["IpRanges"],
+                            'Description': tmpdic["Description"],
+                        },
+                    ],
+                    'ToPort': int(ToPort),
+                },
+            )
+        else:
+            IpPermissions.append(
+                {
+                    'FromPort': int(tmpdic["FromPort"]),
+                    'IpProtocol': tmpdic["IpProtocol"],
+                    'UserIdGroupPairs': [
+                        {
+                            'GroupId': tmpdic["UserIdGroupPairs\r"].replace("\r",""),
+                            'Description': tmpdic["Description"],
+                        },
+                    ],
+                    'ToPort': int(tmpdic["ToPort"]),
+
+                },
+            )
+
+        response = ec2.authorize_security_group_ingress(
+            GroupId=groupid,
+            IpPermissions=IpPermissions
         )
-    else:
-        IpPermissions.append(
-            {
-                'FromPort': int(tmpdic["FromPort"]),
-                'IpProtocol': tmpdic["IpProtocol"],
-                'UserIdGroupPairs': [
-                    {
-                        'GroupId': tmpdic["UserIdGroupPairs\r"].replace("\r",""),
-                        'Description': tmpdic["Description"],
-                    },
-                ],
-                'ToPort': int(tmpdic["ToPort"]),
-
-            },
-        )
-
-    response = ec2.authorize_security_group_ingress(
-        GroupId=groupid,
-        IpPermissions=IpPermissions
-    )
-    return response
-    # except Exception:
-    #     return Exception
+        return response
+    except Exception:
+        return Exception
 
 def authorizeSecurityGroupEgress(groupid,tmpdic):
-    # try:
-    ec2 = boto3.client('ec2')
-    print(tmpdic)
+    try:
+        ec2 = boto3.client('ec2')
+        print(tmpdic)
 
-    if tmpdic["FromPort"] != "":
-        FromPort = tmpdic["FromPort"]
-    else:
-        FromPort = -1
-    if tmpdic["ToPort"] != "":
-        ToPort = tmpdic["ToPort"]
-    else:
-        ToPort = -1
+        if tmpdic["FromPort"] != "":
+            FromPort = tmpdic["FromPort"]
+        else:
+            FromPort = -1
+        if tmpdic["ToPort"] != "":
+            ToPort = tmpdic["ToPort"]
+        else:
+            ToPort = -1
 
-    IpPermissions=[]
-    if tmpdic["IpRanges"] != '':
-        IpPermissions.append(
-            {
-                'FromPort': int(FromPort),
-                'IpProtocol': tmpdic["IpProtocol"],
-                'IpRanges': [
-                    {
-                        'CidrIp': tmpdic["IpRanges"],
-                        'Description': tmpdic["Description"],
-                    },
-                ],
-                'ToPort': int(ToPort),
-            },
+        IpPermissions=[]
+        if tmpdic["IpRanges"] != '':
+            IpPermissions.append(
+                {
+                    'FromPort': int(FromPort),
+                    'IpProtocol': tmpdic["IpProtocol"],
+                    'IpRanges': [
+                        {
+                            'CidrIp': tmpdic["IpRanges"],
+                            'Description': tmpdic["Description"],
+                        },
+                    ],
+                    'ToPort': int(ToPort),
+                },
+            )
+        else:
+            IpPermissions.append(
+                {
+                    'FromPort': int(tmpdic["FromPort"]),
+                    'IpProtocol': tmpdic["IpProtocol"],
+                    'UserIdGroupPairs': [
+                        {
+                            'GroupId': tmpdic["UserIdGroupPairs\r"].replace("\r",""),
+                            'Description': tmpdic["Description"],
+                        },
+                    ],
+                    'ToPort': int(tmpdic["ToPort"]),
+                },
+            )
+
+        response = ec2.authorize_security_group_egress(
+            GroupId=groupid,
+            IpPermissions=IpPermissions
         )
-    else:
-        IpPermissions.append(
-            {
-                'FromPort': int(tmpdic["FromPort"]),
-                'IpProtocol': tmpdic["IpProtocol"],
-                'UserIdGroupPairs': [
-                    {
-                        'GroupId': tmpdic["UserIdGroupPairs\r"].replace("\r",""),
-                        'Description': tmpdic["Description"],
-                    },
-                ],
-                'ToPort': int(tmpdic["ToPort"]),
-            },
-        )
 
-    response = ec2.authorize_security_group_egress(
-        GroupId=groupid,
-        IpPermissions=IpPermissions
-    )
-
-    return response
-    # except Exception:
-    #     return Exception
+        return response
+    except Exception:
+        return Exception
 
 def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue:None):
     try:
