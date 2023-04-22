@@ -205,114 +205,114 @@ def authorizeSecurityGroupEgress(groupid,tmpdic):
         return Exception
 
 def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue:None):
-    try:
-        wib = dateutil.tz.gettz('Asia/Jakarta')
-        x = datetime.datetime.now(tz=wib)
+    # try:
+    wib = dateutil.tz.gettz('Asia/Jakarta')
+    x = datetime.datetime.now(tz=wib)
 
-        if attachmentmode and mode=="NEW_SG_":
-            file_name = "/tmp/1" 
-            my_file = open(file_name,"w+")
-            temp_my_file = csv.writer(my_file)
+    if attachmentmode and mode=="NEW_SG_":
+        file_name = "/tmp/1" 
+        my_file = open(file_name,"w+")
+        temp_my_file = csv.writer(my_file)
 
-            dichead=None
-            dicbody=None
-            for x in range(len(newvalue)-1):
-                if x==0:
-                    y= bytes.decode(newvalue[x])
-                    dichead=y.split(";")
-                    temp_my_file.writerow(dichead)
-                                
-                if x!=0:
-                    y= bytes.decode(newvalue[x])
-                    dicbody=y.split(";")
-                    temp_my_file.writerow(dicbody)
-            my_file.close()
-        elif attachmentmode and mode=="UPDATE_SG_":
-            file_name = "/tmp/1" 
-            my_file = open(file_name,"w+")
-            temp_my_file = csv.writer(my_file)
-
-            for x in range(len(newvalue)-1):
+        dichead=None
+        dicbody=None
+        for x in range(len(newvalue)-1):
+            if x==0:
                 y= bytes.decode(newvalue[x])
-                z=y.split(";")
-                temp_my_file.writerow(z)
-            my_file.close()        
+                dichead=y.split(";")
+                temp_my_file.writerow(dichead)
+                            
+            if x!=0:
+                y= bytes.decode(newvalue[x])
+                dicbody=y.split(";")
+                temp_my_file.writerow(dicbody)
+        my_file.close()
+    elif attachmentmode and mode=="UPDATE_SG_":
+        file_name = "/tmp/1" 
+        my_file = open(file_name,"w+")
+        temp_my_file = csv.writer(my_file)
+
+        for x in range(len(newvalue)-1):
+            y= bytes.decode(newvalue[x])
+            z=y.split(";")
+            temp_my_file.writerow(z)
+        my_file.close()        
+    
+        file_name2 = "/tmp/2" 
+        my_file2 = open(file_name2,"w+")
+        temp_my_file2 = csv.writer(my_file2)
+
+        for x in range(len(oldvalue)-1):
+            y= bytes.decode(oldvalue[x])
+            z=y.split(";")
+            temp_my_file2.writerow(z)
+        my_file2.close()
+
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = mode + " - " + "SG" + " Notification"
+    msg['From'] = "herbertpieris@gmail.com"
+    msg['To'] = "herbertpieris@gmail.com" #event["email"]
+    if mode=="NEWEMP_SG_":
+        mail_body = sgid + " created"
+    elif mode=="NEW_SG_":
+        mail_body = sgid + " created"
+    elif mode=="UPDATE_SG_":
+        mail_body = sgid + " updated"            
+
+
+    # Create the body of the message (a plain-text and an HTML version).
+    html = """\
+    <html>
+        <head></head>
+        <body>
+        <p style="margin-top: 0.0px;margin-bottom: 0.0px;font-size: 11.0pt;font-family: Calibri , sans-serif;color: rgb(33,33,33);">Dear Technician<br><br> """ + mail_body + """
+        </p>
+        <p>&nbsp;</p>
+        <p style="margin-top: 0.0px;margin-bottom: 0.0px;font-size: 11.0pt;font-family: Calibri , sans-serif;color: rgb(33,33,33);"> <b><span lang="IN" style="font-size: 8.0pt;font-family: Arial , sans-serif;color: silver;">Note</span></b><span lang="IN" style="font-size: 8.0pt;font-family: Arial , sans-serif;color: silver;">:&nbsp;</span><span style="font-size: 8.0pt;font-family: Arial , sans-serif;color: silver;">This  email and its attachments are intended for the sole receipt of its stated addressees. Their contents are private and confidential. If you have received this email or its attachments in error, please immediately notify the sender and destroy the same without  reading, using, copying, storing and/or disseminating the same.</span><span lang="IN" style="font-size: 8.0pt;font-family: Arial , sans-serif;color: rgb(96,96,96);">&nbsp;&nbsp;</span><span style="font-size: 8.0pt;font-family: Arial , sans-serif;color: silver;">As  email communications are not secure, neither the sender nor any of the Japfa companies or their affiliates accepts any responsibility for any errors or changes resulting from interference or tampering.</span>
+        </p>
+        </body>
+    </html>
+    """      
+
+    ses = boto3.client('ses', use_ssl=True)
+
+    # Record the MIME types of both parts - text/plain and text/html.
+    # part1 = MIMEText(text, 'plain')
+    part2 = MIMEText(html, 'html')
+
+    # Attach parts into message container.
+    # According to RFC 2046, the last part of a multipart message, in this case
+    # the HTML message, is best and preferred.
+    # msg.attach(part1)
+    msg.attach(part2)
         
-            file_name2 = "/tmp/2" 
-            my_file2 = open(file_name2,"w+")
-            temp_my_file2 = csv.writer(my_file2)
+    if attachmentmode and (mode=="NEW_SG_" or mode=="UPDATE_SG_"):    
+        # ATTACHMENT = tmp_summary_file_name
 
-            for x in range(len(oldvalue)-1):
-                y= bytes.decode(oldvalue[x])
-                z=y.split(";")
-                temp_my_file2.writerow(z)
-            my_file2.close()
+        # part3 = MIMEApplication(open(ATTACHMENT, 'rb').read())
+        # part3.add_header('Content-Disposition', 'attachment', filename=summary_file_name)
+        # msg.attach(part3)   
 
-        msg = MIMEMultipart('alternative')
-        msg['Subject'] = mode + " - " + "SG" + " Notification"
-        msg['From'] = "herbertpieris@gmail.com"
-        msg['To'] = "herbertpieris@gmail.com" #event["email"]
-        if mode=="NEWEMP_SG_":
-            mail_body = sgid + " created"
-        elif mode=="NEW_SG_":
-            mail_body = sgid + " created"
-        elif mode=="UPDATE_SG_":
-            mail_body = sgid + " updated"            
+        ATTACHMENT = file_name
 
+        part4 = MIMEApplication(open(ATTACHMENT, 'rb').read())
+        part4.add_header('Content-Disposition', 'attachment', filename=file_name+".csv")
+        msg.attach(part4)
 
-        # Create the body of the message (a plain-text and an HTML version).
-        html = """\
-        <html>
-            <head></head>
-            <body>
-            <p style="margin-top: 0.0px;margin-bottom: 0.0px;font-size: 11.0pt;font-family: Calibri , sans-serif;color: rgb(33,33,33);">Dear Technician<br><br> """ + mail_body + """
-            </p>
-            <p>&nbsp;</p>
-            <p style="margin-top: 0.0px;margin-bottom: 0.0px;font-size: 11.0pt;font-family: Calibri , sans-serif;color: rgb(33,33,33);"> <b><span lang="IN" style="font-size: 8.0pt;font-family: Arial , sans-serif;color: silver;">Note</span></b><span lang="IN" style="font-size: 8.0pt;font-family: Arial , sans-serif;color: silver;">:&nbsp;</span><span style="font-size: 8.0pt;font-family: Arial , sans-serif;color: silver;">This  email and its attachments are intended for the sole receipt of its stated addressees. Their contents are private and confidential. If you have received this email or its attachments in error, please immediately notify the sender and destroy the same without  reading, using, copying, storing and/or disseminating the same.</span><span lang="IN" style="font-size: 8.0pt;font-family: Arial , sans-serif;color: rgb(96,96,96);">&nbsp;&nbsp;</span><span style="font-size: 8.0pt;font-family: Arial , sans-serif;color: silver;">As  email communications are not secure, neither the sender nor any of the Japfa companies or their affiliates accepts any responsibility for any errors or changes resulting from interference or tampering.</span>
-            </p>
-            </body>
-        </html>
-        """      
+    if attachmentmode and mode=="UPDATE_SG_":
+        ATTACHMENT = file_name2
 
-        ses = boto3.client('ses', use_ssl=True)
+        part5 = MIMEApplication(open(ATTACHMENT, 'rb').read())
+        part5.add_header('Content-Disposition', 'attachment', filename=file_name2+".csv")
+        msg.attach(part5)                 
+    
+    text = msg.as_string()
 
-        # Record the MIME types of both parts - text/plain and text/html.
-        # part1 = MIMEText(text, 'plain')
-        part2 = MIMEText(html, 'html')
-
-        # Attach parts into message container.
-        # According to RFC 2046, the last part of a multipart message, in this case
-        # the HTML message, is best and preferred.
-        # msg.attach(part1)
-        msg.attach(part2)
-            
-        if attachmentmode and (mode=="NEW_SG_" or mode=="UPDATE_SG_"):    
-            # ATTACHMENT = tmp_summary_file_name
-
-            # part3 = MIMEApplication(open(ATTACHMENT, 'rb').read())
-            # part3.add_header('Content-Disposition', 'attachment', filename=summary_file_name)
-            # msg.attach(part3)   
-
-            ATTACHMENT = file_name
-
-            part4 = MIMEApplication(open(ATTACHMENT, 'rb').read())
-            part4.add_header('Content-Disposition', 'attachment', filename=file_name+".csv")
-            msg.attach(part4)
-
-        if attachmentmode and mode=="UPDATE_SG_":
-            ATTACHMENT = file_name2
-
-            part5 = MIMEApplication(open(ATTACHMENT, 'rb').read())
-            part5.add_header('Content-Disposition', 'attachment', filename=file_name2+".csv")
-            msg.attach(part5)                 
-        
-        text = msg.as_string()
-
-        ses.send_raw_email(
-            RawMessage= { 'Data': text }
-        )
-    except Exception as e:
-        raise e
+    ses.send_raw_email(
+        RawMessage= { 'Data': text }
+    )
+    # except Exception as e:
+    #     raise e
 
 # def rollBackNewSG():
 
