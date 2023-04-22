@@ -414,21 +414,21 @@ def main(event, context):
                     dicbody=y.split(";")
                     tmpdic = convertArrToDic(dichead,dicbody)
                     if tmpdic["Type"].lower() == "inbound":
-                        print("authorizeSecurityGroupIngress " + str(x) + " - start")
-                        print(tmpdic)
-                        print("authorizeSecurityGroupIngress " + str(x) + "  - end")
+                        # print("authorizeSecurityGroupIngress " + str(x) + " - start")
+                        # print(tmpdic)
+                        # print("authorizeSecurityGroupIngress " + str(x) + "  - end")
                         response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
                     elif tmpdic["Type"].lower() == "outbound":
-                        print("authorizeSecurityGroupEgress " + str(x) + "  - start")
-                        print(tmpdic)
-                        print("authorizeSecurityGroupEgress " + str(x) + "  - end")
+                        # print("authorizeSecurityGroupEgress " + str(x) + "  - start")
+                        # print(tmpdic)
+                        # print("authorizeSecurityGroupEgress " + str(x) + "  - end")
                         response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
 
-            print("---1---") 
-            print(csvbody)
-            print("---2---")
+            # print("---1---") 
+            # print(csvbody)
+            # print("---2---")
             sendEmail("UPDATE_SG_",sggroupid,True,csvbody,sgvalue)
-            print("---3---")
+            # print("---3---")
 
         elif csvfilename.__contains__("DELETE_SG_"):
             sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
