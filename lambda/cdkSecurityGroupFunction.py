@@ -12,48 +12,50 @@ from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 
 def convertArrToDic(head,body):
-    data = {}    
-    for x in range(len(head)):
-        data[head[x]] = body[x]
-    
-    response = data
-    return response
-
+    try:
+        data = {}    
+        for x in range(len(head)):
+            data[head[x]] = body[x]
+        
+        response = data
+        return response        
+    except Exception:
+        return Exception    
 
 def getSecurityGroup(groupid):
-    # try:
-    ec2 = boto3.client('ec2')
-    response = ec2.describe_security_groups(
-        GroupIds=[groupid]
-    )
+    try:
+        ec2 = boto3.client('ec2')
+        response = ec2.describe_security_groups(
+            GroupIds=[groupid]
+        )
 
-    return response    
-    # except Exception:
-    #     return Exception
+        return response    
+    except Exception:
+        return Exception
 
 def createSecurityGroup(vpcid, groupname, description):
-    # try:
-    ec2 = boto3.client('ec2')
-    response = ec2.create_security_group(
-        Description=description,
-        GroupName=groupname,
-        VpcId=vpcid
-    )
+    try:
+        ec2 = boto3.client('ec2')
+        response = ec2.create_security_group(
+            Description=description,
+            GroupName=groupname,
+            VpcId=vpcid
+        )
 
-    return response
-    # except Exception:
-    #     return Exception
+        return response
+    except Exception:
+        return Exception
 
 def deleteSecurityGroup(groupid):
-    # try:
-    ec2 = boto3.client('ec2')
-    response = ec2.delete_security_group(
-        GroupId=groupid
-    )
+    try:
+        ec2 = boto3.client('ec2')
+        response = ec2.delete_security_group(
+            GroupId=groupid
+        )
 
-    return response
-    # except Exception:
-    #     return Exception
+        return response
+    except Exception:
+        return Exception
 
 def revokeIngress(data):
     ec2 = boto3.client('ec2')
@@ -389,7 +391,8 @@ def main(event, context):
         elif csvfilename.__contains__("UPDATE_SG_"):
             sggroupid=csvfilename.replace("UPDATE_SG_","").replace(".csv", "")
 
-            print(getSecurityGroup(sggroupid))
+            sgvalue=getSecurityGroup(sggroupid)
+            print(sgvalue)
             revokeIngress(getSecurityGroup(sggroupid))
             revokeEgress(getSecurityGroup(sggroupid))
 
