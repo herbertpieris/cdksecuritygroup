@@ -236,21 +236,18 @@ def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue:None):
                 y= bytes.decode(newvalue[x])
                 z=y.split(";")
                 temp_my_file.writerow(z)
-
-            # dichead=None
-            # dicbody=None
-            # for x in range(len(newvalue)-1):
-            #     if x==0:
-            #         y= bytes.decode(newvalue[x])
-            #         dichead=y.split(";")
-            #         temp_my_file.writerow(dichead)
-                                
-            #     if x!=0:
-            #         y= bytes.decode(newvalue[x])
-            #         dicbody=y.split(";")
-            #         temp_my_file.writerow(dicbody)
             my_file.close()        
         
+            file_name2 = "/tmp/2" 
+            my_file2 = open(file_name2,"w+")
+            temp_my_file2 = csv.writer(my_file2)
+
+            for x in range(len(oldvalue)-1):
+                y= bytes.decode(oldvalue[x])
+                z=y.split(";")
+                temp_my_file2.writerow(z)
+            my_file2.close()
+
         msg = MIMEMultipart('alternative')
         msg['Subject'] = mode + " - " + "SG" + " Notification"
         msg['From'] = "herbertpieris@gmail.com"
@@ -303,10 +300,10 @@ def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue:None):
             msg.attach(part4)
 
         if attachmentmode and mode=="UPDATE_SG_":
-            ATTACHMENT = file_name
+            ATTACHMENT = file_name2
 
             part5 = MIMEApplication(open(ATTACHMENT, 'rb').read())
-            part5.add_header('Content-Disposition', 'attachment', filename=file_name+".csv")
+            part5.add_header('Content-Disposition', 'attachment', filename=file_name2+".csv")
             msg.attach(part5)                 
         
         text = msg.as_string()
