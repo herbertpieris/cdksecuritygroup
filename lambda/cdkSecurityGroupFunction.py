@@ -243,7 +243,7 @@ def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue:None):
         temp_my_file2 = csv.writer(my_file2)
 
         if oldvalue["IpPermissions"] != []:
-            for x in range(len(oldvalue["IpPermissions"]-1):
+            for x in range(len(oldvalue["IpPermissions"]-1)):
                 y= bytes.decode(oldvalue["IpPermissions"][x])
                 z=y.split(";")
                 temp_my_file2.writerow(z)
