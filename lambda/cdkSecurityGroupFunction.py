@@ -244,6 +244,7 @@ def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue:None):
 
         if oldvalue["IpPermissions"] != []:
             for x in range(len(oldvalue["IpPermissions"])-1):
+                print(oldvalue["IpPermissions"][x])
                 y= bytes.decode(oldvalue["IpPermissions"][x])
                 z=y.split(";")
                 temp_my_file2.writerow(z)
