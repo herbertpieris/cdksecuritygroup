@@ -242,10 +242,24 @@ def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue:None):
         my_file2 = open(file_name2,"w+")
         temp_my_file2 = csv.writer(my_file2)
 
-        for x in range(len(oldvalue)-1):
-            y= bytes.decode(oldvalue[x])
-            z=y.split(";")
-            temp_my_file2.writerow(z)
+        if oldvalue["IpPermissions"] != []:
+            for x in range(len(oldvalue["IpPermissions"]-1):
+                y= bytes.decode(oldvalue["IpPermissions"][x])
+                z=y.split(";")
+                temp_my_file2.writerow(z)
+
+        if "UserIdGroupPairs" in oldvalue:
+            for x in range(len(oldvalue["UserIdGroupPairs"])-1):
+                y= bytes.decode(oldvalue["UserIdGroupPairs"][x])
+                z=y.split(";")
+                temp_my_file2.writerow(z)                
+
+        if oldvalue["IpPermissionsEgress"] != [] :
+            for x in range(len(oldvalue["IpPermissionsEgress"])-1):
+                y= bytes.decode(oldvalue["IpPermissionsEgress"][x])
+                z=y.split(";")
+                temp_my_file2.writerow(z)
+
         my_file2.close()
 
     msg = MIMEMultipart('alternative')
