@@ -339,7 +339,10 @@ def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue:None):
     # try:
 
     ses = boto3.client('ses', use_ssl=True)
-    text = compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue) 
+    if oldvalue:
+        text = compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue) 
+    else:
+        text = compileEmail(mode, sgid, attachmentmode, newvalue)
 
     ses.send_raw_email(
         RawMessage= { 'Data': text }
@@ -451,8 +454,8 @@ def processRecord(record):
 
         sgvalue=getSecurityGroup(sggroupid)
         # print(sgvalue['SecurityGroups'][0])
-        revokeIngress(sgvalue)
-        revokeEgress(sgvalue)
+        revokeIngressRecords(sgvalue)
+        revokeEgressRecords(sgvalue)
 
         dichead=None
         dicbody=None
