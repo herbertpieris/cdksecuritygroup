@@ -378,8 +378,10 @@ def processNewEmptySG(csvfilename,csvbody):
     sggroupname=tmp[1]
     sgdescription=tmp[1]
     sgvpcid=tmp[0]
-
+    
     sggroupid = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
+    print(sggroupid)
+    print(sggroupid["GroupId"])
     sggroupid = sggroupid["GroupId"]
 
     sgValue = getSecurityGroup(sggroupid)
