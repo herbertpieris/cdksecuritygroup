@@ -40,17 +40,17 @@ def getSecurityGroup(groupid):
 ### createSecurityGroup
 ### creating security group
 def createSecurityGroup(vpcid, groupname, description):
-    try:
-        ec2 = boto3.client('ec2')
-        response = ec2.create_security_group(
-            Description=description,
-            GroupName=groupname,
-            VpcId=vpcid
-        )
+    # try:
+    ec2 = boto3.client('ec2')
+    response = ec2.create_security_group(
+        Description=description,
+        GroupName=groupname,
+        VpcId=vpcid
+    )
 
-        return response
-    except Exception:
-        return Exception
+    return response
+    # except Exception:
+    #     return Exception
 
 ### deleteSecurityGroup
 ### deleting security group
