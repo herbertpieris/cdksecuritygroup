@@ -11,6 +11,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 
+### convertArrDic
+### convert list to dictionary
 def convertArrToDic(head,body):
     try:
         data = {}    
@@ -22,6 +24,8 @@ def convertArrToDic(head,body):
     except Exception:
         return Exception    
 
+### getSecurityGroup
+### describe security group
 def getSecurityGroup(groupid):
     try:
         ec2 = boto3.client('ec2')
@@ -33,6 +37,8 @@ def getSecurityGroup(groupid):
     except Exception:
         return Exception
 
+### createSecurityGroup
+### creating security group
 def createSecurityGroup(vpcid, groupname, description):
     try:
         ec2 = boto3.client('ec2')
@@ -46,6 +52,8 @@ def createSecurityGroup(vpcid, groupname, description):
     except Exception:
         return Exception
 
+### deleteSecurityGroup
+### deleting security group
 def deleteSecurityGroup(groupid):
     try:
         ec2 = boto3.client('ec2')
@@ -57,17 +65,14 @@ def deleteSecurityGroup(groupid):
     except Exception:
         return Exception
 
-def revokeIngress(data):
+### revokeIngressRecords
+### remove ingress records from security group
+def revokeIngressRecords(data):
     ec2 = boto3.client('ec2')
     data = data['SecurityGroups'][0]
     try:
         GroupId = data["GroupId"]
         
-        FromPort = None
-        ToPort = None
-        IpProtocol = None
-        IpRanges = None
-
         if data["IpPermissions"] != [] or "UserIdGroupPairs" in data:
             ec2.revoke_security_group_ingress(
                 DryRun=False,
@@ -78,16 +83,13 @@ def revokeIngress(data):
     except botocore.exceptions.ClientError as e:
         raise e
 
-def revokeEgress(data):
+### revokeEgressRecords
+### remove egress records from security group
+def revokeEgressRecords(data):
     ec2 = boto3.client('ec2')
     data = data['SecurityGroups'][0]
     try:
         GroupId = data["GroupId"]
-        
-        FromPort = None
-        ToPort = None
-        IpProtocol = None
-        IpRanges = None
 
         if data["IpPermissionsEgress"] != [] :
             ec2.revoke_security_group_egress(
@@ -99,24 +101,31 @@ def revokeEgress(data):
     except botocore.exceptions.ClientError as e:
         raise e
 
+### validatePort
+### figure out from and to port    
+def validatePort(tmpdic):
+    fromPort = -1
+    if tmpdic["FromPort"] != "":
+        FromPort = tmpdic["FromPort"]
+
+    toPort = -1
+    if tmpdic["ToPort"] != "":
+        ToPort = tmpdic["ToPort"]
+    
+    return fromPort, toPort
+
+### authorizeSecurityGroupIngress
+### input ingress record to security group
 def authorizeSecurityGroupIngress(groupid,tmpdic):
     try:
         ec2 = boto3.client('ec2')
-
-        if tmpdic["FromPort"] != "":
-            FromPort = tmpdic["FromPort"]
-        else:
-            FromPort = -1
-        if tmpdic["ToPort"] != "":
-            ToPort = tmpdic["ToPort"]
-        else:
-            ToPort = -1
+        fromPort, toPort = validatePort(tmpdic)
 
         IpPermissions = []
         if tmpdic["IpRanges"] != '':
             IpPermissions.append(
                 {
-                    'FromPort': int(FromPort),
+                    'FromPort': int(fromPort),
                     'IpProtocol': tmpdic["IpProtocol"],
                     'IpRanges': [
                         {
@@ -124,7 +133,7 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
                             'Description': tmpdic["Description"],
                         },
                     ],
-                    'ToPort': int(ToPort),
+                    'ToPort': int(toPort),
                 },
             )
         else:
@@ -154,22 +163,13 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
 def authorizeSecurityGroupEgress(groupid,tmpdic):
     try:
         ec2 = boto3.client('ec2')
-        # print(tmpdic)
-
-        if tmpdic["FromPort"] != "":
-            FromPort = tmpdic["FromPort"]
-        else:
-            FromPort = -1
-        if tmpdic["ToPort"] != "":
-            ToPort = tmpdic["ToPort"]
-        else:
-            ToPort = -1
+        fromPort, toPort = validatePort(tmpdic)
 
         IpPermissions=[]
         if tmpdic["IpRanges"] != '':
             IpPermissions.append(
                 {
-                    'FromPort': int(FromPort),
+                    'FromPort': int(fromPort),
                     'IpProtocol': tmpdic["IpProtocol"],
                     'IpRanges': [
                         {
@@ -177,7 +177,7 @@ def authorizeSecurityGroupEgress(groupid,tmpdic):
                             'Description': tmpdic["Description"],
                         },
                     ],
-                    'ToPort': int(ToPort),
+                    'ToPort': int(toPort),
                 },
             )
         else:
@@ -204,64 +204,77 @@ def authorizeSecurityGroupEgress(groupid,tmpdic):
     except Exception:
         return Exception
 
-def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue:None):
-    # try:
-    wib = dateutil.tz.gettz('Asia/Jakarta')
-    x = datetime.datetime.now(tz=wib)
+def writeAttachment(filename,value, mode):
+    file_name = "/tmp/"+filename 
+    my_file = open(file_name,"w+")
+    temp_my_file = csv.writer(my_file)
 
-    if attachmentmode and mode=="NEW_SG_":
-        file_name = "/tmp/1" 
-        my_file = open(file_name,"w+")
-        temp_my_file = csv.writer(my_file)
-
+    if mode==1:
         dichead=None
         dicbody=None
-        for x in range(len(newvalue)-1):
+        for x in range(len(value)-1):
             if x==0:
-                y= bytes.decode(newvalue[x])
+                y= bytes.decode(value[x])
                 dichead=y.split(";")
                 temp_my_file.writerow(dichead)
                             
             if x!=0:
-                y= bytes.decode(newvalue[x])
+                y= bytes.decode(value[x])
                 dicbody=y.split(";")
                 temp_my_file.writerow(dicbody)
         my_file.close()
-    elif attachmentmode and mode=="UPDATE_SG_":
-        file_name = "/tmp/1" 
-        my_file = open(file_name,"w+")
-        temp_my_file = csv.writer(my_file)
+    elif mode==2:
+        if value["IpPermissions"] != []:        
+            for x in range(len(value["IpPermissions"])-1):
+                # csvbody[x] <--- value csv yang bisa di store di list untuk dijadikan report waktu di email
+                if x==0:
+                    y= bytes.decode(csvbody[x])
+                    dichead=y.split(";")
+                if x!=0:
+                    y= bytes.decode(csvbody[x])
+                    dicbody=y.split(";")
+                    tmpdic = convertArrToDic(dichead,dicbody)
+                    if tmpdic["Type"].lower() == "inbound":
+                        response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
+                    elif tmpdic["Type"].lower() == "outbound":
+                        response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
 
-        for x in range(len(newvalue)-1):
-            y= bytes.decode(newvalue[x])
-            z=y.split(";")
-            temp_my_file.writerow(z)
+        if value["IpPermissions"] != []:
+            for x in range(len(value["IpPermissions"])-1):
+                print(value["IpPermissions"][x])
+                y= bytes.decode(value["IpPermissions"][x])
+                z=y.split(";")
+                temp_my_file.writerow(z)
+
+        if "UserIdGroupPairs" in value:
+            for x in range(len(value["UserIdGroupPairs"])-1):
+                y= bytes.decode(value["UserIdGroupPairs"][x])
+                z=y.split(";")
+                temp_my_file.writerow(z)                
+
+        if value["IpPermissionsEgress"] != [] :
+            for x in range(len(value["IpPermissionsEgress"])-1):
+                y= bytes.decode(value["IpPermissionsEgress"][x])
+                z=y.split(";")
+                temp_my_file.writerow(z)
+
         my_file.close()        
-    
-        file_name2 = "/tmp/2" 
-        my_file2 = open(file_name2,"w+")
-        temp_my_file2 = csv.writer(my_file2)
+    return my_file
 
-        if oldvalue["IpPermissions"] != []:
-            for x in range(len(oldvalue["IpPermissions"])-1):
-                print(oldvalue["IpPermissions"][x])
-                y= bytes.decode(oldvalue["IpPermissions"][x])
-                z=y.split(";")
-                temp_my_file2.writerow(z)
+def compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue:None):
+    wib = dateutil.tz.gettz('Asia/Jakarta')
+    x = datetime.datetime.now(tz=wib)
 
-        if "UserIdGroupPairs" in oldvalue:
-            for x in range(len(oldvalue["UserIdGroupPairs"])-1):
-                y= bytes.decode(oldvalue["UserIdGroupPairs"][x])
-                z=y.split(";")
-                temp_my_file2.writerow(z)                
+    if attachmentmode and mode=="NEW_SG_":
+        filename1="new"
+        fileNewValue=writeAttachment(filename1,newvalue, 1)
 
-        if oldvalue["IpPermissionsEgress"] != [] :
-            for x in range(len(oldvalue["IpPermissionsEgress"])-1):
-                y= bytes.decode(oldvalue["IpPermissionsEgress"][x])
-                z=y.split(";")
-                temp_my_file2.writerow(z)
+    elif attachmentmode and mode=="UPDATE_SG_":
+        filename1="new"
+        fileNewValue=writeAttachment(filename1,1)
 
-        my_file2.close()
+        filename2="old"
+        fileOldValue=writeAttachment(filename2,2)
 
     msg = MIMEMultipart('alternative')
     msg['Subject'] = mode + " - " + "SG" + " Notification"
@@ -287,9 +300,7 @@ def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue:None):
         </p>
         </body>
     </html>
-    """      
-
-    ses = boto3.client('ses', use_ssl=True)
+    """    
 
     # Record the MIME types of both parts - text/plain and text/html.
     # part1 = MIMEText(text, 'plain')
@@ -308,20 +319,27 @@ def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue:None):
         # part3.add_header('Content-Disposition', 'attachment', filename=summary_file_name)
         # msg.attach(part3)   
 
-        ATTACHMENT = file_name
+        ATTACHMENT = fileNewValue
 
         part4 = MIMEApplication(open(ATTACHMENT, 'rb').read())
-        part4.add_header('Content-Disposition', 'attachment', filename=file_name+".csv")
+        part4.add_header('Content-Disposition', 'attachment', filename=filename1+".csv")
         msg.attach(part4)
 
     if attachmentmode and mode=="UPDATE_SG_":
-        ATTACHMENT = file_name2
+        ATTACHMENT = fileOldValue
 
         part5 = MIMEApplication(open(ATTACHMENT, 'rb').read())
-        part5.add_header('Content-Disposition', 'attachment', filename=file_name2+".csv")
-        msg.attach(part5)                 
+        part5.add_header('Content-Disposition', 'attachment', filename=filename2+".csv")
+        msg.attach(part5)
     
     text = msg.as_string()
+    return text    
+
+def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue:None):
+    # try:
+
+    ses = boto3.client('ses', use_ssl=True)
+    text = compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue) 
 
     ses.send_raw_email(
         RawMessage= { 'Data': text }
@@ -331,127 +349,153 @@ def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue:None):
 
 # def rollBackNewSG():
 
-def main(event, context):
-    # try:
+def readCSV(record, csvfilename):
     s3 = boto3.client('s3')
+    s3BucketName = record['s3']['bucket']['name']
 
+    # read csv
+    csvfile = s3.get_object(Bucket=s3BucketName,Key=csvfilename)
+    csvbody = csvfile["Body"].read().split(b'\n')
+    return csvbody
+
+### getSGName function
+### get security group name from csv file name
+### that will be used as securigy group identifier
+def getSGName(csvfilename,lookup):
+    tmp=csvfilename.replace(lookup,"").replace(".csv", "")
+    tmp=tmp.split("_")
+    return tmp
+
+### processNewEmptySG
+### create security group without ingress or egress record
+### send email notification
+def processNewEmptySG(csvfilename,csvbody):
+    tmp = getSGName(csvfilename,"NEWEMP_SG_")
+
+    sggroupname=tmp[1]
+    sgdescription=tmp[1]
+    sgvpcid=tmp[0]
+
+    sggroupid = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
+    sggroupid = sggroupid["GroupId"]
+
+    sgValue = getSecurityGroup(sggroupid)
+    revokeIngressRecords(sgValue)
+    revokeEgressRecords(sgValue) 
+
+    sendEmail("NEWEMP_SG_",sggroupid,False,csvbody)
+
+### processNewSG
+### create security group with ingress or egress record
+### send email notification
+def processNewSG(csvfilename,csvbody):
+    tmp = getSGName(csvfilename,"NEW_SG_")
+
+    sggroupname=tmp[1]
+    sgdescription=tmp[1]
+    sgvpcid=tmp[0]
+
+    sggroupid = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
+    sggroupid = sggroupid["GroupId"]
+
+    sgValue = getSecurityGroup(sggroupid)
+    revokeIngressRecords(sgValue)
+    revokeEgressRecords(sgValue)             
+
+    dichead=None
+    dicbody=None
+    csvbody = list(dict.fromkeys(csvbody))            
+    for x in range(len(csvbody)-1):
+        # csvbody[x] <--- value csv yang bisa di store di list untuk dijadikan report waktu di email
+        if x==0:
+            y= bytes.decode(csvbody[x])
+            dichead=y.split(";")
+        if x!=0:
+            y= bytes.decode(csvbody[x])
+            dicbody=y.split(";")
+            tmpdic = convertArrToDic(dichead,dicbody)
+            if tmpdic["Type"].lower() == "inbound":
+                response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
+            elif tmpdic["Type"].lower() == "outbound":
+                response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
+            
+        # response=None
+        # try:                
+        # response=authorizeSecurityGroupIngress(sggroupid)
+        # except Exception:
+        #     print(Exception) 
+        
+    # print("---1---") 
+    # print(csvbody)
+    # print("---2---")
+    sendEmail("NEW_SG_",sggroupid,True,csvbody)
+    # print("---3---")       
+
+### processRecord function
+### processing record from main function
+def processRecord(record):
+    csvfilename = record['s3']['object']['key']
+    CSV = readCSV(record, csvfilename)
+
+    sggroupname=None
+    sgdescription=None
+    sgvpcid=None
+    sggroupid=None
+
+    if csvfilename.__contains__("NEWEMP_SG_"):
+        processNewEmptySG(csvfilename,CSV)
+    elif csvfilename.__contains__("NEW_SG_"):
+        processNewSG(csvfilename,CSV)
+    elif csvfilename.__contains__("UPDATE_SG_"):
+        sggroupid=csvfilename.replace("UPDATE_SG_","").replace(".csv", "")
+
+        sgvalue=getSecurityGroup(sggroupid)
+        # print(sgvalue['SecurityGroups'][0])
+        revokeIngress(sgvalue)
+        revokeEgress(sgvalue)
+
+        dichead=None
+        dicbody=None
+        csvbody = list(dict.fromkeys(csvbody))
+        for x in range(len(csvbody)-1):
+            # csvbody[x] <--- value csv yang bisa di store di list untuk dijadikan report waktu di email                
+            # print(csvbody)
+            if x==0:
+                y= bytes.decode(csvbody[x])
+                dichead=y.split(";")
+            if x!=0:
+                y= bytes.decode(csvbody[x])
+                dicbody=y.split(";")
+                tmpdic = convertArrToDic(dichead,dicbody)
+                if tmpdic["Type"].lower() == "inbound":
+                    # print("authorizeSecurityGroupIngress " + str(x) + " - start")
+                    # print(tmpdic)
+                    # print("authorizeSecurityGroupIngress " + str(x) + "  - end")
+                    response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
+                elif tmpdic["Type"].lower() == "outbound":
+                    # print("authorizeSecurityGroupEgress " + str(x) + "  - start")
+                    # print(tmpdic)
+                    # print("authorizeSecurityGroupEgress " + str(x) + "  - end")
+                    response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
+
+        # print("---1---") 
+        # print(csvbody)
+        # print("---2---")
+        sendEmail("UPDATE_SG_",sggroupid,True,csvbody,sgvalue['SecurityGroups'][0])
+        # print("---3---")
+
+    elif csvfilename.__contains__("DELETE_SG_"):
+        sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
+        response = deleteSecurityGroup(sggroupid)  
+
+### main function
+### process event records triggered by s3 events
+def main(event, context):
     # capture event invoke from s3
     for record in event["Records"]:       
-        s3BucketName = record['s3']['bucket']['name']
-        csvfilename = record['s3']['object']['key']
-
-        # read csv
-        csvfile = s3.get_object(Bucket=s3BucketName,Key=csvfilename)
-        csvbody = csvfile["Body"].read().split(b'\n')
-
-        sggroupname=None
-        sgdescription=None
-        sgvpcid=None
-        sggroupid=None
-        if csvfilename.__contains__("NEWEMP_SG_"):
-            tmp=csvfilename.replace("NEWEMP_SG_","").replace(".csv", "")
-            tmp=tmp.split("_")
-            sggroupname=tmp[1]
-            sgdescription=tmp[1]
-            sgvpcid=tmp[0]
-
-            sggroupid = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
-            print(sggroupid)
-            sggroupid = sggroupid["GroupId"]
-            print(sggroupid)
-
-            revokeIngress(getSecurityGroup(sggroupid))
-            revokeEgress(getSecurityGroup(sggroupid)) 
-
-            sendEmail("NEWEMP_SG_",sggroupid,False,csvbody)                       
-        elif csvfilename.__contains__("NEW_SG_"):
-            tmp=csvfilename.replace("NEW_SG_","").replace(".csv", "")
-            tmp=tmp.split("_")
-            sggroupname=tmp[1]
-            sgdescription=tmp[1]
-            sgvpcid=tmp[0]
-
-            sggroupid = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
-            print(sggroupid)
-            sggroupid = sggroupid["GroupId"]
-            print(sggroupid)
-
-            revokeIngress(getSecurityGroup(sggroupid))
-            revokeEgress(getSecurityGroup(sggroupid))            
-
-            dichead=None
-            dicbody=None
-            csvbody = list(dict.fromkeys(csvbody))            
-            for x in range(len(csvbody)-1):
-                # csvbody[x] <--- value csv yang bisa di store di list untuk dijadikan report waktu di email
-                if x==0:
-                    y= bytes.decode(csvbody[x])
-                    dichead=y.split(";")
-                if x!=0:
-                    y= bytes.decode(csvbody[x])
-                    dicbody=y.split(";")
-                    tmpdic = convertArrToDic(dichead,dicbody)
-                    if tmpdic["Type"].lower() == "inbound":
-                        response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
-                    elif tmpdic["Type"].lower() == "outbound":
-                        response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
-                    
-                # response=None
-                # try:                
-                # response=authorizeSecurityGroupIngress(sggroupid)
-                # except Exception:
-                #     print(Exception) 
-               
-            # print("---1---") 
-            # print(csvbody)
-            # print("---2---")
-            sendEmail("NEW_SG_",sggroupid,True,csvbody)
-            # print("---3---")
-        elif csvfilename.__contains__("UPDATE_SG_"):
-            sggroupid=csvfilename.replace("UPDATE_SG_","").replace(".csv", "")
-
-            sgvalue=getSecurityGroup(sggroupid)
-            # print(sgvalue['SecurityGroups'][0])
-            revokeIngress(sgvalue)
-            revokeEgress(sgvalue)
-
-            dichead=None
-            dicbody=None
-            csvbody = list(dict.fromkeys(csvbody))
-            for x in range(len(csvbody)-1):
-                # csvbody[x] <--- value csv yang bisa di store di list untuk dijadikan report waktu di email                
-                # print(csvbody)
-                if x==0:
-                    y= bytes.decode(csvbody[x])
-                    dichead=y.split(";")
-                if x!=0:
-                    y= bytes.decode(csvbody[x])
-                    dicbody=y.split(";")
-                    tmpdic = convertArrToDic(dichead,dicbody)
-                    if tmpdic["Type"].lower() == "inbound":
-                        # print("authorizeSecurityGroupIngress " + str(x) + " - start")
-                        # print(tmpdic)
-                        # print("authorizeSecurityGroupIngress " + str(x) + "  - end")
-                        response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
-                    elif tmpdic["Type"].lower() == "outbound":
-                        # print("authorizeSecurityGroupEgress " + str(x) + "  - start")
-                        # print(tmpdic)
-                        # print("authorizeSecurityGroupEgress " + str(x) + "  - end")
-                        response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
-
-            # print("---1---") 
-            # print(csvbody)
-            # print("---2---")
-            sendEmail("UPDATE_SG_",sggroupid,True,csvbody,sgvalue['SecurityGroups'][0])
-            # print("---3---")
-
-        elif csvfilename.__contains__("DELETE_SG_"):
-            sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
-            response = deleteSecurityGroup(sggroupid)  
+       processRecord(record)
 
     # return {
     #     'statusCode': 200,
     #     'body': response
-    # }              
-    # except Exception:
-    #     return Exception
+    # }
