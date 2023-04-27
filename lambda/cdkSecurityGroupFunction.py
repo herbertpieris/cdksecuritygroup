@@ -204,6 +204,7 @@ def authorizeSecurityGroupEgress(groupid,tmpdic):
     except Exception:
         return Exception
 
+### writeAttachment
 def writeAttachment(filename,value, mode):
     file_name = "/tmp/"+filename 
     my_file = open(file_name,"w+")
