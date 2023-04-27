@@ -280,6 +280,7 @@ def compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue:None):
     msg['Subject'] = mode + " - " + "SG" + " Notification"
     msg['From'] = "herbertpieris@gmail.com"
     msg['To'] = "herbertpieris@gmail.com" #event["email"]
+
     if mode=="NEWEMP_SG_":
         mail_body = sgid + " created"
     elif mode=="NEW_SG_":
@@ -339,6 +340,7 @@ def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue:None):
     # try:
 
     ses = boto3.client('ses', use_ssl=True)
+    print(oldvalue)
     if oldvalue:
         text = compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue) 
     else:
@@ -388,7 +390,7 @@ def processNewEmptySG(csvfilename,csvbody):
     revokeIngressRecords(sgValue)
     revokeEgressRecords(sgValue) 
 
-    sendEmail("NEWEMP_SG_",sggroupid,False,csvbody,None)
+    sendEmail("NEWEMP_SG_",sggroupid,False,csvbody,"")
 
 ### processNewSG
 ### create security group with ingress or egress record
