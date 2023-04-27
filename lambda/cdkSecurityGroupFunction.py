@@ -336,15 +336,15 @@ def compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue=None):
     text = msg.as_string()
     return text    
 
+### sendEmail
+### send email using simple email service
 def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue=None):
     # try:
 
     ses = boto3.client('ses', use_ssl=True)    
     if oldvalue:
-        print("oldvalue:" + oldvalue)
         text = compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue) 
     else:
-        print("herbert")
         text = compileEmail(mode, sgid, attachmentmode, newvalue)
 
     ses.send_raw_email(
@@ -370,17 +370,13 @@ def readCSV(record, csvfilename):
 def getSGName(csvfilename,lookup):
     tmp=csvfilename.replace(lookup,"").replace(".csv", "")
     tmp=tmp.split("_")
-    return tmp
+    return tmp[1], tmp[1], tmp[0] 
 
 ### processNewEmptySG
 ### create security group without ingress or egress record
 ### send email notification
 def processNewEmptySG(csvfilename,csvbody):
-    tmp = getSGName(csvfilename,"NEWEMP_SG_")
-
-    sggroupname=tmp[1]
-    sgdescription=tmp[1]
-    sgvpcid=tmp[0]
+    sggroupname, sgdescription, sgvpcid = getSGName(csvfilename,"NEWEMP_SG_")
     
     sggroupid = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
     print(sggroupid)
