@@ -409,11 +409,8 @@ def processNewSG(csvfilename,csvbody):
 
     dichead=None
     dicbody=None
-    print(csvbody)
     csvbody = removeDuplicateValue(csvbody)
-    print(csvbody)
     for x in range(len(csvbody)-1):
-        # csvbody[x] <--- value csv yang bisa di store di list untuk dijadikan report waktu di email
         if x==0:
             y= bytes.decode(csvbody[x])
             dichead=y.split(";")
@@ -422,9 +419,13 @@ def processNewSG(csvfilename,csvbody):
             dicbody=y.split(";")
             tmpdic = convertArrToDic(dichead,dicbody)
             if tmpdic["Type"].lower() == "inbound":
+                print("--- inbound " + x + " -----")
                 response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
+                print("--------")
             elif tmpdic["Type"].lower() == "outbound":
+                print("--- outbound " + x + " -----")
                 response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
+                print("--------")
             
     sendEmail("NEW_SG_",sggroupid,True,csvbody)
 
