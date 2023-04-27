@@ -388,7 +388,7 @@ def processNewEmptySG(csvfilename,csvbody):
     revokeIngressRecords(sgValue)
     revokeEgressRecords(sgValue) 
 
-    sendEmail("NEWEMP_SG_",sggroupid,False,csvbody)
+    sendEmail("NEWEMP_SG_",sggroupid,False,csvbody,None)
 
 ### processNewSG
 ### create security group with ingress or egress record
