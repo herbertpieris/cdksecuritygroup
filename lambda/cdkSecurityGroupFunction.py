@@ -419,11 +419,11 @@ def processNewSG(csvfilename,csvbody):
             dicbody=y.split(";")
             tmpdic = convertArrToDic(dichead,dicbody)
             if tmpdic["Type"].lower() == "inbound":
-                print("--- inbound " + x + " -----")
+                print("--- inbound " + str(x) + " -----")
                 response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
                 print("--------")
             elif tmpdic["Type"].lower() == "outbound":
-                print("--- outbound " + x + " -----")
+                print("--- outbound " + str(x) + " -----")
                 response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
                 print("--------")
             
