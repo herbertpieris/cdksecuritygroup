@@ -122,6 +122,7 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
         fromPort, toPort = validatePort(tmpdic)
 
         if tmpdic["IpRanges"] != '':
+            print("--- inbound 1 -----")            
             response = ec2.authorize_security_group_ingress(
                 GroupId=groupid,
                 IpPermissions=[{
@@ -136,7 +137,9 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
                     'ToPort': int(toPort),
                 }]
             )
+            print("--------")
         else:
+            print("--- inbound 2 -----")
             response = ec2.authorize_security_group_ingress(
                 GroupId=groupid,
                 IpPermissions=[{
@@ -151,7 +154,8 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
                     'ToPort': int(tmpdic["ToPort"]),
 
                 }]
-            )            
+            )
+            print("--------")
 
         return response
     except Exception:
@@ -415,10 +419,9 @@ def processNewSG(csvfilename,csvbody):
             y= bytes.decode(csvbody[x])
             dicbody=y.split(";")
             tmpdic = convertArrToDic(dichead,dicbody)
-            if tmpdic["Type"].lower() == "inbound":
-                print("--- inbound " + str(x) + " -----")
+            print(tmpdic)
+            if tmpdic["Type"].lower() == "inbound":                
                 response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
-                print("--------")
             elif tmpdic["Type"].lower() == "outbound":
                 print("--- outbound " + str(x) + " -----")
                 response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
