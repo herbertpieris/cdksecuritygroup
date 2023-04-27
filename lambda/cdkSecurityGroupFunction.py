@@ -166,10 +166,10 @@ def authorizeSecurityGroupEgress(groupid,tmpdic):
         ec2 = boto3.client('ec2')
         fromPort, toPort = validatePort(tmpdic)
 
-        IpPermissions=[]
         if tmpdic["IpRanges"] != '':
-            IpPermissions.append(
-                {
+            response = ec2.authorize_security_group_egress(
+                GroupId=groupid,
+                IpPermissions=[{
                     'FromPort': int(fromPort),
                     'IpProtocol': tmpdic["IpProtocol"],
                     'IpRanges': [
@@ -179,11 +179,12 @@ def authorizeSecurityGroupEgress(groupid,tmpdic):
                         },
                     ],
                     'ToPort': int(toPort),
-                },
-            )
+                }]
+            )            
         else:
-            IpPermissions.append(
-                {
+            response = ec2.authorize_security_group_egress(
+                GroupId=groupid,
+                IpPermissions=[{
                     'FromPort': int(tmpdic["FromPort"]),
                     'IpProtocol': tmpdic["IpProtocol"],
                     'UserIdGroupPairs': [
@@ -193,13 +194,8 @@ def authorizeSecurityGroupEgress(groupid,tmpdic):
                         },
                     ],
                     'ToPort': int(tmpdic["ToPort"]),
-                },
-            )
-
-        response = ec2.authorize_security_group_egress(
-            GroupId=groupid,
-            IpPermissions=IpPermissions
-        )
+                }]
+            )            
 
         return response
     except Exception:
