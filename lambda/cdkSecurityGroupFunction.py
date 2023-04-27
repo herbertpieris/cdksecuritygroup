@@ -137,6 +137,7 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
                     'ToPort': int(toPort),
                 }]
             )
+            print(response)
             print("--------")
         else:
             print("--- inbound 2 -----")
@@ -415,7 +416,6 @@ def processNewSG(csvfilename,csvbody):
             y= bytes.decode(csvbody[x])
             dicbody=y.split(";")
             tmpdic = convertArrToDic(dichead,dicbody)
-            print(tmpdic)
             if tmpdic["Type"].lower() == "inbound":                
                 response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
             elif tmpdic["Type"].lower() == "outbound":
