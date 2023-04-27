@@ -339,11 +339,12 @@ def compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue:None):
 def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue:None):
     # try:
 
-    ses = boto3.client('ses', use_ssl=True)
-    print("oldvalue:" + oldvalue)
+    ses = boto3.client('ses', use_ssl=True)    
     if oldvalue:
+        print("oldvalue:" + oldvalue)
         text = compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue) 
     else:
+        print("herbert")
         text = compileEmail(mode, sgid, attachmentmode, newvalue)
 
     ses.send_raw_email(
