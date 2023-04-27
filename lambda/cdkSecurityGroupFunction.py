@@ -409,7 +409,9 @@ def processNewSG(csvfilename,csvbody):
 
     dichead=None
     dicbody=None
-    csvbody = removeDuplicateValue(csvbody)                
+    print(csvbody)
+    csvbody = removeDuplicateValue(csvbody)
+    print(csvbody)
     for x in range(len(csvbody)-1):
         # csvbody[x] <--- value csv yang bisa di store di list untuk dijadikan report waktu di email
         if x==0:
