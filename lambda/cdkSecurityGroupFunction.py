@@ -372,6 +372,12 @@ def getSGName(csvfilename,lookup):
     tmp=tmp.split("_")
     return tmp[1], tmp[1], tmp[0] 
 
+### removeDuplicateValue
+### removing duplicate value from list
+def removeDuplicateValue(csvbody):
+    csvbody = list(dict.fromkeys(csvbody))
+    return csvbody
+
 ### processNewEmptySG
 ### create security group without ingress or egress record
 ### send email notification
@@ -379,8 +385,6 @@ def processNewEmptySG(csvfilename,csvbody):
     sggroupname, sgdescription, sgvpcid = getSGName(csvfilename,"NEWEMP_SG_")
     
     sggroupid = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
-    print(sggroupid)
-    print(sggroupid["GroupId"])
     sggroupid = sggroupid["GroupId"]
 
     sgValue = getSecurityGroup(sggroupid)
@@ -393,11 +397,7 @@ def processNewEmptySG(csvfilename,csvbody):
 ### create security group with ingress or egress record
 ### send email notification
 def processNewSG(csvfilename,csvbody):
-    tmp = getSGName(csvfilename,"NEW_SG_")
-
-    sggroupname=tmp[1]
-    sgdescription=tmp[1]
-    sgvpcid=tmp[0]
+    sggroupname, sgdescription, sgvpcid = getSGName(csvfilename,"NEW_SG_")
 
     sggroupid = createSecurityGroup(sgvpcid, sggroupname,sgdescription)
     sggroupid = sggroupid["GroupId"]
@@ -408,7 +408,7 @@ def processNewSG(csvfilename,csvbody):
 
     dichead=None
     dicbody=None
-    csvbody = list(dict.fromkeys(csvbody))            
+    csvbody = removeDuplicateValue(csvbody)                
     for x in range(len(csvbody)-1):
         # csvbody[x] <--- value csv yang bisa di store di list untuk dijadikan report waktu di email
         if x==0:
@@ -423,17 +423,7 @@ def processNewSG(csvfilename,csvbody):
             elif tmpdic["Type"].lower() == "outbound":
                 response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
             
-        # response=None
-        # try:                
-        # response=authorizeSecurityGroupIngress(sggroupid)
-        # except Exception:
-        #     print(Exception) 
-        
-    # print("---1---") 
-    # print(csvbody)
-    # print("---2---")
     sendEmail("NEW_SG_",sggroupid,True,csvbody)
-    # print("---3---")       
 
 ### processRecord function
 ### processing record from main function
