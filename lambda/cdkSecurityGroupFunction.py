@@ -261,7 +261,7 @@ def writeAttachment(filename,value, mode):
         my_file.close()        
     return my_file
 
-def compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue:None):
+def compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue=None):
     wib = dateutil.tz.gettz('Asia/Jakarta')
     x = datetime.datetime.now(tz=wib)
 
@@ -336,7 +336,7 @@ def compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue:None):
     text = msg.as_string()
     return text    
 
-def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue:None):
+def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue=None):
     # try:
 
     ses = boto3.client('ses', use_ssl=True)    
