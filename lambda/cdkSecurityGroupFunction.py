@@ -415,7 +415,8 @@ def processNewSG(csvfilename,csvbody):
     dichead=None
     dicbody=None
     csvbody = removeDuplicateValue(csvbody)
-    IpPermissions = []
+    IpPermissionsIngress = []
+    IpPermissionsEgress = []
     for x in range(len(csvbody)-1):
         if x==0:
             y= bytes.decode(csvbody[x])
@@ -425,26 +426,41 @@ def processNewSG(csvfilename,csvbody):
             dicbody=y.split(";")
             tmpdic = convertArrToDic(dichead,dicbody)
             if tmpdic["Type"].lower() == "inbound":
-                # print(tmpdic)
-                fromPort, toPort = validatePort(tmpdic)
-                IpPermissions.append({
-                    'FromPort': int(fromPort),
-                    'IpProtocol': tmpdic["IpProtocol"],
-                    'IpRanges': [
-                        {
-                            'CidrIp': tmpdic["IpRanges"],
-                            'Description': tmpdic["Description"],
-                        },
-                    ],
-                    'ToPort': int(toPort),
-                })
+                if tmpdic["IpRanges"] != '':
+                    # print(tmpdic)
+                    fromPort, toPort = validatePort(tmpdic)
+                    IpPermissionsIngress.append({
+                        'FromPort': int(fromPort),
+                        'IpProtocol': tmpdic["IpProtocol"],
+                        'IpRanges': [
+                            {
+                                'CidrIp': tmpdic["IpRanges"],
+                                'Description': tmpdic["Description"],
+                            },
+                        ],
+                        'ToPort': int(toPort),
+                    })
+                else:
+                    IpPermissionsIngress.append({
+                        'FromPort': int(tmpdic["FromPort"]),
+                        'IpProtocol': tmpdic["IpProtocol"],
+                        'UserIdGroupPairs': [
+                            {
+                                'GroupId': tmpdic["UserIdGroupPairs\r"].replace("\r",""),
+                                'Description': tmpdic["Description"],
+                            },
+                        ],
+                        'ToPort': int(tmpdic["ToPort"]),
+
+                    })
                 # response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
             elif tmpdic["Type"].lower() == "outbound":
                 print(tmpdic)
                 # print("--- outbound " + str(x) + " -----")
                 # response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
                 # print("--------")
-    print(IpPermissions)   
+    print(IpPermissionsIngress)
+    print(IpPermissionsEgress)   
     sendEmail("NEW_SG_",sggroupid,True,csvbody)
 
 ### processRecord function
