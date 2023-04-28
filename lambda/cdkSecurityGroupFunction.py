@@ -442,7 +442,7 @@ def processNewSG(csvfilename,csvbody):
             tmpdic = convertArrToDic(dichead,dicbody)
             fromPort, toPort = validatePort(tmpdic)
 
-            if tmpdic["Type"].lower().contain() == "inbound":
+            if tmpdic["Type"].lower().__contains__("inbound"):
                 if tmpdic["IpRanges"] != '':
                     IpPermissionsIngress.append({
                         'FromPort': fromPort,
@@ -470,7 +470,7 @@ def processNewSG(csvfilename,csvbody):
                     })
 
                 # response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
-            elif tmpdic["Type"].lower() == "outbound":
+            elif tmpdic["Type"].lower().__contains__("outbound"):
                 print(tmpdic)
                 # print("--- outbound " + str(x) + " -----")
                 # response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
