@@ -107,7 +107,7 @@ def validatePortocol(tmpdic):
     if tmpdic["FromPort"] != "" and tmpdic["ToPort"] != "":
         ipProtocol = tmpdic["IpProtocol"]
     
-    return ipProtocol
+    return str(ipProtocol)
 
 ### validatePort
 ### figure out from and to port    
