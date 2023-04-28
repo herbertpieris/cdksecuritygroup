@@ -110,7 +110,7 @@ def validatePort(tmpdic):
 
     toPort = -1
     if tmpdic["ToPort"] != "":
-        ToPort = tmpdic["ToPort"]
+        ToPort = tmpdic["ToPort"] 
     
     return fromPort, toPort
 
@@ -141,7 +141,7 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
         response = ec2.authorize_security_group_ingress(
             GroupId=groupid,
             IpPermissions=[{
-                'FromPort': int(fromPort),
+                # 'FromPort': int(fromPort),
                 'IpProtocol': tmpdic["IpProtocol"],
                 'IpRanges': [
                     {
@@ -149,7 +149,7 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
                         'Description': tmpdic["Description"],
                     },
                 ],
-                'ToPort': int(toPort),
+                # 'ToPort': int(toPort),
             }]
         )
         print(response)
