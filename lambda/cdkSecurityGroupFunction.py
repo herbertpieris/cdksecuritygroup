@@ -134,7 +134,7 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
     #         'ToPort': toPort
     #     }]
     # )    
-    # fromPort, toPort = validatePort(tmpdic)
+    fromPort, toPort = validatePort(tmpdic)
 
     if tmpdic["IpRanges"] != '':
         print("--- inbound 1 -----")            
