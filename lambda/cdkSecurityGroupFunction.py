@@ -137,6 +137,7 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
     fromPort, toPort = validatePort(tmpdic)
 
     if tmpdic["IpRanges"] != '':
+        print(tmpdic)
         print("--- inbound 1 -----")            
         response = ec2.authorize_security_group_ingress(
             GroupId=groupid,
