@@ -158,7 +158,7 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
                         'Description': tmpdic["Description"],
                     },
                 ],
-                'ToPort': int(tmpdic["TromPort"]),
+                'ToPort': int(tmpdic["ToPort"]),
             }]
         )
         print(response)
