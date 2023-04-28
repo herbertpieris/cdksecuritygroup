@@ -112,11 +112,11 @@ def validatePortocol(tmpdic):
 ### validatePort
 ### figure out from and to port    
 def validatePort(tmpdic):
-    fromPort = ""
+    fromPort = 0
     if tmpdic["FromPort"] != "":
         FromPort = int(tmpdic["FromPort"])
 
-    toPort = ""
+    toPort = 0
     if tmpdic["ToPort"] != "":
         ToPort = int(tmpdic["ToPort"]) 
     
