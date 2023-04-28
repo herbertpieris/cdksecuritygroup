@@ -119,59 +119,59 @@ def validatePort(tmpdic):
 def authorizeSecurityGroupIngress(groupid,tmpdic):
     # try:
     ec2 = boto3.client('ec2')
-    fromPort, toPort = validatePort(tmpdic)
-    response = ec2.authorize_security_group_ingress(
-        GroupId=groupid,
-        IpPermissions=[{
-            'FromPort': fromPort, 
-            'IpProtocol': 'tcp', 
-            'IpRanges': [
-                {
-                    'CidrIp': '10.91.148.0/23', 
-                    'Description': 'Access Web from VPN'
-                }
-            ], 
-            'ToPort': toPort
-        }]
-    )    
+    # fromPort, toPort = validatePort(tmpdic)
+    # response = ec2.authorize_security_group_ingress(
+    #     GroupId=groupid,
+    #     IpPermissions=[{
+    #         'FromPort': fromPort, 
+    #         'IpProtocol': 'tcp', 
+    #         'IpRanges': [
+    #             {
+    #                 'CidrIp': '10.91.148.0/23', 
+    #                 'Description': 'Access Web from VPN'
+    #             }
+    #         ], 
+    #         'ToPort': toPort
+    #     }]
+    # )    
     # fromPort, toPort = validatePort(tmpdic)
 
-    # if tmpdic["IpRanges"] != '':
-    #     print("--- inbound 1 -----")            
-    #     response = ec2.authorize_security_group_ingress(
-    #         GroupId=groupid,
-    #         IpPermissions=[{
-    #             'FromPort': int(fromPort),
-    #             'IpProtocol': tmpdic["IpProtocol"],
-    #             'IpRanges': [
-    #                 {
-    #                     'CidrIp': tmpdic["IpRanges"],
-    #                     'Description': tmpdic["Description"],
-    #                 },
-    #             ],
-    #             'ToPort': int(toPort),
-    #         }]
-    #     )
-    #     print(response)
-    #     print("--------")
-    # else:
-    #     print("--- inbound 2 -----")
-    #     response = ec2.authorize_security_group_ingress(
-    #         GroupId=groupid,
-    #         IpPermissions=[{
-    #             'FromPort': int(tmpdic["FromPort"]),
-    #             'IpProtocol': tmpdic["IpProtocol"],
-    #             'UserIdGroupPairs': [
-    #                 {
-    #                     'GroupId': tmpdic["UserIdGroupPairs\r"].replace("\r",""),
-    #                     'Description': tmpdic["Description"],
-    #                 },
-    #             ],
-    #             'ToPort': int(tmpdic["ToPort"]),
+    if tmpdic["IpRanges"] != '':
+        print("--- inbound 1 -----")            
+        response = ec2.authorize_security_group_ingress(
+            GroupId=groupid,
+            IpPermissions=[{
+                'FromPort': int(fromPort),
+                'IpProtocol': tmpdic["IpProtocol"],
+                'IpRanges': [
+                    {
+                        'CidrIp': tmpdic["IpRanges"],
+                        'Description': tmpdic["Description"],
+                    },
+                ],
+                'ToPort': int(toPort),
+            }]
+        )
+        print(response)
+        print("--------")
+    else:
+        print("--- inbound 2 -----")
+        response = ec2.authorize_security_group_ingress(
+            GroupId=groupid,
+            IpPermissions=[{
+                'FromPort': int(tmpdic["FromPort"]),
+                'IpProtocol': tmpdic["IpProtocol"],
+                'UserIdGroupPairs': [
+                    {
+                        'GroupId': tmpdic["UserIdGroupPairs\r"].replace("\r",""),
+                        'Description': tmpdic["Description"],
+                    },
+                ],
+                'ToPort': int(tmpdic["ToPort"]),
 
-    #         }]
-    #     )
-    #     print("--------")
+            }]
+        )
+        print("--------")
 
     return response
     # except Exception:
@@ -441,42 +441,42 @@ def processNewSG(csvfilename,csvbody):
             dicbody=y.split(";")
             tmpdic = convertArrToDic(dichead,dicbody)
             if tmpdic["Type"].lower() == "inbound":
-                if tmpdic["IpRanges"] != '':
-                    # print(tmpdic)
-                    fromPort, toPort = validatePort(tmpdic)
-                    IpPermissionsIngress.append({
-                        'FromPort': int(fromPort),
-                        'IpProtocol': tmpdic["IpProtocol"],
-                        'IpRanges': [
-                            {
-                                'CidrIp': tmpdic["IpRanges"],
-                                'Description': tmpdic["Description"],
-                            },
-                        ],
-                        'ToPort': int(toPort),
-                    })
-                else:
-                    IpPermissionsIngress.append({
-                        'FromPort': int(tmpdic["FromPort"]),
-                        'IpProtocol': tmpdic["IpProtocol"],
-                        'UserIdGroupPairs': [
-                            {
-                                'GroupId': tmpdic["UserIdGroupPairs\r"].replace("\r",""),
-                                'Description': tmpdic["Description"],
-                            },
-                        ],
-                        'ToPort': int(tmpdic["ToPort"]),
+                # if tmpdic["IpRanges"] != '':
+                #     # print(tmpdic)
+                #     fromPort, toPort = validatePort(tmpdic)
+                #     IpPermissionsIngress.append({
+                #         'FromPort': int(fromPort),
+                #         'IpProtocol': tmpdic["IpProtocol"],
+                #         'IpRanges': [
+                #             {
+                #                 'CidrIp': tmpdic["IpRanges"],
+                #                 'Description': tmpdic["Description"],
+                #             },
+                #         ],
+                #         'ToPort': int(toPort),
+                #     })
+                # else:
+                #     IpPermissionsIngress.append({
+                #         'FromPort': int(tmpdic["FromPort"]),
+                #         'IpProtocol': tmpdic["IpProtocol"],
+                #         'UserIdGroupPairs': [
+                #             {
+                #                 'GroupId': tmpdic["UserIdGroupPairs\r"].replace("\r",""),
+                #                 'Description': tmpdic["Description"],
+                #             },
+                #         ],
+                #         'ToPort': int(tmpdic["ToPort"]),
 
-                    })
-                # response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
+                #     })
+                response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
             elif tmpdic["Type"].lower() == "outbound":
                 print(tmpdic)
                 # print("--- outbound " + str(x) + " -----")
                 # response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
                 # print("--------")
-    print(IpPermissionsIngress)
-    print(IpPermissionsEgress) 
-    authorizeSecurityGroupIngress(sggroupid,IpPermissionsIngress)  
+    # print(IpPermissionsIngress)
+    # print(IpPermissionsEgress) 
+    # authorizeSecurityGroupIngress(sggroupid,IpPermissionsIngress)  
     sendEmail("NEW_SG_",sggroupid,True,csvbody)
 
 ### processRecord function
