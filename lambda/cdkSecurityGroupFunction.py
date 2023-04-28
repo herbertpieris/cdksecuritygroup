@@ -432,7 +432,6 @@ def processNewSG(csvfilename,csvbody):
             dicbody=y.split(";")
 
             tmpdic = convertArrToDic(dichead,dicbody)
-
             if tmpdic["Type"].lower().__contains__("inbound"):
                 IpPermissionIngress = compileIPPermissionIngress(tmpdic, IpPermissionIngress)
             elif tmpdic["Type"].lower().__contains__("outbound"):
@@ -441,6 +440,39 @@ def processNewSG(csvfilename,csvbody):
     authorizeSecurityGroupIngress(sggroupid,IpPermissionIngress)
     authorizeSecurityGroupEgress(sggroupid,IpPermissionEgress)
     sendEmail("NEW_SG_",sggroupid,True,csvbody)
+
+### processUpdateSG
+### modify ( add or remove ) ingress or egress record 
+### send email notification
+def processUpdateSG(csvfilename,csvbody):
+    sggroupid=csvfilename.replace("UPDATE_SG_","").replace(".csv", "")
+
+    sgvalue=getSecurityGroup(sggroupid)
+    revokeIngressRecords(sgvalue)
+    revokeEgressRecords(sgvalue)
+
+    dichead=None
+    dicbody=None
+    csvbody = removeDuplicateValue(csvbody)
+    IpPermissionIngress = []
+    IpPermissionEgress = []    
+    for x in range(len(csvbody)-1):
+        if x==0:
+            y= bytes.decode(csvbody[x])
+            dichead=y.split(";")
+        if x!=0:
+            y= bytes.decode(csvbody[x])
+            dicbody=y.split(";")
+
+            tmpdic = convertArrToDic(dichead,dicbody)
+            if tmpdic["Type"].lower().__contains__("inbound"):
+                IpPermissionIngress = compileIPPermissionIngress(tmpdic, IpPermissionIngress)
+            elif tmpdic["Type"].lower().__contains__("outbound"):
+                IpPermissionEgress = compileIPPermissionEgress(tmpdic, IpPermissionEgress)
+
+    authorizeSecurityGroupIngress(sggroupid,IpPermissionIngress)
+    authorizeSecurityGroupEgress(sggroupid,IpPermissionEgress)
+    sendEmail("UPDATE_SG_",sggroupid,True,csvbody,sgvalue['SecurityGroups'][0])
 
 ### processRecord function
 ### processing record from main function
@@ -458,43 +490,7 @@ def processRecord(record):
     elif csvfilename.__contains__("NEW_SG_"):
         processNewSG(csvfilename,CSV)
     elif csvfilename.__contains__("UPDATE_SG_"):
-        sggroupid=csvfilename.replace("UPDATE_SG_","").replace(".csv", "")
-
-        sgvalue=getSecurityGroup(sggroupid)
-        # print(sgvalue['SecurityGroups'][0])
-        revokeIngressRecords(sgvalue)
-        revokeEgressRecords(sgvalue)
-
-        dichead=None
-        dicbody=None
-        csvbody = list(dict.fromkeys(csvbody))
-        for x in range(len(csvbody)-1):
-            # csvbody[x] <--- value csv yang bisa di store di list untuk dijadikan report waktu di email                
-            # print(csvbody)
-            if x==0:
-                y= bytes.decode(csvbody[x])
-                dichead=y.split(";")
-            if x!=0:
-                y= bytes.decode(csvbody[x])
-                dicbody=y.split(";")
-                tmpdic = convertArrToDic(dichead,dicbody)
-                if tmpdic["Type"].lower() == "inbound":
-                    # print("authorizeSecurityGroupIngress " + str(x) + " - start")
-                    # print(tmpdic)
-                    # print("authorizeSecurityGroupIngress " + str(x) + "  - end")
-                    response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
-                elif tmpdic["Type"].lower() == "outbound":
-                    # print("authorizeSecurityGroupEgress " + str(x) + "  - start")
-                    # print(tmpdic)
-                    # print("authorizeSecurityGroupEgress " + str(x) + "  - end")
-                    response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
-
-        # print("---1---") 
-        # print(csvbody)
-        # print("---2---")
-        sendEmail("UPDATE_SG_",sggroupid,True,csvbody,sgvalue['SecurityGroups'][0])
-        # print("---3---")
-
+        processUpdateSG(csvfilename,CSV)
     elif csvfilename.__contains__("DELETE_SG_"):
         sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
         response = deleteSecurityGroup(sggroupid)  
