@@ -101,6 +101,14 @@ def revokeEgressRecords(data):
     except botocore.exceptions.ClientError as e:
         raise e
 
+### validatePortocol    
+def validatePortocol(tmpdic):
+    ipProtocol = -1
+    if tmpdic["FromPort"] != "" and tmpdic["ToPort"] != "":
+        ipProtocol = tmpdic["IpProtocol"]
+    
+    return ipProtocol
+
 ### validatePort
 ### figure out from and to port    
 def validatePort(tmpdic):
@@ -134,7 +142,7 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
     #         'ToPort': toPort
     #     }]
     # )    
-    fromPort, toPort = validatePort(tmpdic)
+    # fromPort, toPort = validatePort(tmpdic)
 
     print(tmpdic)
     if tmpdic["IpRanges"] != '':
@@ -142,15 +150,15 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
         response = ec2.authorize_security_group_ingress(
             GroupId=groupid,
             IpPermissions=[{
-                # 'FromPort': int(fromPort),
-                'IpProtocol': tmpdic["IpProtocol"],
+                'FromPort': int(tmpdic["FromPort"]),
+                'IpProtocol': validatePortocol(tmpdic),
                 'IpRanges': [
                     {
                         'CidrIp': tmpdic["IpRanges"],
                         'Description': tmpdic["Description"],
                     },
                 ],
-                # 'ToPort': int(toPort),
+                'ToPort': int(tmpdic["TromPort"]),
             }]
         )
         print(response)
