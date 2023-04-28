@@ -379,6 +379,11 @@ def removeDuplicateValue(csvbody):
     csvbody = list(dict.fromkeys(csvbody))
     return csvbody
 
+### constructIPPermissionIngress
+###
+def constructIPPermissionIngress():
+    return
+
 ### processNewEmptySG
 ### create security group without ingress or egress record
 ### send email notification
@@ -393,9 +398,6 @@ def processNewEmptySG(csvfilename,csvbody):
     revokeEgressRecords(sgValue) 
 
     sendEmail("NEWEMP_SG_",sggroupid,False,csvbody,"")
-
-def constructIPPermission():
-    return
 
 ### processNewSG
 ### create security group with ingress or egress record
@@ -413,6 +415,7 @@ def processNewSG(csvfilename,csvbody):
     dichead=None
     dicbody=None
     csvbody = removeDuplicateValue(csvbody)
+    IpPermissions = []
     for x in range(len(csvbody)-1):
         if x==0:
             y= bytes.decode(csvbody[x])
@@ -422,14 +425,26 @@ def processNewSG(csvfilename,csvbody):
             dicbody=y.split(";")
             tmpdic = convertArrToDic(dichead,dicbody)
             if tmpdic["Type"].lower() == "inbound":
-                print(tmpdic)
+                # print(tmpdic)
+                fromPort, toPort = validatePort(tmpdic)
+                IpPermissions.append({
+                    'FromPort': int(fromPort),
+                    'IpProtocol': tmpdic["IpProtocol"],
+                    'IpRanges': [
+                        {
+                            'CidrIp': tmpdic["IpRanges"],
+                            'Description': tmpdic["Description"],
+                        },
+                    ],
+                    'ToPort': int(toPort),
+                })
                 # response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
             elif tmpdic["Type"].lower() == "outbound":
                 print(tmpdic)
                 # print("--- outbound " + str(x) + " -----")
                 # response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
                 # print("--------")
-            
+    print(IpPermissions)   
     sendEmail("NEW_SG_",sggroupid,True,csvbody)
 
 ### processRecord function
