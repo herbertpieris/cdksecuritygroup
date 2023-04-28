@@ -112,13 +112,13 @@ def validatePortocol(tmpdic):
 ### validatePort
 ### figure out from and to port    
 def validatePort(tmpdic):
-    fromPort = -1
+    fromPort = ""
     if tmpdic["FromPort"] != "":
-        FromPort = tmpdic["FromPort"]
+        FromPort = int(tmpdic["FromPort"])
 
-    toPort = -1
+    toPort = ""
     if tmpdic["ToPort"] != "":
-        ToPort = tmpdic["ToPort"] 
+        ToPort = int(tmpdic["ToPort"]) 
     
     return fromPort, toPort
 
@@ -142,7 +142,7 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
     #         'ToPort': toPort
     #     }]
     # )    
-    # fromPort, toPort = validatePort(tmpdic)
+    fromPort, toPort = validatePort(tmpdic)
 
     print(tmpdic)
     if tmpdic["IpRanges"] != '':
@@ -150,7 +150,7 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
         response = ec2.authorize_security_group_ingress(
             GroupId=groupid,
             IpPermissions=[{
-                'FromPort': int(tmpdic["FromPort"]),
+                'FromPort': fromPort,
                 'IpProtocol': validatePortocol(tmpdic),
                 'IpRanges': [
                     {
@@ -158,7 +158,7 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
                         'Description': tmpdic["Description"],
                     },
                 ],
-                'ToPort': int(tmpdic["ToPort"]),
+                'ToPort': toPort,
             }]
         )
         print(response)
@@ -168,15 +168,15 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
         response = ec2.authorize_security_group_ingress(
             GroupId=groupid,
             IpPermissions=[{
-                'FromPort': int(tmpdic["FromPort"]),
-                'IpProtocol': tmpdic["IpProtocol"],
+                'FromPort': fromPort,
+                'IpProtocol': validatePortocol(tmpdic),
                 'UserIdGroupPairs': [
                     {
                         'GroupId': tmpdic["UserIdGroupPairs\r"].replace("\r",""),
                         'Description': tmpdic["Description"],
                     },
                 ],
-                'ToPort': int(tmpdic["ToPort"]),
+                'ToPort': toPort,
 
             }]
         )
