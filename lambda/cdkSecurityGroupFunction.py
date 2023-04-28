@@ -119,10 +119,11 @@ def validatePort(tmpdic):
 def authorizeSecurityGroupIngress(groupid,tmpdic):
     # try:
     ec2 = boto3.client('ec2')
+    fromPort, toPort = validatePort(tmpdic)
     response = ec2.authorize_security_group_ingress(
         GroupId=groupid,
         IpPermissions=[{
-            'FromPort': -1, 
+            'FromPort': fromPort, 
             'IpProtocol': 'tcp', 
             'IpRanges': [
                 {
@@ -130,7 +131,7 @@ def authorizeSecurityGroupIngress(groupid,tmpdic):
                     'Description': 'Access Web from VPN'
                 }
             ], 
-            'ToPort': -1
+            'ToPort': toPort
         }]
     )    
     # fromPort, toPort = validatePort(tmpdic)
