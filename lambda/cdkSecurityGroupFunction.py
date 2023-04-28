@@ -354,6 +354,8 @@ def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue=None):
 
 # def rollBackNewSG():
 
+### readCSV
+### extract csv content
 def readCSV(record, csvfilename):
     s3 = boto3.client('s3')
     s3BucketName = record['s3']['bucket']['name']
@@ -392,6 +394,9 @@ def processNewEmptySG(csvfilename,csvbody):
 
     sendEmail("NEWEMP_SG_",sggroupid,False,csvbody,"")
 
+def constructIPPermission():
+    return
+
 ### processNewSG
 ### create security group with ingress or egress record
 ### send email notification
@@ -416,12 +421,14 @@ def processNewSG(csvfilename,csvbody):
             y= bytes.decode(csvbody[x])
             dicbody=y.split(";")
             tmpdic = convertArrToDic(dichead,dicbody)
-            if tmpdic["Type"].lower() == "inbound":                
-                response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
+            if tmpdic["Type"].lower() == "inbound":
+                print(tmpdic)
+                # response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
             elif tmpdic["Type"].lower() == "outbound":
-                print("--- outbound " + str(x) + " -----")
-                response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
-                print("--------")
+                print(tmpdic)
+                # print("--- outbound " + str(x) + " -----")
+                # response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
+                # print("--------")
             
     sendEmail("NEW_SG_",sggroupid,True,csvbody)
 
