@@ -327,10 +327,68 @@ def removeDuplicateValue(csvbody):
     csvbody = list(dict.fromkeys(csvbody))
     return csvbody
 
-### constructIPPermissionIngress
-###
-def constructIPPermissionIngress():
-    return
+### compileIPPermissionIngress
+### create list of ip permission for ingress record
+def compileIPPermissionIngress(tmpdic, IpPermissionIngress):
+    fromPort, toPort = validatePort(tmpdic)
+
+    if tmpdic["IpRanges"] != '':
+        IpPermissionIngress.append({
+            'FromPort': fromPort,
+            'IpProtocol': validatePortocol(tmpdic),
+            'IpRanges': [
+                {
+                    'CidrIp': tmpdic["IpRanges"],
+                    'Description': tmpdic["Description"],
+                },
+            ],
+            'ToPort': toPort,
+        })
+    else:
+        IpPermissionIngress.append({
+            'FromPort': fromPort,
+            'IpProtocol': validatePortocol(tmpdic),
+            'UserIdGroupPairs': [
+                {
+                    'GroupId': tmpdic["UserIdGroupPairs\r"].replace("\r",""),
+                    'Description': tmpdic["Description"],
+                },
+            ],
+            'ToPort': toPort,
+
+        })    
+    return IpPermissionIngress
+
+### compileIPPermissionEgress
+### create list of ip permission for egress record
+def compileIPPermissionEgress(tmpdic, IpPermissionEgress):
+    fromPort, toPort = validatePort(tmpdic)
+
+    if tmpdic["IpRanges"] != '':
+        IpPermissionEgress.append({
+            'FromPort': fromPort,
+            'IpProtocol': validatePortocol(tmpdic),
+            'IpRanges': [
+                {
+                    'CidrIp': tmpdic["IpRanges"],
+                    'Description': tmpdic["Description"],
+                },
+            ],
+            'ToPort': toPort,
+        })
+    else:
+        IpPermissionEgress.append({
+                'FromPort': fromPort,
+                'IpProtocol': validatePortocol(tmpdic),
+                'UserIdGroupPairs': [
+                    {
+                        'GroupId': tmpdic["UserIdGroupPairs\r"].replace("\r",""),
+                        'Description': tmpdic["Description"],
+                    },
+                ],
+                'ToPort': toPort,
+            })
+    return IpPermissionEgress
 
 ### processNewEmptySG
 ### create security group without ingress or egress record
@@ -374,64 +432,11 @@ def processNewSG(csvfilename,csvbody):
             dicbody=y.split(";")
 
             tmpdic = convertArrToDic(dichead,dicbody)
-            fromPort, toPort = validatePort(tmpdic)
 
             if tmpdic["Type"].lower().__contains__("inbound"):
-                if tmpdic["IpRanges"] != '':
-                    IpPermissionIngress.append({
-                        'FromPort': fromPort,
-                        'IpProtocol': validatePortocol(tmpdic),
-                        'IpRanges': [
-                            {
-                                'CidrIp': tmpdic["IpRanges"],
-                                'Description': tmpdic["Description"],
-                            },
-                        ],
-                        'ToPort': toPort,
-                    })
-                else:
-                    IpPermissionIngress.append({
-                        'FromPort': fromPort,
-                        'IpProtocol': validatePortocol(tmpdic),
-                        'UserIdGroupPairs': [
-                            {
-                                'GroupId': tmpdic["UserIdGroupPairs\r"].replace("\r",""),
-                                'Description': tmpdic["Description"],
-                            },
-                        ],
-                        'ToPort': toPort,
-
-                    })
-
-                # response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
+                IpPermissionIngress = compileIPPermissionIngress(tmpdic, IpPermissionIngress)
             elif tmpdic["Type"].lower().__contains__("outbound"):
-                if tmpdic["IpRanges"] != '':
-                    IpPermissionEgress.append({
-                        'FromPort': fromPort,
-                        'IpProtocol': validatePortocol(tmpdic),
-                        'IpRanges': [
-                            {
-                                'CidrIp': tmpdic["IpRanges"],
-                                'Description': tmpdic["Description"],
-                            },
-                        ],
-                        'ToPort': toPort,
-                    })
-                else:
-                    IpPermissionEgress.append({
-                            'FromPort': fromPort,
-                            'IpProtocol': validatePortocol(tmpdic),
-                            'UserIdGroupPairs': [
-                                {
-                                    'GroupId': tmpdic["UserIdGroupPairs\r"].replace("\r",""),
-                                    'Description': tmpdic["Description"],
-                                },
-                            ],
-                            'ToPort': toPort,
-                        })
-                # print("--- outbound " + str(x) + " -----")
-                # response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
-                # print("--------")
+                IpPermissionEgress = compileIPPermissionEgress(tmpdic, IpPermissionEgress)
 
     authorizeSecurityGroupIngress(sggroupid,IpPermissionIngress)
     authorizeSecurityGroupEgress(sggroupid,IpPermissionEgress)
