@@ -116,14 +116,14 @@ def validatePort(tmpdic):
     print(tmpdic["FromPort"])
     fromPort = -1
     if tmpdic["FromPort"] != "":
-        fromPort = int(tmpdic["FromPort"])
+        fromPort = tmpdic["FromPort"]
 
     print(tmpdic["ToPort"])
     toPort = -1
     if tmpdic["ToPort"] != "":
-        toPort = int(tmpdic["ToPort"]) 
+        toPort = tmpdic["ToPort"]
     
-    return fromPort, toPort
+    return int(fromPort), int(toPort)
 
 ### authorizeSecurityGroupIngress
 ### input ingress record to security group
