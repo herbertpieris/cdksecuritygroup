@@ -173,9 +173,9 @@ def writeAttachment(filename,value, mode):
         my_file.close()
     elif mode==2:
         if value["IpPermissions"] != []:
-            print(value["IpPermissions"])        
-            # for x in range(len(value["IpPermissions"])-1):
-            #     print(value["IpPermissions"][x])
+            print(value["IpPermissions"])
+            for x in range(len(value["IpPermissions"])):
+                print(value["IpPermissions"][x])
 
                 # if x==0:
                 #     y= bytes.decode(csvbody[x])
