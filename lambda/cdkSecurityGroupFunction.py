@@ -203,7 +203,7 @@ def writeAttachment(filename,value, mode):
                 #         temp_my_file.writerow(z)                
 
         if value["IpPermissionsEgress"] != [] :
-            print(value["IpPermissions"][x])
+            print(value["IpPermissionsEgress"])
             # for x in range(len(value["IpPermissionsEgress"])-1):
             #     y= bytes.decode(value["IpPermissionsEgress"][x])
             #     z=y.split(";")
