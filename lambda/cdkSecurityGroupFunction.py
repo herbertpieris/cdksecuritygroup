@@ -173,6 +173,7 @@ def writeAttachment(filename,value, mode):
                 temp_my_file.writerow(dicbody)
         my_file.close()
     elif mode==2:
+        print(value)
         if value["IpPermissions"] != []:        
             for x in range(len(value["IpPermissions"])-1):
                 # csvbody[x] <--- value csv yang bisa di store di list untuk dijadikan report waktu di email
