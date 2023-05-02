@@ -214,15 +214,15 @@ def compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue=None):
     x = datetime.datetime.now(tz=wib)
 
     if attachmentmode and mode=="NEW_SG_":
-        filename1="new-sg-"+sgid
+        filename1="new-sg-"+sgid+"-records"
         fileNewValue=writeAttachment(filename1,newvalue, 1)
 
     elif attachmentmode and mode=="UPDATE_SG_":
         filename1="new-sg-"+sgid+"-records"
-        fileNewValue=writeAttachment(filename1,1)
+        fileNewValue=writeAttachment(filename1,newvalue,1)
 
         filename2="old-"+sgid+"-records"
-        fileOldValue=writeAttachment(filename2,2)
+        fileOldValue=writeAttachment(filename2,oldvalue,2)
 
     msg = MIMEMultipart('alternative')
     msg['Subject'] = mode + " - " + "SG" + " Notification"
