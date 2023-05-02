@@ -193,9 +193,9 @@ def writeAttachment(filename,value, mode):
         if value["IpPermissions"] != []:
             for x in range(len(value["IpPermissions"])-1):
                 print(value["IpPermissions"][x])
-                y= bytes.decode(value["IpPermissions"][x])
-                z=y.split(";")
-                temp_my_file.writerow(z)
+                # y= bytes.decode(value["IpPermissions"][x])
+                # z=y.split(";")
+                # temp_my_file.writerow(z)
 
         if "UserIdGroupPairs" in value:
             for x in range(len(value["UserIdGroupPairs"])-1):
