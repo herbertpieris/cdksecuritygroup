@@ -28,6 +28,7 @@ def convertArrToDic(head,body):
 ### describe security group
 def getSecurityGroup(groupid):
     # try:
+    print(groupid)
     ec2 = boto3.client('ec2')
     response = ec2.describe_security_groups(
         GroupIds=[groupid]
@@ -450,7 +451,7 @@ def processUpdateSG(csvfilename,csvbody):
     sggroupid=csvfilename.replace("UPDATE_SG_","").replace(".csv", "")
 
     sgvalue=getSecurityGroup(sggroupid)
-    print(sgvalue)
+    # print(sgvalue)
     revokeIngressRecords(sgvalue)
     revokeEgressRecords(sgvalue)
 
