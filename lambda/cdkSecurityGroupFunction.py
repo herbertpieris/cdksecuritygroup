@@ -151,6 +151,7 @@ def authorizeSecurityGroupEgress(groupid,ipPermission):
     #     return Exception
 
 ### writeAttachment
+### 
 def writeAttachment(filename,value, mode):
     file_name = "/tmp/"+filename 
     my_file = open(file_name,"w+")
@@ -170,42 +171,42 @@ def writeAttachment(filename,value, mode):
                 dicbody=y.split(";")
                 temp_my_file.writerow(dicbody)
         my_file.close()
-    # elif mode==2:
-    #     if value["IpPermissions"] != []:        
-    #         for x in range(len(value["IpPermissions"])-1):
-    #             # csvbody[x] <--- value csv yang bisa di store di list untuk dijadikan report waktu di email
-    #             if x==0:
-    #                 y= bytes.decode(csvbody[x])
-    #                 dichead=y.split(";")
-    #             if x!=0:
-    #                 y= bytes.decode(csvbody[x])
-    #                 dicbody=y.split(";")
-    #                 tmpdic = convertArrToDic(dichead,dicbody)
-    #                 if tmpdic["Type"].lower() == "inbound":
-    #                     response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
-    #                 elif tmpdic["Type"].lower() == "outbound":
-    #                     response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
+    elif mode==2:
+        if value["IpPermissions"] != []:        
+            for x in range(len(value["IpPermissions"])-1):
+                # csvbody[x] <--- value csv yang bisa di store di list untuk dijadikan report waktu di email
+                if x==0:
+                    y= bytes.decode(csvbody[x])
+                    dichead=y.split(";")
+                if x!=0:
+                    y= bytes.decode(csvbody[x])
+                    dicbody=y.split(";")
+                    tmpdic = convertArrToDic(dichead,dicbody)
+                    if tmpdic["Type"].lower() == "inbound":
+                        response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
+                    elif tmpdic["Type"].lower() == "outbound":
+                        response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
 
-    #     if value["IpPermissions"] != []:
-    #         for x in range(len(value["IpPermissions"])-1):
-    #             print(value["IpPermissions"][x])
-    #             y= bytes.decode(value["IpPermissions"][x])
-    #             z=y.split(";")
-    #             temp_my_file.writerow(z)
+        if value["IpPermissions"] != []:
+            for x in range(len(value["IpPermissions"])-1):
+                print(value["IpPermissions"][x])
+                y= bytes.decode(value["IpPermissions"][x])
+                z=y.split(";")
+                temp_my_file.writerow(z)
 
-    #     if "UserIdGroupPairs" in value:
-    #         for x in range(len(value["UserIdGroupPairs"])-1):
-    #             y= bytes.decode(value["UserIdGroupPairs"][x])
-    #             z=y.split(";")
-    #             temp_my_file.writerow(z)                
+        if "UserIdGroupPairs" in value:
+            for x in range(len(value["UserIdGroupPairs"])-1):
+                y= bytes.decode(value["UserIdGroupPairs"][x])
+                z=y.split(";")
+                temp_my_file.writerow(z)                
 
-    #     if value["IpPermissionsEgress"] != [] :
-    #         for x in range(len(value["IpPermissionsEgress"])-1):
-    #             y= bytes.decode(value["IpPermissionsEgress"][x])
-    #             z=y.split(";")
-    #             temp_my_file.writerow(z)
+        if value["IpPermissionsEgress"] != [] :
+            for x in range(len(value["IpPermissionsEgress"])-1):
+                y= bytes.decode(value["IpPermissionsEgress"][x])
+                z=y.split(";")
+                temp_my_file.writerow(z)
 
-    #     my_file.close()        
+        my_file.close()        
     return file_name
 
 def compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue=None):
@@ -213,14 +214,14 @@ def compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue=None):
     x = datetime.datetime.now(tz=wib)
 
     if attachmentmode and mode=="NEW_SG_":
-        filename1="new"
+        filename1="new-sg-"+sgid
         fileNewValue=writeAttachment(filename1,newvalue, 1)
 
     elif attachmentmode and mode=="UPDATE_SG_":
-        filename1="new"
+        filename1="new-sg-"+sgid+"-records"
         fileNewValue=writeAttachment(filename1,1)
 
-        filename2="old"
+        filename2="old-"+sgid+"-records"
         fileOldValue=writeAttachment(filename2,2)
 
     msg = MIMEMultipart('alternative')
