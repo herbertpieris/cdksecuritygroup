@@ -27,15 +27,15 @@ def convertArrToDic(head,body):
 ### getSecurityGroup
 ### describe security group
 def getSecurityGroup(groupid):
-    try:
-        ec2 = boto3.client('ec2')
-        response = ec2.describe_security_groups(
-            GroupIds=[groupid]
-        )
+    # try:
+    ec2 = boto3.client('ec2')
+    response = ec2.describe_security_groups(
+        GroupIds=[groupid]
+    )
 
-        return response    
-    except Exception:
-        return Exception
+    return response    
+    # except Exception:
+    #     return Exception
 
 ### createSecurityGroup
 ### creating security group
