@@ -289,7 +289,8 @@ def compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue=None):
 def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue=None):
     # try:
 
-    ses = boto3.client('ses', use_ssl=True)    
+    ses = boto3.client('ses', use_ssl=True)
+    print(oldvalue)
     if oldvalue:
         text = compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue) 
     else:
