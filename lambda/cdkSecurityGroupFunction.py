@@ -28,7 +28,6 @@ def convertArrToDic(head,body):
 ### describe security group
 def getSecurityGroup(groupid):
     # try:
-    print(groupid)
     ec2 = boto3.client('ec2')
     response = ec2.describe_security_groups(
         GroupIds=[groupid]
@@ -173,7 +172,6 @@ def writeAttachment(filename,value, mode):
                 temp_my_file.writerow(dicbody)
         my_file.close()
     elif mode==2:
-        print(value)
         if value["IpPermissions"] != []:        
             for x in range(len(value["IpPermissions"])-1):
                 print(value["IpPermissions"][x])
