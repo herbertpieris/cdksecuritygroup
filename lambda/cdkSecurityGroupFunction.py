@@ -450,6 +450,7 @@ def processUpdateSG(csvfilename,csvbody):
     sggroupid=csvfilename.replace("UPDATE_SG_","").replace(".csv", "")
 
     sgvalue=getSecurityGroup(sggroupid)
+    print(sgvalue)
     revokeIngressRecords(sgvalue)
     revokeEgressRecords(sgvalue)
 
