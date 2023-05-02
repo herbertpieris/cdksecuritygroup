@@ -190,24 +190,25 @@ def writeAttachment(filename,value, mode):
                 #     elif tmpdic["Type"].lower() == "outbound":
                 #         response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
 
-        if value["IpPermissions"] != []:
-            for x in range(len(value["IpPermissions"])-1):
-                print(value["IpPermissions"][x])
-                # y= bytes.decode(value["IpPermissions"][x])
-                # z=y.split(";")
-                # temp_my_file.writerow(z)
+                # if value["IpPermissions"] != []:
+                #     for x in range(len(value["IpPermissions"])-1):
+                #         print(value["IpPermissions"][x])
+                #         y= bytes.decode(value["IpPermissions"][x])
+                #         z=y.split(";")
+                #         temp_my_file.writerow(z)
 
-        if "UserIdGroupPairs" in value:
-            for x in range(len(value["UserIdGroupPairs"])-1):
-                y= bytes.decode(value["UserIdGroupPairs"][x])
-                z=y.split(";")
-                temp_my_file.writerow(z)                
+                # if "UserIdGroupPairs" in value:
+                #     for x in range(len(value["UserIdGroupPairs"])-1):
+                #         y= bytes.decode(value["UserIdGroupPairs"][x])
+                #         z=y.split(";")
+                #         temp_my_file.writerow(z)                
 
         if value["IpPermissionsEgress"] != [] :
-            for x in range(len(value["IpPermissionsEgress"])-1):
-                y= bytes.decode(value["IpPermissionsEgress"][x])
-                z=y.split(";")
-                temp_my_file.writerow(z)
+            print(value["IpPermissions"][x])
+            # for x in range(len(value["IpPermissionsEgress"])-1):
+            #     y= bytes.decode(value["IpPermissionsEgress"][x])
+            #     z=y.split(";")
+            #     temp_my_file.writerow(z)
 
         my_file.close()        
     return file_name
