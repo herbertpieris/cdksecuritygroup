@@ -176,18 +176,19 @@ def writeAttachment(filename,value, mode):
         print(value)
         if value["IpPermissions"] != []:        
             for x in range(len(value["IpPermissions"])-1):
-                # csvbody[x] <--- value csv yang bisa di store di list untuk dijadikan report waktu di email
-                if x==0:
-                    y= bytes.decode(csvbody[x])
-                    dichead=y.split(";")
-                if x!=0:
-                    y= bytes.decode(csvbody[x])
-                    dicbody=y.split(";")
-                    tmpdic = convertArrToDic(dichead,dicbody)
-                    if tmpdic["Type"].lower() == "inbound":
-                        response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
-                    elif tmpdic["Type"].lower() == "outbound":
-                        response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
+                print(value["IpPermissions"][x])
+
+                # if x==0:
+                #     y= bytes.decode(csvbody[x])
+                #     dichead=y.split(";")
+                # if x!=0:
+                #     y= bytes.decode(csvbody[x])
+                #     dicbody=y.split(";")
+                #     tmpdic = convertArrToDic(dichead,dicbody)
+                #     if tmpdic["Type"].lower() == "inbound":
+                #         response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
+                #     elif tmpdic["Type"].lower() == "outbound":
+                #         response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
 
         if value["IpPermissions"] != []:
             for x in range(len(value["IpPermissions"])-1):
@@ -290,9 +291,8 @@ def compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue=None):
 ### send email using simple email service
 def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue=None):
     # try:
-
     ses = boto3.client('ses', use_ssl=True)
-    print(oldvalue)
+
     if oldvalue:
         text = compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue) 
     else:
@@ -452,7 +452,6 @@ def processUpdateSG(csvfilename,csvbody):
     sggroupid=csvfilename.replace("UPDATE_SG_","").replace(".csv", "")
 
     sgvalue=getSecurityGroup(sggroupid)
-    # print(sgvalue)
     revokeIngressRecords(sgvalue)
     revokeEgressRecords(sgvalue)
 
