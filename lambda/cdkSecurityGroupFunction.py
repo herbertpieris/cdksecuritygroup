@@ -70,36 +70,36 @@ def deleteSecurityGroup(groupid):
 def revokeIngressRecords(data):
     ec2 = boto3.client('ec2')
     data = data['SecurityGroups'][0]
-    try:
-        GroupId = data["GroupId"]
-        
-        if data["IpPermissions"] != [] or "UserIdGroupPairs" in data:
-            ec2.revoke_security_group_ingress(
-                DryRun=False,
-                GroupId=GroupId,            
-                IpPermissions=data["IpPermissions"]
-            )   
+    # try:
+    GroupId = data["GroupId"]
+    
+    if data["IpPermissions"] != [] or "UserIdGroupPairs" in data:
+        ec2.revoke_security_group_ingress(
+            DryRun=False,
+            GroupId=GroupId,            
+            IpPermissions=data["IpPermissions"]
+        )   
 
-    except botocore.exceptions.ClientError as e:
-        raise e
+    # except botocore.exceptions.ClientError as e:
+    #     raise e
 
 ### revokeEgressRecords
 ### remove egress records from security group
 def revokeEgressRecords(data):
     ec2 = boto3.client('ec2')
     data = data['SecurityGroups'][0]
-    try:
-        GroupId = data["GroupId"]
+    # try:
+    GroupId = data["GroupId"]
 
-        if data["IpPermissionsEgress"] != [] :
-            ec2.revoke_security_group_egress(
-                DryRun=False,
-                GroupId=GroupId,            
-                IpPermissions=data["IpPermissionsEgress"]
-            )
+    if data["IpPermissionsEgress"] != [] :
+        ec2.revoke_security_group_egress(
+            DryRun=False,
+            GroupId=GroupId,            
+            IpPermissions=data["IpPermissionsEgress"]
+        )
 
-    except botocore.exceptions.ClientError as e:
-        raise e
+    # except botocore.exceptions.ClientError as e:
+    #     raise e
 
 ### validatePortocol    
 def validatePortocol(tmpdic):
