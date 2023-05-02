@@ -112,8 +112,6 @@ def validatePortocol(tmpdic):
 ### validatePort
 ### figure out from and to port    
 def validatePort(tmpdic):
-    print(tmpdic)
-    print(type(tmpdic["FromPort"]))
     fromPort = -1
     if tmpdic["FromPort"] != "":
         fromPort = tmpdic["FromPort"]
@@ -177,7 +175,7 @@ def writeAttachment(filename,value, mode):
         if value["IpPermissions"] != []:
             IpPermissionIngress=[]
             for x in range(len(value["IpPermissions"])):
-                compileIPPermissionIngress(value["IpPermissions"], IpPermissionIngress)
+                compileIPPermissionIngress(value["IpPermissions"][x], IpPermissionIngress)
             print(IpPermissionIngress)
                 # if x==0:
                 #     y= bytes.decode(csvbody[x])
