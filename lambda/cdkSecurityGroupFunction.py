@@ -172,8 +172,8 @@ def writeAttachment(filename,value, mode):
                 temp_my_file.writerow(dicbody)
         my_file.close()
     elif mode==2:
-        if value["IpPermissions"] != []:
-            IpPermissionIngress=[]
+        IpPermissionIngress=[]
+        if value["IpPermissions"] != []:            
             for x in range(len(value["IpPermissions"])):
                 compileIPPermissionIngress(value["IpPermissions"][x], IpPermissionIngress, 2)
             
