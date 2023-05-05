@@ -176,7 +176,10 @@ def writeAttachment(filename,value, mode):
             IpPermissionIngress=[]
             for x in range(len(value["IpPermissions"])):
                 compileIPPermissionIngress(value["IpPermissions"][x], IpPermissionIngress, 2)
-            print(IpPermissionIngress)
+            
+        print("-----")
+        print(IpPermissionIngress)
+        print("-----")
                 # if x==0:
                 #     y= bytes.decode(csvbody[x])
                 #     dichead=y.split(";")
@@ -380,7 +383,7 @@ def compileIPPermissionIngress(tmpdic, IpPermissionIngress, mode):
 
 ### compileIPPermissionEgress
 ### create list of ip permission for egress record
-def compileIPPermissionEgress(tmpdic, IpPermissionEgress):
+def compileIPPermissionEgress(tmpdic, IpPermissionEgress, mode):
     fromPort, toPort = validatePort(tmpdic)
 
     if mode == 1:
@@ -408,6 +411,7 @@ def compileIPPermissionEgress(tmpdic, IpPermissionEgress):
                     ],
                     'ToPort': toPort,
                 })
+    elif mode ==2:
     return IpPermissionEgress
 
 ### processNewEmptySG
