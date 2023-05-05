@@ -379,6 +379,7 @@ def compileIPPermissionIngress(tmpdic, IpPermissionIngress, mode):
                     ],
                     'ToPort': toPort,
                 })
+            print(tmpdic)
             if "UserIdGroupPairs" in tmpdic:
                 IpPermissionIngress.append({
                     'FromPort': fromPort,
