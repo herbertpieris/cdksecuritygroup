@@ -173,11 +173,14 @@ def writeAttachment(filename,value, mode):
         my_file.close()
     elif mode==2:
         IpPermissionIngress=[]
+        IpPermissionsEgress=[]
         if value["IpPermissions"] != []:            
             for x in range(len(value["IpPermissions"])):
                 compileIPPermissionIngress(value["IpPermissions"][x], IpPermissionIngress, 2)
 
-        print(IpPermissionIngress)
+        for ingress in IpPermissionIngress:
+            temp_my_file.writerow(ingress)
+
                 # if value["IpPermissions"] != []:
                 #     for x in range(len(value["IpPermissions"])-1):
                 #         print(value["IpPermissions"][x])
@@ -192,8 +195,11 @@ def writeAttachment(filename,value, mode):
                 #         temp_my_file.writerow(z)                
 
         if value["IpPermissionsEgress"] != [] :
-            for x in range(len(value["IpPermissions"])):
-                compileIPPermissionIngress(value["IpPermissions"][x], IpPermissionIngress, 2)
+            for x in range(len(value["IpPermissionsEgress"])):
+                compileIPPermissionEgress(value["IpPermissions"][x], IpPermissionEgress, 2)
+
+        for egress in IpPermissionsEgress:
+            temp_my_file.writerow(egress)
 
             # for x in range(len(value["IpPermissionsEgress"])-1):
             #     y= bytes.decode(value["IpPermissionsEgress"][x])
