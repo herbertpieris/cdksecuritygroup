@@ -178,18 +178,6 @@ def writeAttachment(filename,value, mode):
             for x in range(len(value["IpPermissions"])):
                 compileIPPermissionIngress(value["IpPermissions"][x], IpPermissionIngress, 2)
             
-                # if x==0:
-                #     y= bytes.decode(csvbody[x])
-                #     dichead=y.split(";")
-                # if x!=0:
-                #     y= bytes.decode(csvbody[x])
-                #     dicbody=y.split(";")
-                #     tmpdic = convertArrToDic(dichead,dicbody)
-                #     if tmpdic["Type"].lower() == "inbound":
-                #         response=authorizeSecurityGroupIngress(sggroupid,tmpdic)
-                #     elif tmpdic["Type"].lower() == "outbound":
-                #         response=authorizeSecurityGroupEgress(sggroupid,tmpdic)
-
                 # if value["IpPermissions"] != []:
                 #     for x in range(len(value["IpPermissions"])-1):
                 #         print(value["IpPermissions"][x])
