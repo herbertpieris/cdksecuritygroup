@@ -379,7 +379,7 @@ def compileIPPermissionIngress(tmpdic, IpPermissionIngress, mode):
                     ],
                     'ToPort': toPort,
                 })
-            print(tmpdic)
+
             if "UserIdGroupPairs" in tmpdic:
                 for x in range(len(tmpdic["UserIdGroupPairs"])):
                     IpPermissionIngress.append({
@@ -394,17 +394,18 @@ def compileIPPermissionIngress(tmpdic, IpPermissionIngress, mode):
                         'ToPort': toPort,
                     })                
         else:
-            IpPermissionIngress.append({
-                'FromPort': fromPort,
-                'IpProtocol': validatePortocol(tmpdic),
-                'UserIdGroupPairs': [
-                    {
-                        'GroupId': tmpdic["UserIdGroupPairs"]["GroupId"],
-                        'Description': tmpdic["UserIdGroupPairs"]["Description"],
-                    },
-                ],
-                'ToPort': toPort,
-            })            
+            for x in range(len(tmpdic["UserIdGroupPairs"])):            
+                IpPermissionIngress.append({
+                    'FromPort': fromPort,
+                    'IpProtocol': validatePortocol(tmpdic),
+                    'UserIdGroupPairs': [
+                        {
+                            'GroupId': tmpdic["UserIdGroupPairs"][x]["GroupId"],
+                            'Description': tmpdic["UserIdGroupPairs"][x]["Description"],
+                        },
+                    ],
+                    'ToPort': toPort,
+                })            
     return IpPermissionIngress
 
 ### compileIPPermissionEgress
