@@ -172,12 +172,11 @@ def writeAttachment(filename,value, mode):
                 temp_my_file.writerow(dicbody)
         my_file.close()
     elif mode==2:
-        print(value)
         IpPermissionIngress=[]
         if value["IpPermissions"] != []:            
             for x in range(len(value["IpPermissions"])):
                 compileIPPermissionIngress(value["IpPermissions"][x], IpPermissionIngress, 2)
-            
+
                 # if value["IpPermissions"] != []:
                 #     for x in range(len(value["IpPermissions"])-1):
                 #         print(value["IpPermissions"][x])
@@ -192,7 +191,9 @@ def writeAttachment(filename,value, mode):
                 #         temp_my_file.writerow(z)                
 
         if value["IpPermissionsEgress"] != [] :
-            print(value["IpPermissionsEgress"])
+            for x in range(len(value["IpPermissions"])):
+                compileIPPermissionIngress(value["IpPermissions"][x], IpPermissionIngress, 2)
+
             # for x in range(len(value["IpPermissionsEgress"])-1):
             #     y= bytes.decode(value["IpPermissionsEgress"][x])
             #     z=y.split(";")
@@ -425,7 +426,46 @@ def compileIPPermissionEgress(tmpdic, IpPermissionEgress, mode):
                     'ToPort': toPort,
                 })
     elif mode ==2:
-        print("")
+        if tmpdic["IpRanges"] != '':
+            for x in range(len(tmpdic["IpRanges"])):
+                IpPermissionEgress.append({
+                    'FromPort': fromPort,
+                    'IpProtocol': validatePortocol(tmpdic),
+                    'IpRanges': [
+                        {
+                            'CidrIp': tmpdic["IpRanges"][x]["CidrIp"],
+                            'Description': tmpdic["IpRanges"][x]["Description"],
+                        },
+                    ],
+                    'ToPort': toPort,
+                })
+
+            if "UserIdGroupPairs" in tmpdic:
+                for x in range(len(tmpdic["UserIdGroupPairs"])):
+                    IpPermissionEgress.append({
+                        'FromPort': fromPort,
+                        'IpProtocol': validatePortocol(tmpdic),
+                        'UserIdGroupPairs': [
+                            {
+                                'GroupId': tmpdic["UserIdGroupPairs"][x]["GroupId"],
+                                'Description': tmpdic["UserIdGroupPairs"][x]["Description"],
+                            },
+                        ],
+                        'ToPort': toPort,
+                    })                
+        else:
+            for x in range(len(tmpdic["UserIdGroupPairs"])):            
+                IpPermissionEgress.append({
+                    'FromPort': fromPort,
+                    'IpProtocol': validatePortocol(tmpdic),
+                    'UserIdGroupPairs': [
+                        {
+                            'GroupId': tmpdic["UserIdGroupPairs"][x]["GroupId"],
+                            'Description': tmpdic["UserIdGroupPairs"][x]["Description"],
+                        },
+                    ],
+                    'ToPort': toPort,
+                })
     return IpPermissionEgress
 
 ### processNewEmptySG
