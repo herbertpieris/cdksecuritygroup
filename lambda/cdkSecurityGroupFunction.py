@@ -412,6 +412,7 @@ def compileIPPermissionEgress(tmpdic, IpPermissionEgress, mode):
                     'ToPort': toPort,
                 })
     elif mode ==2:
+        print("")
     return IpPermissionEgress
 
 ### processNewEmptySG
