@@ -355,7 +355,6 @@ def convertSGFormatToCSVFormat(value):
 
     IpPermissionIngress=[]
     for x in range(len(tmpIpPermissionIngress)):
-        IpPermissionIngress[x] = []
         print(tmpIpPermissionIngress[x])
 
     # y= "VpcId;GroupId;GroupName;Type;IpProtocol;FromPort;ToPort;IpRanges;Ipv6Ranges;Description;PrefixListIds;UserIdGroupPairs"
@@ -619,8 +618,6 @@ def processUpdateSG(csvfilename,csvbody):
             dicbody=y.split(";")
 
             tmpdic = convertArrToDic(dichead,dicbody)
-
-            print(tmpdic)
 
             if tmpdic["Type"].lower().__contains__("inbound"):
                 IpPermissionIngress = compileIPPermissionIngress(tmpdic, IpPermissionIngress, 1)
