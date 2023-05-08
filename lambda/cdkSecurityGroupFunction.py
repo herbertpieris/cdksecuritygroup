@@ -128,8 +128,6 @@ def authorizeSecurityGroupIngress(groupid,ipPermission):
     # try:
     ec2 = boto3.client('ec2')
 
-    print(ipPermission)
-
     response = ec2.authorize_security_group_ingress(
         GroupId=groupid,
         IpPermissions=ipPermission
@@ -355,7 +353,7 @@ def convertSGFormatToCSVFormat(value):
         for x in range(len(value["IpPermissions"])):
             compileIPPermissionIngress(value["IpPermissions"][x], tmpIpPermissionIngress, 2)
 
-    IpPermissionIngress={}
+    IpPermissionIngress=[]
     for x in range(len(tmpIpPermissionIngress)):
         IpPermissionIngress[x] = []
         print(tmpIpPermissionIngress[x])
@@ -621,6 +619,9 @@ def processUpdateSG(csvfilename,csvbody):
             dicbody=y.split(";")
 
             tmpdic = convertArrToDic(dichead,dicbody)
+
+            print(tmpdic)
+
             if tmpdic["Type"].lower().__contains__("inbound"):
                 IpPermissionIngress = compileIPPermissionIngress(tmpdic, IpPermissionIngress, 1)
             elif tmpdic["Type"].lower().__contains__("outbound"):
