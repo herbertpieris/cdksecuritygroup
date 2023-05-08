@@ -341,15 +341,19 @@ def removeDuplicateValue(csvbody):
 ### convertSGFormatToCSVFormat
 ### standarized existing sg value so it can be restored
 def convertSGFormatToCSVFormat(value):
+    # ['vpc-0b8ffb4fee204dcb', 'sg-059c44950ec451289', 'ApexJCIHOPROD', 'Inbound/Ingress', 'tcp', '80', '80', '10.91.148.0/23', '', 'Access Web from VPN', '', '\r']
+
     vpcid=value["VpcId"]
     sggroupid=value["GroupId"]
 
     IpPermissionIngress=[]
     IpPermissionEgress=[]
 
-    # if value["IpPermissions"] != []:            
-    #     for x in range(len(value["IpPermissions"])):
-    #         compileIPPermissionIngress(value["IpPermissions"][x], IpPermissionIngress, 2)
+    if value["IpPermissions"] != []:            
+        for x in range(len(value["IpPermissions"])):
+            compileIPPermissionIngress(value["IpPermissions"][x], IpPermissionIngress, 2)
+    
+    print(IpPermissionIngress)
 
     # y= "VpcId;GroupId;GroupName;Type;IpProtocol;FromPort;ToPort;IpRanges;Ipv6Ranges;Description;PrefixListIds;UserIdGroupPairs"
     # dichead=y.split(";")
@@ -611,7 +615,6 @@ def processUpdateSG(csvfilename,csvbody):
             y= bytes.decode(csvbody[x])
             dicbody=y.split(";")
 
-            print(dicbody)
             tmpdic = convertArrToDic(dichead,dicbody)
             if tmpdic["Type"].lower().__contains__("inbound"):
                 IpPermissionIngress = compileIPPermissionIngress(tmpdic, IpPermissionIngress, 1)
