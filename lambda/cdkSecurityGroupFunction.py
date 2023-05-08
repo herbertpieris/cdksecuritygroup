@@ -179,6 +179,7 @@ def writeAttachment(filename,value, mode):
                 compileIPPermissionIngress(value["IpPermissions"][x], IpPermissionIngress, 2)
 
         for ingress in IpPermissionIngress:
+            print(type(ingress))
             print(ingress)
             temp_my_file.writerow(ingress)
 
