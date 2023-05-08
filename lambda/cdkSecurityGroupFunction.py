@@ -217,6 +217,8 @@ def writeAttachment(filename,value, mode):
         my_file.close()        
     return file_name
 
+### compileEmail
+###
 def compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue=None):
     wib = dateutil.tz.gettz('Asia/Jakarta')
     x = datetime.datetime.now(tz=wib)
@@ -335,6 +337,54 @@ def getSGName(csvfilename,lookup):
 def removeDuplicateValue(csvbody):
     csvbody = list(dict.fromkeys(csvbody))
     return csvbody
+
+### convertSGFormatToCSVFormat
+### standarized existing sg value so it can be restored
+def convertSGFormatToCSVFormat(sggroupid,value):
+    print(sggroupid)
+    print(value)
+    # IpPermissionIngress=[]
+    # IpPermissionEgress=[]
+    # if value["IpPermissions"] != []:            
+    #     for x in range(len(value["IpPermissions"])):
+    #         compileIPPermissionIngress(value["IpPermissions"][x], IpPermissionIngress, 2)
+
+    # y= "VpcId;GroupId;GroupName;Type;IpProtocol;FromPort;ToPort;IpRanges;Ipv6Ranges;Description;PrefixListIds;UserIdGroupPairs"
+    # dichead=y.split(";")
+    # temp_my_file.writerow(dichead)
+
+    # for x in range(len(IpPermissionIngress)):
+    #     # dicbody=IpPermissionIngress.split(";")
+    #     # temp_my_file.writerow(dicbody)            
+    #     print(IpPermissionIngress[x])
+    #     # print(ingress.values())
+    #     # temp_my_file.writerow(ingress.values())
+
+    #         # if value["IpPermissions"] != []:
+    #         #     for x in range(len(value["IpPermissions"])-1):
+    #         #         print(value["IpPermissions"][x])
+    #         #         y= bytes.decode(value["IpPermissions"][x])
+    #         #         z=y.split(";")
+    #         #         temp_my_file.writerow(z)
+
+    #         # if "UserIdGroupPairs" in value:
+    #         #     for x in range(len(value["UserIdGroupPairs"])-1):
+    #         #         y= bytes.decode(value["UserIdGroupPairs"][x])
+    #         #         z=y.split(";")
+    #         #         temp_my_file.writerow(z)                
+
+    # if value["IpPermissionsEgress"] != [] :
+    #     for x in range(len(value["IpPermissionsEgress"])):
+    #         compileIPPermissionEgress(value["IpPermissions"][x], IpPermissionEgress, 2)
+
+    # for egress in IpPermissionEgress:
+    #     temp_my_file.writerow(egress)
+
+    #     # for x in range(len(value["IpPermissionsEgress"])-1):
+    #     #     y= bytes.decode(value["IpPermissionsEgress"][x])
+    #     #     z=y.split(";")
+    #     #     temp_my_file.writerow(z)
+    return
 
 ### compileIPPermissionIngress
 ### create list of ip permission for ingress record
@@ -567,7 +617,8 @@ def processUpdateSG(csvfilename,csvbody):
 
     authorizeSecurityGroupIngress(sggroupid,IpPermissionIngress)
     authorizeSecurityGroupEgress(sggroupid,IpPermissionEgress)
-    sendEmail("UPDATE_SG_",sggroupid,True,csvbody,sgvalue['SecurityGroups'][0])
+    oldvalue = convertSGFormatToCSVFormat(sggroupid,sgvalue['SecurityGroups'][0])
+    # sendEmail("UPDATE_SG_",sggroupid,True,csvbody,oldvalue)
 
 ### processRecord function
 ### processing record from main function
