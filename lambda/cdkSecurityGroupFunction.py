@@ -617,7 +617,7 @@ def processUpdateSG(csvfilename,csvbody):
 
     authorizeSecurityGroupIngress(sggroupid,IpPermissionIngress)
     authorizeSecurityGroupEgress(sggroupid,IpPermissionEgress)
-    oldvalue = convertSGFormatToCSVFormat(sggroupid,sgvalue['SecurityGroups'][0])
+    oldvalue = convertSGFormatToCSVFormat(sggroupid,sgvalue)
     # sendEmail("UPDATE_SG_",sggroupid,True,csvbody,oldvalue)
 
 ### processRecord function
