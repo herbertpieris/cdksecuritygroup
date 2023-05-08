@@ -178,7 +178,13 @@ def writeAttachment(filename,value, mode):
             for x in range(len(value["IpPermissions"])):
                 compileIPPermissionIngress(value["IpPermissions"][x], IpPermissionIngress, 2)
 
+        y= "VpcId;GroupId;GroupName;Type;IpProtocol;FromPort;ToPort;IpRanges;Ipv6Ranges;Description;PrefixListIds;UserIdGroupPairs"
+        dichead=y.split(";")
+        temp_my_file.writerow(dichead)
+
         for x in range(len(IpPermissionIngress)):
+            # dicbody=IpPermissionIngress.split(";")
+            # temp_my_file.writerow(dicbody)            
             print(IpPermissionIngress[x])
             # print(ingress.values())
             # temp_my_file.writerow(ingress.values())
@@ -332,6 +338,7 @@ def removeDuplicateValue(csvbody):
 
 ### compileIPPermissionIngress
 ### create list of ip permission for ingress record
+### 2 mode : mode 1 - compile from csv, mode 2 - compile from SG value
 def compileIPPermissionIngress(tmpdic, IpPermissionIngress, mode):
     fromPort, toPort = validatePort(tmpdic)
 
@@ -406,6 +413,7 @@ def compileIPPermissionIngress(tmpdic, IpPermissionIngress, mode):
 
 ### compileIPPermissionEgress
 ### create list of ip permission for egress record
+### 2 mode : mode 1 - compile from csv, mode 2 - compile from SG value
 def compileIPPermissionEgress(tmpdic, IpPermissionEgress, mode):
     fromPort, toPort = validatePort(tmpdic)
 
