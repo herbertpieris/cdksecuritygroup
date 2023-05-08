@@ -180,8 +180,8 @@ def writeAttachment(filename,value, mode):
 
         for ingress in IpPermissionIngress:
             print(type(ingress))
-            print(ingress.value)
-            temp_my_file.writerow(ingress)
+            print(ingress.values())
+            temp_my_file.writerow(ingress.values())
 
                 # if value["IpPermissions"] != []:
                 #     for x in range(len(value["IpPermissions"])-1):
