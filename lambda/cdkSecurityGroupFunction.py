@@ -340,11 +340,13 @@ def removeDuplicateValue(csvbody):
 
 ### convertSGFormatToCSVFormat
 ### standarized existing sg value so it can be restored
-def convertSGFormatToCSVFormat(sggroupid,value):
-    print(sggroupid)
-    print(value)
-    # IpPermissionIngress=[]
-    # IpPermissionEgress=[]
+def convertSGFormatToCSVFormat(value):
+    vpcid=value["VpcId"]
+    sggroupid=value["GroupId"]
+
+    IpPermissionIngress=[]
+    IpPermissionEgress=[]
+
     # if value["IpPermissions"] != []:            
     #     for x in range(len(value["IpPermissions"])):
     #         compileIPPermissionIngress(value["IpPermissions"][x], IpPermissionIngress, 2)
@@ -609,6 +611,7 @@ def processUpdateSG(csvfilename,csvbody):
             y= bytes.decode(csvbody[x])
             dicbody=y.split(";")
 
+            print(dicbody)
             tmpdic = convertArrToDic(dichead,dicbody)
             if tmpdic["Type"].lower().__contains__("inbound"):
                 IpPermissionIngress = compileIPPermissionIngress(tmpdic, IpPermissionIngress, 1)
@@ -617,7 +620,7 @@ def processUpdateSG(csvfilename,csvbody):
 
     authorizeSecurityGroupIngress(sggroupid,IpPermissionIngress)
     authorizeSecurityGroupEgress(sggroupid,IpPermissionEgress)
-    oldvalue = convertSGFormatToCSVFormat(sggroupid,sgvalue)
+    oldvalue = convertSGFormatToCSVFormat(sgvalue['SecurityGroups'][0])
     # sendEmail("UPDATE_SG_",sggroupid,True,csvbody,oldvalue)
 
 ### processRecord function
