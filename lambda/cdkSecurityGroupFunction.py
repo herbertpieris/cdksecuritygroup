@@ -172,49 +172,50 @@ def writeAttachment(filename,value, mode):
                 temp_my_file.writerow(dicbody)
         my_file.close()
     elif mode==2:
-        IpPermissionIngress=[]
-        IpPermissionEgress=[]
-        if value["IpPermissions"] != []:            
-            for x in range(len(value["IpPermissions"])):
-                compileIPPermissionIngress(value["IpPermissions"][x], IpPermissionIngress, 2)
+        print("")
+        # IpPermissionIngress=[]
+        # IpPermissionEgress=[]
+        # if value["IpPermissions"] != []:            
+        #     for x in range(len(value["IpPermissions"])):
+        #         compileIPPermissionIngress(value["IpPermissions"][x], IpPermissionIngress, 2)
 
-        y= "VpcId;GroupId;GroupName;Type;IpProtocol;FromPort;ToPort;IpRanges;Ipv6Ranges;Description;PrefixListIds;UserIdGroupPairs"
-        dichead=y.split(";")
-        temp_my_file.writerow(dichead)
+        # y= "VpcId;GroupId;GroupName;Type;IpProtocol;FromPort;ToPort;IpRanges;Ipv6Ranges;Description;PrefixListIds;UserIdGroupPairs"
+        # dichead=y.split(";")
+        # temp_my_file.writerow(dichead)
 
-        for x in range(len(IpPermissionIngress)):
-            # dicbody=IpPermissionIngress.split(";")
-            # temp_my_file.writerow(dicbody)            
-            print(IpPermissionIngress[x])
-            # print(ingress.values())
-            # temp_my_file.writerow(ingress.values())
+        # for x in range(len(IpPermissionIngress)):
+        #     # dicbody=IpPermissionIngress.split(";")
+        #     # temp_my_file.writerow(dicbody)            
+        #     print(IpPermissionIngress[x])
+        #     # print(ingress.values())
+        #     # temp_my_file.writerow(ingress.values())
 
-                # if value["IpPermissions"] != []:
-                #     for x in range(len(value["IpPermissions"])-1):
-                #         print(value["IpPermissions"][x])
-                #         y= bytes.decode(value["IpPermissions"][x])
-                #         z=y.split(";")
-                #         temp_my_file.writerow(z)
+        #         # if value["IpPermissions"] != []:
+        #         #     for x in range(len(value["IpPermissions"])-1):
+        #         #         print(value["IpPermissions"][x])
+        #         #         y= bytes.decode(value["IpPermissions"][x])
+        #         #         z=y.split(";")
+        #         #         temp_my_file.writerow(z)
 
-                # if "UserIdGroupPairs" in value:
-                #     for x in range(len(value["UserIdGroupPairs"])-1):
-                #         y= bytes.decode(value["UserIdGroupPairs"][x])
-                #         z=y.split(";")
-                #         temp_my_file.writerow(z)                
+        #         # if "UserIdGroupPairs" in value:
+        #         #     for x in range(len(value["UserIdGroupPairs"])-1):
+        #         #         y= bytes.decode(value["UserIdGroupPairs"][x])
+        #         #         z=y.split(";")
+        #         #         temp_my_file.writerow(z)                
 
-        if value["IpPermissionsEgress"] != [] :
-            for x in range(len(value["IpPermissionsEgress"])):
-                compileIPPermissionEgress(value["IpPermissions"][x], IpPermissionEgress, 2)
+        # if value["IpPermissionsEgress"] != [] :
+        #     for x in range(len(value["IpPermissionsEgress"])):
+        #         compileIPPermissionEgress(value["IpPermissions"][x], IpPermissionEgress, 2)
 
-        for egress in IpPermissionEgress:
-            temp_my_file.writerow(egress)
+        # for egress in IpPermissionEgress:
+        #     temp_my_file.writerow(egress)
 
-            # for x in range(len(value["IpPermissionsEgress"])-1):
-            #     y= bytes.decode(value["IpPermissionsEgress"][x])
-            #     z=y.split(";")
-            #     temp_my_file.writerow(z)
+        #     # for x in range(len(value["IpPermissionsEgress"])-1):
+        #     #     y= bytes.decode(value["IpPermissionsEgress"][x])
+        #     #     z=y.split(";")
+        #     #     temp_my_file.writerow(z)
 
-        my_file.close()        
+        # my_file.close()        
     return file_name
 
 ### compileEmail
@@ -495,6 +496,7 @@ def compileIPPermissionIngress(tmpdic, IpPermissionIngress, mode):
 
             })
     elif mode == 2:
+        print(tmpdic)
         if tmpdic["IpRanges"] != '':
             for x in range(len(tmpdic["IpRanges"])):
                 IpPermissionIngress.append({
