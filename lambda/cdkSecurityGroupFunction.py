@@ -358,7 +358,7 @@ def convertSGFormatToCSVFormat(value):
     for x in range(len(tmpIpPermissionIngress)):
         print(tmpIpPermissionIngress[x])
         
-        if tmpIpPermissionIngress[x]["IpRanges"] != "":
+        if "IpRanges" in tmpIpPermissionIngress[x]:
             for y in range(len(tmpIpPermissionIngress[x]["IpRanges"])):
                 ingress = {'VpcId': vpcid, 'GroupId': sggroupid, 'GroupName': sggroupname, 'Type': 'Inbound/Ingress', 'IpProtocol': tmpIpPermissionIngress[x]["IpProtocol"], 'FromPort': tmpIpPermissionIngress[x]["FromPort"], 'ToPort': tmpIpPermissionIngress[x]["ToPort"], 'IpRanges': tmpIpPermissionIngress[x]["IpRanges"][y]["CidrIp"], 'Ipv6Ranges': '', 'Description': tmpIpPermissionIngress[x]["IpRanges"][y]["Description"], 'PrefixListIds': '', 'UserIdGroupPairs': '\r'}
 
