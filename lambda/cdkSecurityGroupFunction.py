@@ -354,8 +354,8 @@ def convertSGFormatToCSVFormat(value):
         for x in range(len(value["IpPermissions"])):
             compileIPPermissionIngress(value["IpPermissions"][x], tmpIpPermissionIngress, 2)
         
-        for x in range(len(value["IpPermissionsEgress"])):
-            print(value["IpPermissionsEgress"][x])
+        # for x in range(len(value["IpPermissionsEgress"])):
+        #     print(value["IpPermissionsEgress"][x])
             # compileIPPermissionEgress(value["IpPermissionsEgress"][x], tmpIpPermissionEgress, 2)
 
     IpPermission=[]
@@ -422,7 +422,7 @@ def convertSGFormatToCSVFormat(value):
     #             })    
 
     print(IpPermission)
-    print(tmpIpPermissionIngress)
+    # print(tmpIpPermissionIngress)
 
     # y= "VpcId;GroupId;GroupName;Type;IpProtocol;FromPort;ToPort;IpRanges;Ipv6Ranges;Description;PrefixListIds;UserIdGroupPairs"
     # dichead=y.split(";")
