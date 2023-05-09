@@ -357,13 +357,25 @@ def convertSGFormatToCSVFormat(value):
     IpPermissionIngress=[]
     for x in range(len(tmpIpPermissionIngress)):
         print(tmpIpPermissionIngress[x])
-
+        
         if tmpIpPermissionIngress[x]["IpRanges"] != "":
-            ingress = {'VpcId': vpcid, 'GroupId': sggroupid, 'GroupName': sggroupname, 'Type': 'Inbound/Ingress', 'IpProtocol': tmpIpPermissionIngress[x]["IpProtocol"], 'FromPort': tmpIpPermissionIngress[x]["FromPort"], 'ToPort': tmpIpPermissionIngress[x]["ToPort"], 'IpRanges': tmpIpPermissionIngress[x]["IpRanges"][0]["CidrIp"], 'Ipv6Ranges': '', 'Description': tmpIpPermissionIngress[x]["IpRanges"][0]["Description"], 'PrefixListIds': '', 'UserIdGroupPairs': '\r'}
-        else:
-            ingress = {'VpcId': vpcid, 'GroupId': sggroupid, 'GroupName': sggroupname, 'Type': 'Inbound/Ingress', 'IpProtocol': tmpIpPermissionIngress[x]["IpProtocol"], 'FromPort': tmpIpPermissionIngress[x]["FromPort"], 'ToPort': tmpIpPermissionIngress[x]["ToPort"], 'IpRanges': ''   , 'Ipv6Ranges': '', 'Description': tmpIpPermissionIngress[x]["UserIdGroupPairs"][0]["Description"], 'PrefixListIds': '', 'UserIdGroupPairs': tmpIpPermissionIngress[x]["UserIdGroupPairs"][0]["GroupId"]}
+            for y in range(len(tmpIpPermissionIngress[x]["IpRanges"])):
+                ingress = {'VpcId': vpcid, 'GroupId': sggroupid, 'GroupName': sggroupname, 'Type': 'Inbound/Ingress', 'IpProtocol': tmpIpPermissionIngress[x]["IpProtocol"], 'FromPort': tmpIpPermissionIngress[x]["FromPort"], 'ToPort': tmpIpPermissionIngress[x]["ToPort"], 'IpRanges': tmpIpPermissionIngress[x]["IpRanges"][y]["CidrIp"], 'Ipv6Ranges': '', 'Description': tmpIpPermissionIngress[x]["IpRanges"][y]["Description"], 'PrefixListIds': '', 'UserIdGroupPairs': '\r'}
 
-        IpPermissionIngress.append(ingress)
+                IpPermissionIngress.append(ingress)
+
+
+            if "UserIdGroupPairs" in tmpIpPermissionIngress[x]:
+                for y in range(len(tmpIpPermissionIngress[x]["UserIdGroupPairs"])):
+                    ingress = {'VpcId': vpcid, 'GroupId': sggroupid, 'GroupName': sggroupname, 'Type': 'Inbound/Ingress', 'IpProtocol': tmpIpPermissionIngress[x]["IpProtocol"], 'FromPort': tmpIpPermissionIngress[x]["FromPort"], 'ToPort': tmpIpPermissionIngress[x]["ToPort"], 'IpRanges': ''   , 'Ipv6Ranges': '', 'Description': tmpIpPermissionIngress[x]["UserIdGroupPairs"][y]["Description"], 'PrefixListIds': '', 'UserIdGroupPairs': tmpIpPermissionIngress[x]["UserIdGroupPairs"][y]["GroupId"]}
+
+                    IpPermissionIngress.append(ingress)
+
+        else:
+            for y in range(len(tmpIpPermissionIngress[x]["UserIdGroupPairs"])):            
+                ingress = {'VpcId': vpcid, 'GroupId': sggroupid, 'GroupName': sggroupname, 'Type': 'Inbound/Ingress', 'IpProtocol': tmpIpPermissionIngress[x]["IpProtocol"], 'FromPort': tmpIpPermissionIngress[x]["FromPort"], 'ToPort': tmpIpPermissionIngress[x]["ToPort"], 'IpRanges': ''   , 'Ipv6Ranges': '', 'Description': tmpIpPermissionIngress[x]["UserIdGroupPairs"][y]["Description"], 'PrefixListIds': '', 'UserIdGroupPairs': tmpIpPermissionIngress[x]["UserIdGroupPairs"][y]["GroupId"]}
+                
+                IpPermissionIngress.append(ingress)
 
     print(IpPermissionIngress)
 
