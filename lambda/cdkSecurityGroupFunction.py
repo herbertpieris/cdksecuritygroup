@@ -348,36 +348,80 @@ def convertSGFormatToCSVFormat(value):
     sggroupname=value["GroupName"]
 
     tmpIpPermissionIngress=[]
-    IpPermissionEgress=[]
+    tmpIpPermissionEgress=[]
 
     if value["IpPermissions"] != []:            
         for x in range(len(value["IpPermissions"])):
             compileIPPermissionIngress(value["IpPermissions"][x], tmpIpPermissionIngress, 2)
 
-    IpPermissionIngress=[]
-    for x in range(len(tmpIpPermissionIngress)):
-        print(tmpIpPermissionIngress[x])
-        
+        for x in range(len(value["IpPermissions"])):
+            compileIPPermissionEgress(value["IpPermissions"][x], tmpIpPermissionEgress, 2)
+
+    IpPermission=[]
+    for x in range(len(tmpIpPermissionIngress)):        
         if "IpRanges" in tmpIpPermissionIngress[x]:
             for y in range(len(tmpIpPermissionIngress[x]["IpRanges"])):
                 ingress = {'VpcId': vpcid, 'GroupId': sggroupid, 'GroupName': sggroupname, 'Type': 'Inbound/Ingress', 'IpProtocol': tmpIpPermissionIngress[x]["IpProtocol"], 'FromPort': tmpIpPermissionIngress[x]["FromPort"], 'ToPort': tmpIpPermissionIngress[x]["ToPort"], 'IpRanges': tmpIpPermissionIngress[x]["IpRanges"][y]["CidrIp"], 'Ipv6Ranges': '', 'Description': tmpIpPermissionIngress[x]["IpRanges"][y]["Description"], 'PrefixListIds': '', 'UserIdGroupPairs': '\r'}
 
-                IpPermissionIngress.append(ingress)
+                IpPermission.append(ingress)
 
 
             if "UserIdGroupPairs" in tmpIpPermissionIngress[x]:
                 for y in range(len(tmpIpPermissionIngress[x]["UserIdGroupPairs"])):
                     ingress = {'VpcId': vpcid, 'GroupId': sggroupid, 'GroupName': sggroupname, 'Type': 'Inbound/Ingress', 'IpProtocol': tmpIpPermissionIngress[x]["IpProtocol"], 'FromPort': tmpIpPermissionIngress[x]["FromPort"], 'ToPort': tmpIpPermissionIngress[x]["ToPort"], 'IpRanges': ''   , 'Ipv6Ranges': '', 'Description': tmpIpPermissionIngress[x]["UserIdGroupPairs"][y]["Description"], 'PrefixListIds': '', 'UserIdGroupPairs': tmpIpPermissionIngress[x]["UserIdGroupPairs"][y]["GroupId"]}
 
-                    IpPermissionIngress.append(ingress)
+                    IpPermission.append(ingress)
 
         else:
             for y in range(len(tmpIpPermissionIngress[x]["UserIdGroupPairs"])):            
                 ingress = {'VpcId': vpcid, 'GroupId': sggroupid, 'GroupName': sggroupname, 'Type': 'Inbound/Ingress', 'IpProtocol': tmpIpPermissionIngress[x]["IpProtocol"], 'FromPort': tmpIpPermissionIngress[x]["FromPort"], 'ToPort': tmpIpPermissionIngress[x]["ToPort"], 'IpRanges': ''   , 'Ipv6Ranges': '', 'Description': tmpIpPermissionIngress[x]["UserIdGroupPairs"][y]["Description"], 'PrefixListIds': '', 'UserIdGroupPairs': tmpIpPermissionIngress[x]["UserIdGroupPairs"][y]["GroupId"]}
                 
-                IpPermissionIngress.append(ingress)
+                IpPermission.append(ingress)
 
-    print(IpPermissionIngress)
+    # for x in range(len(tmpIpPermissionEgress)):
+    #     if tmpdic["IpRanges"] != '':
+    #         for x in range(len(tmpdic["IpRanges"])):
+    #             IpPermissionEgress.append({
+    #                 'FromPort': fromPort,
+    #                 'IpProtocol': validatePortocol(tmpdic),
+    #                 'IpRanges': [
+    #                     {
+    #                         'CidrIp': tmpdic["IpRanges"][x]["CidrIp"],
+    #                         'Description': tmpdic["IpRanges"][x]["Description"],
+    #                     },
+    #                 ],
+    #                 'ToPort': toPort,
+    #             })
+
+    #         if "UserIdGroupPairs" in tmpdic:
+    #             for x in range(len(tmpdic["UserIdGroupPairs"])):
+    #                 IpPermissionEgress.append({
+    #                     'FromPort': fromPort,
+    #                     'IpProtocol': validatePortocol(tmpdic),
+    #                     'UserIdGroupPairs': [
+    #                         {
+    #                             'GroupId': tmpdic["UserIdGroupPairs"][x]["GroupId"],
+    #                             'Description': tmpdic["UserIdGroupPairs"][x]["Description"],
+    #                         },
+    #                     ],
+    #                     'ToPort': toPort,
+    #                 })                
+    #     else:
+    #         for x in range(len(tmpdic["UserIdGroupPairs"])):            
+    #             IpPermissionEgress.append({
+    #                 'FromPort': fromPort,
+    #                 'IpProtocol': validatePortocol(tmpdic),
+    #                 'UserIdGroupPairs': [
+    #                     {
+    #                         'GroupId': tmpdic["UserIdGroupPairs"][x]["GroupId"],
+    #                         'Description': tmpdic["UserIdGroupPairs"][x]["Description"],
+    #                     },
+    #                 ],
+    #                 'ToPort': toPort,
+    #             })    
+
+    print(IpPermission)
+    print(tmpIpPermissionIngress)
 
     # y= "VpcId;GroupId;GroupName;Type;IpProtocol;FromPort;ToPort;IpRanges;Ipv6Ranges;Description;PrefixListIds;UserIdGroupPairs"
     # dichead=y.split(";")
