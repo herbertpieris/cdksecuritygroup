@@ -178,11 +178,10 @@ def writeAttachment(filename,value, mode):
 
         dicbody=None
         for x in range(len(value)):
-            dicbody=y.split(";")
+            dicbody=value[x].split(";")
             temp_my_file.writerow(dicbody)
         my_file.close()
 
-        print("")
         # IpPermissionIngress=[]
         # IpPermissionEgress=[]
         # if value["IpPermissions"] != []:            
