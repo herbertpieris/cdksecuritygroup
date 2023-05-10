@@ -356,9 +356,9 @@ def convertSGFormatToCSVFormat(value):
             print(value["IpPermissions"][x])
             compileIPPermissionIngress(value["IpPermissions"][x], tmpIpPermissionIngress, 2)
         
-        # for x in range(len(value["IpPermissionsEgress"])):
-        #     print(value["IpPermissionsEgress"][x])
-            # compileIPPermissionEgress(value["IpPermissionsEgress"][x], tmpIpPermissionEgress, 2)
+        for x in range(len(value["IpPermissionsEgress"])):
+            print(value["IpPermissionsEgress"][x])
+            compileIPPermissionEgress(value["IpPermissionsEgress"][x], tmpIpPermissionEgress, 2)
 
     IpPermission=[]
     for x in range(len(tmpIpPermissionIngress)):        
