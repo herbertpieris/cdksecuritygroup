@@ -104,7 +104,7 @@ def revokeEgressRecords(data):
 ### validatePortocol    
 def validatePortocol(tmpdic):
     ipProtocol = -1
-    if tmpdic["FromPort"] != "" and tmpdic["ToPort"] != "":
+    if "FromPort" in tmpdic and "ToPort" in tmpdic and tmpdic["FromPort"] != "" and tmpdic["ToPort"] != "":
         ipProtocol = tmpdic["IpProtocol"]
     
     return str(ipProtocol)
