@@ -151,7 +151,7 @@ def authorizeSecurityGroupEgress(groupid,ipPermission):
     #     return Exception
 
 ### writeAttachment
-### 
+### write file to be attached to email
 def writeAttachment(filename,value, mode):
     file_name = "/tmp/"+filename 
     my_file = open(file_name,"w+")
@@ -181,50 +181,7 @@ def writeAttachment(filename,value, mode):
             dicbody=value[x].split(";")
             temp_my_file.writerow(dicbody)
         my_file.close()
-
-        # IpPermissionIngress=[]
-        # IpPermissionEgress=[]
-        # if value["IpPermissions"] != []:            
-        #     for x in range(len(value["IpPermissions"])):
-        #         compileIPPermissionIngress(value["IpPermissions"][x], IpPermissionIngress, 2)
-
-        # y= "VpcId;GroupId;GroupName;Type;IpProtocol;FromPort;ToPort;IpRanges;Ipv6Ranges;Description;PrefixListIds;UserIdGroupPairs"
-        # dichead=y.split(";")
-        # temp_my_file.writerow(dichead)
-
-        # for x in range(len(IpPermissionIngress)):
-        #     # dicbody=IpPermissionIngress.split(";")
-        #     # temp_my_file.writerow(dicbody)            
-        #     print(IpPermissionIngress[x])
-        #     # print(ingress.values())
-        #     # temp_my_file.writerow(ingress.values())
-
-        #         # if value["IpPermissions"] != []:
-        #         #     for x in range(len(value["IpPermissions"])-1):
-        #         #         print(value["IpPermissions"][x])
-        #         #         y= bytes.decode(value["IpPermissions"][x])
-        #         #         z=y.split(";")
-        #         #         temp_my_file.writerow(z)
-
-        #         # if "UserIdGroupPairs" in value:
-        #         #     for x in range(len(value["UserIdGroupPairs"])-1):
-        #         #         y= bytes.decode(value["UserIdGroupPairs"][x])
-        #         #         z=y.split(";")
-        #         #         temp_my_file.writerow(z)                
-
-        # if value["IpPermissionsEgress"] != [] :
-        #     for x in range(len(value["IpPermissionsEgress"])):
-        #         compileIPPermissionEgress(value["IpPermissions"][x], IpPermissionEgress, 2)
-
-        # for egress in IpPermissionEgress:
-        #     temp_my_file.writerow(egress)
-
-        #     # for x in range(len(value["IpPermissionsEgress"])-1):
-        #     #     y= bytes.decode(value["IpPermissionsEgress"][x])
-        #     #     z=y.split(";")
-        #     #     temp_my_file.writerow(z)
-
-        # my_file.close()        
+      
     return file_name
 
 ### compileEmail
@@ -676,6 +633,10 @@ def processUpdateSG(csvfilename,csvbody):
     oldvalue = convertSGFormatToCSVFormat(sgvalue['SecurityGroups'][0])
     sendEmail("UPDATE_SG_",sggroupid,True,csvbody,oldvalue)
 
+def processDeleteSG(csvfilename):
+    sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
+    response = deleteSecurityGroup(sggroupid)
+
 ### processRecord function
 ### processing record from main function
 def processRecord(record):
@@ -694,9 +655,8 @@ def processRecord(record):
     elif csvfilename.__contains__("UPDATE_SG_"):
         processUpdateSG(csvfilename,CSV)
     elif csvfilename.__contains__("DELETE_SG_"):
-        sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
-        response = deleteSecurityGroup(sggroupid)  
-
+        processDeleteSG(csvfilename)
+  
 ### main function
 ### process event records triggered by s3 events
 def main(event, context):
