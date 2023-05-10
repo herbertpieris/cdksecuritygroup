@@ -373,36 +373,36 @@ def convertSGFormatToCSVFormat(value):
     for x in range(len(tmpIpPermissionIngress)):        
         if "IpRanges" in tmpIpPermissionIngress[x]:
             for y in range(len(tmpIpPermissionIngress[x]["IpRanges"])):
-                ingress = {vpcid+";"+ sggroupid+";"+ sggroupname+";"+ 'Inbound/Ingress'+";"+ tmpIpPermissionIngress[x]["IpProtocol"]+";"+ tmpIpPermissionIngress[x]["FromPort"]+";"+ tmpIpPermissionIngress[x]["ToPort"]+";"+ tmpIpPermissionIngress[x]["IpRanges"][y]["CidrIp"]+";"+ ''+";"+ 'Description': tmpIpPermissionIngress[x]["IpRanges"][y]["Description"]+";"+ ''+";"+ '\r'}
+                ingress = {vpcid+";"+ sggroupid+";"+ sggroupname+";"+ 'Inbound/Ingress'+";"+ str(tmpIpPermissionIngress[x]["IpProtocol"])+";"+ str(tmpIpPermissionIngress[x]["FromPort"])+";"+ str(tmpIpPermissionIngress[x]["ToPort"])+";"+ str(tmpIpPermissionIngress[x]["IpRanges"][y]["CidrIp"])+";"+ ''+";"+ 'Description': tmpIpPermissionIngress[x]["IpRanges"][y]["Description"]+";"+ ''+";"+ '\r'}
 
                 IpPermission.append(ingress)
 
             if "UserIdGroupPairs" in tmpIpPermissionIngress[x]:
                 for y in range(len(tmpIpPermissionIngress[x]["UserIdGroupPairs"])):
-                    ingress = {vpcid+";"+ sggroupid+";"+ sggroupname+";"+ 'Inbound/Ingress'+";"+ tmpIpPermissionIngress[x]["IpProtocol"]+";"+ tmpIpPermissionIngress[x]["FromPort"]+";"+ tmpIpPermissionIngress[x]["ToPort"]+";"+ ''   +";"+ ''+";"+ 'Description': tmpIpPermissionIngress[x]["UserIdGroupPairs"][y]["Description"]+";"+ ''+";"+ tmpIpPermissionIngress[x]["UserIdGroupPairs"][y]["GroupId"]}
+                    ingress = {vpcid+";"+ sggroupid+";"+ sggroupname+";"+ 'Inbound/Ingress'+";"+ str(tmpIpPermissionIngress[x]["IpProtocol"])+";"+ str(tmpIpPermissionIngress[x]["FromPort"])+";"+ str(tmpIpPermissionIngress[x]["ToPort"])+";"+ ''   +";"+ ''+";"+ 'Description': tmpIpPermissionIngress[x]["UserIdGroupPairs"][y]["Description"]+";"+ ''+";"+ tmpIpPermissionIngress[x]["UserIdGroupPairs"][y]["GroupId"]}
 
                     IpPermission.append(ingress)
         else:
             for y in range(len(tmpIpPermissionIngress[x]["UserIdGroupPairs"])):            
-                ingress = {vpcid+";"+ sggroupid+";"+ sggroupname+";"+ 'Inbound/Ingress'+";"+ tmpIpPermissionIngress[x]["IpProtocol"]+";"+ tmpIpPermissionIngress[x]["FromPort"]+";"+ tmpIpPermissionIngress[x]["ToPort"]+";"+ ''   +";"+ ''+";"+ 'Description': tmpIpPermissionIngress[x]["UserIdGroupPairs"][y]["Description"]+";"+ ''+";"+ tmpIpPermissionIngress[x]["UserIdGroupPairs"][y]["GroupId"]}
+                ingress = {vpcid+";"+ sggroupid+";"+ sggroupname+";"+ 'Inbound/Ingress'+";"+ str(tmpIpPermissionIngress[x]["IpProtocol"])+";"+ str(tmpIpPermissionIngress[x]["FromPort"])+";"+ str(tmpIpPermissionIngress[x]["ToPort"])+";"+ ''   +";"+ ''+";"+ 'Description': tmpIpPermissionIngress[x]["UserIdGroupPairs"][y]["Description"]+";"+ ''+";"+ tmpIpPermissionIngress[x]["UserIdGroupPairs"][y]["GroupId"]}
                 
                 IpPermission.append(ingress)
 
     for x in range(len(tmpIpPermissionEgress)):
         if "IpRanges" in tmpIpPermissionEgress[x]:
             for y in range(len(tmpIpPermissionEgress[x]["IpRanges"])):
-                egress = {vpcid+";"+ sggroupid+";"+ sggroupname+";"+ 'Outbound/Egress'+";"+ tmpIpPermissionEgress[x]["IpProtocol"]+";"+ tmpIpPermissionEgress[x]["FromPort"]+";"+ tmpIpPermissionEgress[x]["ToPort"]+";"+ tmpIpPermissionEgress[x]["IpRanges"][y]["CidrIp"]+";"+ ''+";"+ 'Description': tmpIpPermissionEgress[x]["IpRanges"][y]["Description"]+";"+ ''+";"+ '\r'}
+                egress = {vpcid+";"+ sggroupid+";"+ sggroupname+";"+ 'Outbound/Egress'+";"+ str(tmpIpPermissionEgress[x]["IpProtocol"])+";"+ str(tmpIpPermissionEgress[x]["FromPort"])+";"+ str(tmpIpPermissionEgress[x]["ToPort"])+";"+ str(tmpIpPermissionEgress[x]["IpRanges"][y]["CidrIp"])+";"+ ''+";"+ 'Description': tmpIpPermissionEgress[x]["IpRanges"][y]["Description"]+";"+ ''+";"+ '\r'}
 
                 IpPermission.append(egress)
 
             if "UserIdGroupPairs" in tmpIpPermissionEgress[x]:
                 for y in range(len(tmpIpPermissionEgress[x]["UserIdGroupPairs"])):
-                    egress = {vpcid+";"+ sggroupid+";"+ sggroupname+";"+ 'Outbound/Egress'+";"+ tmpIpPermissionEgress[x]["IpProtocol"]+";"+ tmpIpPermissionEgress[x]["FromPort"]+";"+ tmpIpPermissionEgress[x]["ToPort"]+";"+ ''   +";"+ ''+";"+ 'Description': tmpIpPermissionEgress[x]["UserIdGroupPairs"][y]["Description"]+";"+ ''+";"+ tmpIpPermissionEgress[x]["UserIdGroupPairs"][y]["GroupId"]}
+                    egress = {vpcid+";"+ sggroupid+";"+ sggroupname+";"+ 'Outbound/Egress'+";"+ str(tmpIpPermissionEgress[x]["IpProtocol"])+";"+ str(tmpIpPermissionEgress[x]["FromPort"])+";"+ str(tmpIpPermissionEgress[x]["ToPort"])+";"+ ''   +";"+ ''+";"+ 'Description': tmpIpPermissionEgress[x]["UserIdGroupPairs"][y]["Description"]+";"+ ''+";"+ tmpIpPermissionEgress[x]["UserIdGroupPairs"][y]["GroupId"]}
 
                     IpPermission.append(egress)
         else:
             for y in range(len(tmpIpPermissionEgress[x]["UserIdGroupPairs"])):            
-                egress = {vpcid+";"+ sggroupid+";"+ sggroupname+";"+ 'Outbound/Egress'+";"+ tmpIpPermissionEgress[x]["IpProtocol"]+";"+ tmpIpPermissionEgress[x]["FromPort"]+";"+ tmpIpPermissionEgress[x]["ToPort"]+";"+ ''   +";"+ ''+";"+ 'Description': tmpIpPermissionEgress[x]["UserIdGroupPairs"][y]["Description"]+";"+ ''+";"+ tmpIpPermissionEgress[x]["UserIdGroupPairs"][y]["GroupId"]}
+                egress = {vpcid+";"+ sggroupid+";"+ sggroupname+";"+ 'Outbound/Egress'+";"+ str(tmpIpPermissionEgress[x]["IpProtocol"])+";"+ str(tmpIpPermissionEgress[x]["FromPort"])+";"+ str(tmpIpPermissionEgress[x]["ToPort"])+";"+ ''   +";"+ ''+";"+ 'Description': tmpIpPermissionEgress[x]["UserIdGroupPairs"][y]["Description"]+";"+ ''+";"+ tmpIpPermissionEgress[x]["UserIdGroupPairs"][y]["GroupId"]}
                 
                 IpPermission.append(egress)
 
