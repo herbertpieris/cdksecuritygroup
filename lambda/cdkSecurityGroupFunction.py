@@ -178,6 +178,7 @@ def writeAttachment(filename,value, mode):
 
         dicbody=None
         for x in range(len(value)):
+            print(value[x])
             dicbody=value[x].split(";")
             temp_my_file.writerow(dicbody)
         my_file.close()
