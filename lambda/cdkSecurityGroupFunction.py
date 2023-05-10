@@ -243,7 +243,7 @@ def compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue=None):
         fileNewValue=writeAttachment(filename1,newvalue,1)
 
         filename2="old-"+sgid+"-records"
-        fileOldValue=writeAttachment(filename2,oldvalue,1)
+        fileOldValue=writeAttachment(filename2,oldvalue,2)
 
     msg = MIMEMultipart('alternative')
     msg['Subject'] = mode + " - " + "SG" + " Notification"
