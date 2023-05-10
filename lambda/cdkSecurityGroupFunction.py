@@ -102,6 +102,7 @@ def revokeEgressRecords(data):
     #     raise e
 
 ### validatePortocol    
+### ipProtocal -1 means all traffic
 def validatePortocol(tmpdic):
     ipProtocol = -1
     if "FromPort" in tmpdic and "ToPort" in tmpdic and tmpdic["FromPort"] != "" and tmpdic["ToPort"] != "":
@@ -137,6 +138,8 @@ def authorizeSecurityGroupIngress(groupid,ipPermission):
     # except Exception:
     #     return Exception
 
+### authorizeSecurityGroupEgress
+### input egress record to security group
 def authorizeSecurityGroupEgress(groupid,ipPermission):
     # try:
     ec2 = boto3.client('ec2')
@@ -185,7 +188,7 @@ def writeAttachment(filename,value, mode):
     return file_name
 
 ### compileEmail
-###
+### build email body and attachment
 def compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue=None):
     wib = dateutil.tz.gettz('Asia/Jakarta')
     x = datetime.datetime.now(tz=wib)
@@ -307,6 +310,7 @@ def removeDuplicateValue(csvbody):
 
 ### convertSGFormatToCSVFormat
 ### standarized existing sg value so it can be restored
+### its necesary for rollback
 def convertSGFormatToCSVFormat(value):
     vpcid=value["VpcId"]
     sggroupid=value["GroupId"]
@@ -359,43 +363,6 @@ def convertSGFormatToCSVFormat(value):
                 
                 IpPermission.append(egress)
 
-    # print(tmpIpPermissionIngress)
-
-    # y= "VpcId;GroupId;GroupName;Type;IpProtocol;FromPort;ToPort;IpRanges;Ipv6Ranges;Description;PrefixListIds;UserIdGroupPairs"
-    # dichead=y.split(";")
-    # temp_my_file.writerow(dichead)
-
-    # for x in range(len(IpPermissionIngress)):
-    #     # dicbody=IpPermissionIngress.split(";")
-    #     # temp_my_file.writerow(dicbody)            
-    #     print(IpPermissionIngress[x])
-    #     # print(ingress.values())
-    #     # temp_my_file.writerow(ingress.values())
-
-    #         # if value["IpPermissions"] != []:
-    #         #     for x in range(len(value["IpPermissions"])-1):
-    #         #         print(value["IpPermissions"][x])
-    #         #         y= bytes.decode(value["IpPermissions"][x])
-    #         #         z=y.split(";")
-    #         #         temp_my_file.writerow(z)
-
-    #         # if "UserIdGroupPairs" in value:
-    #         #     for x in range(len(value["UserIdGroupPairs"])-1):
-    #         #         y= bytes.decode(value["UserIdGroupPairs"][x])
-    #         #         z=y.split(";")
-    #         #         temp_my_file.writerow(z)                
-
-    # if value["IpPermissionsEgress"] != [] :
-    #     for x in range(len(value["IpPermissionsEgress"])):
-    #         compileIPPermissionEgress(value["IpPermissions"][x], IpPermissionEgress, 2)
-
-    # for egress in IpPermissionEgress:
-    #     temp_my_file.writerow(egress)
-
-    #     # for x in range(len(value["IpPermissionsEgress"])-1):
-    #     #     y= bytes.decode(value["IpPermissionsEgress"][x])
-    #     #     z=y.split(";")
-    #     #     temp_my_file.writerow(z)
     return IpPermission
 
 ### compileIPPermissionIngress
