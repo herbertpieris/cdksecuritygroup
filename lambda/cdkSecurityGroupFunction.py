@@ -189,7 +189,7 @@ def writeAttachment(filename,value, mode):
 
 ### compileEmail
 ### build email body and attachment
-def compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue=None):
+def compileEmail(mode, sgid, attachmentmode, newvalue=None, oldvalue=None):
     wib = dateutil.tz.gettz('Asia/Jakarta')
     x = datetime.datetime.now(tz=wib)
 
@@ -214,7 +214,9 @@ def compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue=None):
     elif mode=="NEW_SG_":
         mail_body = sgid + " created"
     elif mode=="UPDATE_SG_":
-        mail_body = sgid + " updated"            
+        mail_body = sgid + " updated"
+    elif mode=="DELETE_SG_":
+        mail_body = sgid + " deleted"
 
 
     # Create the body of the message (a plain-text and an HTML version).
@@ -266,14 +268,16 @@ def compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue=None):
 
 ### sendEmail
 ### send email using simple email service
-def sendEmail(mode, sgid, attachmentmode, newvalue, oldvalue=None):
+def sendEmail(mode, sgid, attachmentmode, newvalue=None, oldvalue=None):
     # try:
     ses = boto3.client('ses', use_ssl=True)
 
-    if oldvalue:
+    if newvalue and oldvalue:
         text = compileEmail(mode, sgid, attachmentmode, newvalue, oldvalue) 
-    else:
+    elif newvalue:
         text = compileEmail(mode, sgid, attachmentmode, newvalue)
+    else:
+        text = compileEmail(mode, sgid, attachmentmode)
 
     ses.send_raw_email(
         RawMessage= { 'Data': text }
@@ -528,6 +532,7 @@ def processNewEmptySG(csvfilename,csvbody):
     revokeEgressRecords(sgValue) 
 
     sendEmail("NEWEMP_SG_",sggroupid,False,csvbody,"")
+        
 
 ### processNewSG
 ### create security group with ingress or egress record
@@ -603,6 +608,7 @@ def processUpdateSG(csvfilename,csvbody):
 def processDeleteSG(csvfilename):
     sggroupid=csvfilename.replace("DELETE_SG_","").replace(".csv", "")
     response = deleteSecurityGroup(sggroupid)
+    sendEmail("DELETE_SG_",sggroupid,False)
 
 ### processRecord function
 ### processing record from main function
