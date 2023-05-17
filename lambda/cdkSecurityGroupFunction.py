@@ -565,13 +565,13 @@ def processNewSG(csvfilename,csvbody):
                 IpPermissionIngress = compileIPPermissionIngress(tmpdic, IpPermissionIngress, 1)
             elif tmpdic["Type"].lower().__contains__("outbound"):
                 IpPermissionEgress = compileIPPermissionEgress(tmpdic, IpPermissionEgress, 1)
-                
+
     try:
         authorizeSecurityGroupIngress(sggroupid,IpPermissionIngress)
         authorizeSecurityGroupEgress(sggroupid,IpPermissionEgress)
         sendEmail("NEW_SG_",sggroupid,True,csvbody)        
     except:
-        processDeleteSG(csvfilename)
+        processDeleteSG(sggroupid)
 
 ### processUpdateSG
 ### modify ( add or remove ) ingress or egress record 
