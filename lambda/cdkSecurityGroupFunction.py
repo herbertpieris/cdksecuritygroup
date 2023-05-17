@@ -217,7 +217,8 @@ def compileEmail(mode, sgid, attachmentmode, newvalue=None, oldvalue=None):
         mail_body = sgid + " updated"
     elif mode=="DELETE_SG_":
         mail_body = sgid + " deleted"
-
+    elif mode=="ROLLBACK_SG_":
+        mail_body = sgid + " deleted"
 
     # Create the body of the message (a plain-text and an HTML version).
     html = """\
@@ -532,7 +533,6 @@ def processNewEmptySG(csvfilename,csvbody):
     revokeEgressRecords(sgValue) 
 
     sendEmail("NEWEMP_SG_",sggroupid,False,csvbody,"")
-        
 
 ### processNewSG
 ### create security group with ingress or egress record
@@ -565,10 +565,13 @@ def processNewSG(csvfilename,csvbody):
                 IpPermissionIngress = compileIPPermissionIngress(tmpdic, IpPermissionIngress, 1)
             elif tmpdic["Type"].lower().__contains__("outbound"):
                 IpPermissionEgress = compileIPPermissionEgress(tmpdic, IpPermissionEgress, 1)
-
-    authorizeSecurityGroupIngress(sggroupid,IpPermissionIngress)
-    authorizeSecurityGroupEgress(sggroupid,IpPermissionEgress)
-    sendEmail("NEW_SG_",sggroupid,True,csvbody)
+                
+    try:
+        authorizeSecurityGroupIngress(sggroupid,IpPermissionIngress)
+        authorizeSecurityGroupEgress(sggroupid,IpPermissionEgress)
+        sendEmail("NEW_SG_",sggroupid,True,csvbody)        
+    except:
+        processDeleteSG(csvfilename)
 
 ### processUpdateSG
 ### modify ( add or remove ) ingress or egress record 
